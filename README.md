@@ -8,6 +8,6 @@ Sylvain LECLERC
 (University of Montpellier : M2 IMAGINE, 2022-2023)
 
 ## Dependencies
-- C++ : ?  
-- Qt : ?  
+- C++   
+- Qt : v5.7.0  
 - CUDA : ?  
