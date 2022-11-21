@@ -1,4 +1,4 @@
-# MarchingCloud : AR/VR pottery with point cloud  
+# MarchingCloud : Point cloud rendering
 This project aims to offer a program capable of rendering point clouds using sphere tracing.
 This is a university project on which the students will be graded.
 
