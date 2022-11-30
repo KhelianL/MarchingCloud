@@ -11,3 +11,11 @@ Sylvain LECLERC
 - C++   
 - Qt : v5.7.0  
 - CUDA : ?  
+
+## Execute Commands
+```console
+cmake -Bbuild
+cmake --build build
+cmake --build build --config Release
+./MarchingCloud
+```

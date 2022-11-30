@@ -1,0 +1,84 @@
+cmake_minimum_required(VERSION 3.8)
+
+# Project
+project(MarchingCloud VERSION 1.0.0 LANGUAGES CXX)
+
+# Requirement cpp
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Find includes in the build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Make executable in current dir
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_SOURCE_DIR}>)
+
+# Turn on automatic invocation of the MOC, UIC & RCC
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+# Add a compiler flag
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
+# Make this a GUI application on Windows
+if(WIN32)
+  set(CMAKE_WIN32_EXECUTABLE ON)
+endif()
+
+# Find the libraries
+find_package(Qt5 REQUIRED COMPONENTS Gui OpenGL Widgets Xml)
+find_library(QGLVIEWER_PATH NAMES QGLViewer-qt5)
+find_path(QGLVIEWER_INCLUDE_DIR NAMES QGLViewer/config.h)
+
+add_library(QGLViewer IMPORTED UNKNOWN)
+target_include_directories(QGLViewer INTERFACE ${QGLVIEWER_INCLUDE_DIR})
+set_target_properties(QGLViewer PROPERTIES
+    IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
+    IMPORTED_LOCATION ${QGLVIEWER_PATH}
+)
+target_link_libraries(QGLViewer INTERFACE GL Qt5::Gui Qt5::OpenGL Qt5::Widgets Qt5::Xml)
+
+# Link QGLViewer
+set(QGLVIEWER_FILES ${CMAKE_BINARY_DIR}/libQGLViewer-2.8.0/QGLViewer/qglviewer.h)
+get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+
+add_custom_command(OUTPUT ${QGLVIEWER_FILES}
+  COMMAND  tar xzf "${CMAKE_CURRENT_SOURCE_DIR}/libQGLViewer-2.8.0.tar.gz" --strip 1
+  COMMAND ${QT_QMAKE_EXECUTABLE} -o QMakefile 
+  COMMAND make -f QMakefile 
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/libQGLViewer-2.8.0"
+  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/libQGLViewer-2.8.0.tar.gz"
+  COMMENT "Unpacking libQGLViewer-2.8.0.tar.gz"
+  VERBATIM
+)
+
+add_custom_target(qglviewer_untar DEPENDS ${QGLVIEWER_FILES})
+
+add_library(qglviewer SHARED IMPORTED)
+add_dependencies(qglviewer qglviewer_untar)
+
+set_target_properties(qglviewer PROPERTIES
+                      IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/libQGLViewer-2.8.0/QGLViewer/libQGLViewer-qt5.so"
+                      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/libQGLViewer-2.8.0")
+
+# Tell CMake to create the MarchingCloud executable
+add_executable(MarchingCloud 
+  main.cpp 
+  mainwindow.cpp 
+  app/ui/mainwindow.ui
+  resources.qrc
+)
+
+# Add the Qt5 Widgets for linking
+target_link_libraries(MarchingCloud Qt5::Widgets)
+
+target_include_directories(MarchingCloud PUBLIC
+  "${CMAKE_SOURCE_DIR}/app/header"
+  "${CMAKE_SOURCE_DIR}/app/ui"
+)
+
+set_target_properties(MarchingCloud PROPERTIES
+  WIN32_EXECUTABLE ON
+  MACOSX_BUNDLE ON
+)
