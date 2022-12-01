@@ -8,7 +8,8 @@ Sylvain LECLERC
 (University of Montpellier : M2 IMAGINE, 2022-2023)
 
 ## Dependencies
-- C++   
+- CMake : v3.2  
+- C++ : v17.0  
 - Qt : v5.7.0  
 - CUDA : ?  
 
@@ -16,6 +17,7 @@ Sylvain LECLERC
 ```console
 cmake -Bbuild
 cmake --build build
+./marchingCloud
+
 cmake --build build --config Release
-./MarchingCloud
 ```

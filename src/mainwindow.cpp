@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include <mainwindow.h>
 #include "../ui/ui_mainwindow.h"
 
 #include <QtWidgets>

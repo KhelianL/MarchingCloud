@@ -1,7 +1,7 @@
 #ifndef SAMPLEAPP_H
 #define SAMPLEAPP_H
 
-#include<QApplication>
+#include <QApplication>
 
 class SampleApp : public QApplication
 {

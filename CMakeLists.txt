@@ -26,52 +26,87 @@ if(WIN32)
   set(CMAKE_WIN32_EXECUTABLE ON)
 endif()
 
+find_package(Qt5 COMPONENTS Core Xml OpenGL Gui Widgets QUIET)
+
 ##################
 # Link QGLViewer #
 ##################
 
-# set(QGLVIEWER_FILES ${CMAKE_BINARY_DIR}/extern/libQGLViewer-2.8.0/QGLViewer/qglviewer.h)
-# get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+# if(NOT Qt5_FOUND)
+#   message("Qt5 not found. Install it and set Qt5_DIR accordingly")
+#   if (WIN32)
+#     message("In Windows, Qt5_DIR should be something like C:/Qt/5.4/msvc2013_64_opengl/lib/cmake/Qt5")
+#   endif()
+#   return()
+# endif()
 # 
-# add_custom_command(OUTPUT ${QGLVIEWER_FILES}
-#   COMMAND  tar xzf "${CMAKE_CURRENT_SOURCE_DIR}/extern/libQGLViewer-2.8.0.tar.gz" --strip 1
-#   COMMAND ${QT_QMAKE_EXECUTABLE} -o QMakefile 
-#   COMMAND make -f QMakefile 
-#   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/extern/libQGLViewer-2.8.0"
-#   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/extern/libQGLViewer-2.8.0.tar.gz"
-#   COMMENT "Unpacking libQGLViewer-2.8.0.tar.gz"
-#   VERBATIM
+# find_path(QGLVIEWER_INCLUDE_DIR qglviewer.h
+#     /usr/include/QGLViewer
+#     /opt/local/include/QGLViewer
+#     /usr/local/include/QGLViewer
+#     /sw/include/QGLViewer
+#     ENV QGLVIEWERROOT
+#   )
+# 
+# find_library(QGLVIEWER_LIBRARY_RELEASE
+#   NAMES qglviewer QGLViewer qglviewer-qt5 QGLViewer-qt5
+#   PATHS /usr/lib
+#         /usr/local/lib
+#         /opt/local/lib
+#         /sw/lib
+#         ENV QGLVIEWERROOT
+#         ENV LD_LIBRARY_PATH
+#         ENV LIBRARY_PATH
+#   PATH_SUFFIXES QGLViewer QGLViewer/release
+# )
+# find_library(QGLVIEWER_LIBRARY_DEBUG
+#   NAMES dqglviewer dQGLViewer dqglviewer-qt5 dQGLViewer-qt5 QGLViewerd2
+#   PATHS /usr/lib
+#         /usr/local/lib
+#         /opt/local/lib
+#         /sw/lib
+#         ENV QGLVIEWERROOT
+#         ENV LD_LIBRARY_PATH
+#         ENV LIBRARY_PATH
+#   PATH_SUFFIXES QGLViewer QGLViewer/debug
 # )
 # 
-# add_custom_target(qglviewer_untar DEPENDS ${QGLVIEWER_FILES})
-# 
-# add_library(qglviewer SHARED IMPORTED)
-# add_dependencies(qglviewer qglviewer_untar)
-# 
-# set_target_properties(qglviewer PROPERTIES
-#                       IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/extern/libQGLViewer-2.8.0/QGLViewer/libQGLViewer-qt5.so"
-#                       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/extern/libQGLViewer-2.8.0")
+# if(QGLVIEWER_LIBRARY_RELEASE)
+#   if(QGLVIEWER_LIBRARY_DEBUG)
+#     set(QGLVIEWER_LIBRARY optimized ${QGLVIEWER_LIBRARY_RELEASE} debug ${QGLVIEWER_LIBRARY_DEBUG})
+#   else()
+#     set(QGLVIEWER_LIBRARY ${QGLVIEWER_LIBRARY_RELEASE})
+#   endif()
+# endif()
 
 ##################
 # ############## #
 ##################
 
-find_package(Qt5Widgets)
+## Set folders vars
+# set(MY_HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/header)
+# set(MY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+# set(MY_UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ui)
+
+## include headers
+# include_directories(${MY_HEADER_DIR})
 
 # Tell CMake to create the marchingCloud executable
 add_executable(marchingCloud 
     src/main.cpp
     src/sampleapp.cpp
     src/mainwindow.cpp
+    header/mainwindow.h
+    header/sampleapp.h
+)
+
+target_include_directories(marchingCloud PUBLIC
+  "${CMAKE_SOURCE_DIR}/header"
 )
 
 target_link_libraries(marchingCloud
     Qt5::Widgets
 )
-
-# target_include_directories(marchingCloud PUBLIC
-#   "${CMAKE_SOURCE_DIR}/header"
-# )
 
 set_target_properties(marchingCloud PROPERTIES
   WIN32_EXECUTABLE ON

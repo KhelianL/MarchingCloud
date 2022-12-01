@@ -1,4 +1,4 @@
-#include "sampleapp.h"
+#include <sampleapp.h>
 
 SampleApp::SampleApp(int &argc, char *argv[]) :
     QApplication(argc, argv)
