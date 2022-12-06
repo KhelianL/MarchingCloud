@@ -9,8 +9,9 @@ Sylvain LECLERC
 
 ## Dependencies
 - C++ : v17.0  
-- Qt : v5.7.0  
-- CUDA : ?  
+- CUDA : v10.1 
+- Qt : v5.7  
+- libQGLViewer v2.8  
 
 ## Execute Commands
 ```console

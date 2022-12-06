@@ -1,15 +1,22 @@
+/* QT */
 #include <QApplication>
 
-#include <mainwindow.h>
-
+/* CUDA */
 #include <hello.cuh>
 
-int main(int argc, char *argv[])
+/* HEADERS */
+#include <simpleViewer.h>
+
+int main(int argc, char **argv)
 {
     kernel();
 
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+
+    // Instantiate the viewer.
+    Viewer viewer;
+    viewer.setWindowTitle("simpleViewer");
+    viewer.show();
+
+    return app.exec();
 }
