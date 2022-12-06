@@ -18,3 +18,7 @@ qmake
 make
 ./marchingCloud
 ```
+
+## Project file modification for CUDA
+- SYSTEM_TYPE : 32 or 64 depending on your system  
+- CUDA_ARCH : sm_30 depending on your type of CUDA architecture, for example 'compute_10', 'compute_11', 'sm_10'
