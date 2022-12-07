@@ -12,6 +12,5 @@ void kernel()
 	// Launch CUDA kernel.
 	cuda_hello<<<1, 1>>>();
 
-	
 	cudaDeviceSynchronize();
 }

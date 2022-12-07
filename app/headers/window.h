@@ -48,44 +48,41 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QSurfaceFormat>
+#ifndef WINDOW_H
+#define WINDOW_H
 
-#include <hello.cuh>
+#include <QWidget>
 
-#include <mainwindow.h>
+QT_BEGIN_NAMESPACE
+class QSlider;
+class QPushButton;
+QT_END_NAMESPACE
 
-int main(int argc, char *argv[])
+class GLWidget;
+class MainWindow;
+
+class Window : public QWidget
 {
-    kernel();
+    Q_OBJECT
 
-    QApplication app(argc, argv);
+public:
+    Window(MainWindow *mw);
 
-    QSurfaceFormat fmt;
-    fmt.setDepthBufferSize(24);
-    if (QCoreApplication::arguments().contains(QStringLiteral("--multisample")))
-        fmt.setSamples(4);
-    if (QCoreApplication::arguments().contains(QStringLiteral("--coreprofile")))
-    {
-        fmt.setVersion(3, 2);
-        fmt.setProfile(QSurfaceFormat::CoreProfile);
-    }
-    QSurfaceFormat::setDefaultFormat(fmt);
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 
-    MainWindow mainWindow;
-    if (QCoreApplication::arguments().contains(QStringLiteral("--transparent")))
-    {
-        mainWindow.setAttribute(Qt::WA_TranslucentBackground);
-        mainWindow.setAttribute(Qt::WA_NoSystemBackground, false);
-    }
-    mainWindow.resize(mainWindow.sizeHint());
-    int desktopArea = QApplication::desktop()->width() *
-                      QApplication::desktop()->height();
-    int widgetArea = mainWindow.width() * mainWindow.height();
-    if (((float)widgetArea / (float)desktopArea) < 0.75f)
-        mainWindow.show();
-    else
-        mainWindow.showMaximized();
-    return app.exec();
-}
+private slots:
+    void dockUndock();
+
+private:
+    QSlider *createSlider();
+
+    GLWidget *glWidget;
+    QSlider *xSlider;
+    QSlider *ySlider;
+    QSlider *zSlider;
+    QPushButton *dockBtn;
+    MainWindow *mainWindow;
+};
+
+#endif
