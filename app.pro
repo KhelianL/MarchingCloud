@@ -27,7 +27,6 @@ LIBS *= -lGLU
 LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5
 INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
 DEPENDPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
-# PRE_TARGETDEPS *= ./lib/libQGLViewer-2.8.0/QGLViewer/libQGLViewer-qt5.a
 
 #####################################################################
 #                   CUDA compiler configuration                     #

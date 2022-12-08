@@ -12,6 +12,11 @@ Sylvain LECLERC
 - CUDA : v10.1 
 - Qt : v5.7  
 - libQGLViewer v2.8  
+```console
+apt install nvidia-cuda-toolkit
+apt install qt5-default
+apt install libqglviewer-dev-qt5
+```
 
 ## Execute Commands
 ```console
