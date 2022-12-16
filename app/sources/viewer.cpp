@@ -1,11 +1,13 @@
-#include <simpleViewer.h>
+#include <viewer.h>
 
 using namespace std;
 
 // Draws a spiral
 void Viewer::draw()
 {
-        this->test.draw();
+        int size = this->listPointCloud.size();
+        for (int i = 0; i < size; i++)
+                this->listPointCloud[i].draw();
 }
 
 void Viewer::init()
@@ -13,14 +15,14 @@ void Viewer::init()
         // Restore previous viewer state.
         restoreStateFromFile();
         glDisable(GL_LIGHTING);
-        glPointSize(3.0);
+        glPointSize(1.0);
 
         PointCloud p;
         p.loadPointCloud("data/pointsets/dino.pn");
-        this->test = p;
+        this->listPointCloud.push_back(p);
 
         // Opens help window
-        help();
+        // help();
 }
 
 QString Viewer::helpString() const

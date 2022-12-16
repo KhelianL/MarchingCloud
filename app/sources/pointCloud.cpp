@@ -28,56 +28,88 @@ void PointCloud::loadPointCloud(const std::string &filename)
 
     fclose(in);
     delete[] pn;
+
+    // Verification
+    if (this->positions.size() != this->normals.size())
+    {
+        std::cout << "The pointset does not contain the same number of points and normals." << std::endl;
+        this->positions.clear();
+        this->normals.clear();
+        return;
+    }
+    else
+    {
+        this->isSet = true;
+    }
 }
 
-void PointCloud::savePointCloud(const std::string &filename)
+void PointCloud::move(const qglviewer::Vec v)
 {
-    int sizeV = this->positions.size();
-    int sizeN = this->normals.size();
-    if (sizeV != sizeN)
+    if (this->isSet)
     {
-        std::cout << "The pointset you are trying to save does not contain the same number of points and normals." << std::endl;
-        return;
+        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
+        {
+            this->positions[i] += v;
+        }
     }
-    FILE *outfile = fopen(filename.c_str(), "wb");
-    if (outfile == NULL)
+}
+void PointCloud::rotate(const float d, const qglviewer::Vec v)
+{
+    if (this->isSet)
     {
-        std::cout << filename << " is not a valid PN file." << std::endl;
-        return;
+        // Création de la matrice de rotation
+        float c = cos(d);
+        float s = sin(d);
+        float x = v[0];
+        float y = v[1];
+        float z = v[2];
+        float x2 = x * x;
+        float y2 = y * y;
+        float z2 = z * z;
+
+        float rotationMatrix[3][3] = {
+            {c + x2 * (1 - c), x * y * (1 - c) - z * s, x * z * (1 - c) + y * s},
+            {y * x * (1 - c) + z * s, c + y2 * (1 - c), y * z * (1 - c) - x * s},
+            {z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z2 * (1 - c)}};
+
+        // Appliquer la rotation à chaque vecteur de positions
+        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
+        {
+            qglviewer::Vec rotatedVector;
+            for (int j = 0; j < 3; j++)
+            {
+                rotatedVector[j] = 0;
+                for (int k = 0; k < 3; k++)
+                {
+                    rotatedVector[j] += rotationMatrix[j][k] * this->positions[i][k];
+                }
+            }
+            this->positions[i] = rotatedVector;
+        }
     }
-    for (unsigned int pIt = 0; pIt < sizeV; ++pIt)
+}
+void PointCloud::scale(const qglviewer::Vec v)
+{
+    for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
     {
-        fwrite(&(this->positions[pIt]), sizeof(float), 3, outfile);
-        fwrite(&(this->normals[pIt]), sizeof(float), 3, outfile);
+        for (int j = 0; j < 3; j++)
+        {
+            this->positions[i][j] = this->positions[i][j] * v[j];
+        }
     }
-    fclose(outfile);
 }
 
 void PointCloud::draw()
 {
-    int sizeV = this->positions.size();
-    int sizeN = this->normals.size();
-    if (sizeV != sizeN)
+    if (this->isSet)
     {
-        std::cout << "The pointset does not contain the same number of points and normals." << std::endl;
-        return;
+        glBegin(GL_POINTS);
+        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
+        {
+            glVertex3fv(this->positions[i]);
+            glNormal3fv(this->normals[i]);
+            glColor3f(1.0, 1.0, 1.0);
+        }
+        glEnd();
     }
-
-    glBegin(GL_POINTS);
-    for (int i = 0; i < sizeV; i++)
-    {
-        glVertex3fv(this->positions[i]);
-        glNormal3fv(this->normals[i]);
-        glColor3f(1.0, 1.0, 1.0);
-    }
-    glEnd();
-}
-
-void PointCloud::print()
-{
-    for (int i = 0; i < this->positions.size(); i++)
-    {
-        std::cout << this->positions[i] << " ";
-    }
-    std::cout << std::endl;
 }

@@ -5,7 +5,7 @@
 class Viewer : public QGLViewer
 {
 private:
-    PointCloud test;
+    QVector<PointCloud> listPointCloud;
 
 protected:
     virtual void draw();
