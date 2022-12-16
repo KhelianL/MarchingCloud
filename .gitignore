@@ -73,6 +73,7 @@ Thumbs.db
 
 # App
 /marchingCloud
+/.qglviewer
 
 # Visual Studio cache directory
-.vs/
+.vscode/
