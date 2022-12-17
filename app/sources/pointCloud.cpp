@@ -1,3 +1,4 @@
+/* SRC */
 #include <pointCloud.h>
 
 void PointCloud::loadPointCloud(const std::string &filename)
@@ -90,13 +91,25 @@ void PointCloud::rotate(const float d, const qglviewer::Vec v)
 }
 void PointCloud::scale(const qglviewer::Vec v)
 {
-    for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
+    if (this->isSet)
     {
-        for (int j = 0; j < 3; j++)
+        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
-            this->positions[i][j] = this->positions[i][j] * v[j];
+            for (int j = 0; j < 3; j++)
+            {
+                this->positions[i][j] = this->positions[i][j] * v[j];
+            }
         }
     }
+}
+
+std::vector<qglviewer::Vec> &PointCloud::getPositions()
+{
+    return this->positions;
+}
+std::vector<qglviewer::Vec> &PointCloud::getNormals()
+{
+    return this->normals;
 }
 
 void PointCloud::draw()

@@ -1,31 +1,64 @@
-#include <viewer.h>
+/* SRC */
+#include <cameraViewer.h>
 
-using namespace std;
+#include <iostream>
 
-// Draws a spiral
-void Viewer::draw()
+extern "C" void test();
+
+void CameraViewer::draw()
 {
         int size = this->listPointCloud.size();
         for (int i = 0; i < size; i++)
                 this->listPointCloud[i].draw();
 }
 
-void Viewer::init()
+void CameraViewer::init()
 {
-        // Restore previous viewer state.
+        // Init
         restoreStateFromFile();
+        setMouseTracking(true);
+        setAxisIsDrawn();
         glDisable(GL_LIGHTING);
         glPointSize(1.0);
 
+        // Scene
         PointCloud p;
         p.loadPointCloud("data/pointsets/dino.pn");
         this->listPointCloud.push_back(p);
 
-        // Opens help window
+        // Help window
         // help();
 }
 
-QString Viewer::helpString() const
+void CameraViewer::keyPressEvent(QKeyEvent *event)
+{
+        switch (event->key())
+        {
+        case Qt::Key_R:
+                test();
+
+                GLfloat m[16];
+                this->camera()->computeProjectionMatrix();
+                this->camera()->getModelViewProjectionMatrix(m);
+
+                for (int i = 0, sizeMax = this->listPointCloud.size(); i < sizeMax; i++)
+                {
+                        std::vector<qglviewer::Vec> p = this->listPointCloud[i].getPositions();
+                        std::vector<qglviewer::Vec> n = this->listPointCloud[i].getNormals();
+                }
+
+                break;
+        /*
+        case Qt::Key_A:
+                std::cout << this->camera()->keyFrameInterpolator(0) << std::endl;
+                break;
+        */
+        default:
+                QGLViewer::keyPressEvent(event);
+        }
+}
+
+QString CameraViewer::helpString() const
 {
         QString text("<h2>S i m p l e V i e w e r</h2>");
         text += "Use the mouse to move the camera around the object. ";
