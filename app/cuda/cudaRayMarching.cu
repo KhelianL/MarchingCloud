@@ -5,7 +5,6 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
-#include <chrono>
 
 #include <iostream>
 
@@ -718,7 +717,6 @@ Vec3 screen_space_to_worldSpace(float u, float v, float invModelViewMatrix[16], 
 }
 */
 
-
 extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[16], float projectionMatrix[16], Vec3 cameraPos, PointCloudData pcd){
 
     std::vector<float> image(3*w*h, 0.5f);    
@@ -774,15 +772,11 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     dim3 threadsPerBlock(nbth, nbth);
     dim3 numBlocks(nbBlock, 1);
 
-    auto l_clock = std::chrono::high_resolution_clock::now();
-
     cuda_ray_trace<<<numBlocks,threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h*w, pcd, 0);
     cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size()*sizeof(float), cudaMemcpyDeviceToHost);
 
-    auto l_endClock = std::chrono::high_resolution_clock::now();
-    std::cout <<"Rendu terminé, durée : " << std::chrono::duration_cast<std::chrono::milliseconds>(l_endClock - l_clock).count()/1000 << "s" << std::endl;
 
-    std::string filename = "./renduTMP.ppm";
+    std::string filename = "./rendu.ppm";
 
     std::ofstream f(filename.c_str(), std::ios::binary);
 

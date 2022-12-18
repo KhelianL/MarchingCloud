@@ -126,3 +126,12 @@ void PointCloud::draw()
         glEnd();
     }
 }
+
+void PointCloud::setMaterial(Material m){
+    this->mat = m;
+}
+
+Material PointCloud::getMaterial(){
+    return this->mat;
+}
+
