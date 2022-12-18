@@ -1,9 +1,100 @@
 /* SRC */
-#include <cameraViewer.h>
-
 #include <iostream>
 
+#include <cameraViewer.h>
+
+#include <QMatrix4x4>
+
+/* libQGLViewer */
+#include <vec.h>
+
+#include <Vec3.h> 
+
 extern "C" void test();
+
+struct cVec3 {
+   float mVals[3];
+   
+
+   cVec3( float x , float y , float z ) {
+      mVals[0] = x; mVals[1] = y; mVals[2] = z;
+   }
+
+   cVec3() {
+      mVals[0] = 0.0;
+      mVals[1] = 0.0;
+      mVals[2] = 0.0;
+   }
+
+   float operator [] (unsigned int c) { return mVals[c]; }
+   float operator [] (unsigned int c) const { return mVals[c]; }
+
+
+   float squareLength() const {
+      return mVals[0]*mVals[0] + mVals[1]*mVals[1] + mVals[2]*mVals[2];
+   }
+
+   float length() const { return sqrt( squareLength() ); }
+
+   void operator += (cVec3 const & other) {
+      mVals[0] += other[0];
+      mVals[1] += other[1];
+      mVals[2] += other[2];
+   }
+
+   void normalize() { float L = length(); mVals[0] /= L; mVals[1] /= L; mVals[2] /= L; }
+
+   friend std::ostream & operator<<(std::ostream &out, const cVec3 &vec)
+    {
+        out << "(";
+        for (int i = 0; i < 3; i++) {
+        out << vec.mVals[i];
+        if (i < 2) {
+        out << ", ";
+        }
+        }
+        out << ")";
+        return out;
+    }
+
+   
+
+};
+
+extern "C" struct Material{
+    Vec3 AMBIANT_COLOR = Vec3(0,0,0);
+    Vec3 DIFFUSE_COLOR= Vec3(0.5,0.5,0.5);
+    Vec3 SPECULAR_COLOR= Vec3(0.5,0.5,0.5);
+
+    int SPECULAR_EXPONENT = 32;
+    float transparency = 0.0;
+    float refractionIndex = 1.0;
+};
+extern "C" struct kd_tree_node{
+    int ind;
+
+    float x;
+    float y;
+    float z;
+
+    int axis;
+
+    int left;
+    int right;
+};
+
+extern "C" struct PointCloudData{
+    kd_tree_node* kdTree;
+    char* materialIndex;
+    Material* materialList;
+    Vec3 * positions;
+    Vec3 * normals;
+};
+
+extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[16], float projectionMatrix[16], Vec3 cameraPos, PointCloudData pcd);
+
+extern "C" PointCloudData getGPUpcd(std::vector<Vec3> positions, std::vector<Vec3> normals, std::vector<char> materialIndex, std::vector<Material> materialList);
+
 
 void CameraViewer::draw()
 {
@@ -22,9 +113,14 @@ void CameraViewer::init()
         glPointSize(1.0);
 
         // Scene
-        PointCloud p;
-        p.loadPointCloud("data/pointsets/dino.pn");
-        this->listPointCloud.push_back(p);
+        PointCloud igea;
+        igea.loadPointCloud("data/pointsets/igea2_subsampled_extreme.pn");
+
+        PointCloud dino;
+        dino.loadPointCloud("data/pointsets/dino.pn");
+
+        this->listPointCloud.push_back(igea);
+        this->listPointCloud.push_back(dino);
 
         // Help window
         // help();
@@ -32,20 +128,79 @@ void CameraViewer::init()
 
 void CameraViewer::keyPressEvent(QKeyEvent *event)
 {
+        // float m[16];
+        // QMatrix4x4 matrix;
+        qglviewer::Vec camPos;
+
+        float projectionMatrix[16];
+        float modelViewMatrix[16];
+        
+        this->camera()->getProjectionMatrix(projectionMatrix);
+        this->camera()->getModelViewMatrix(modelViewMatrix);
+
+        QMatrix4x4 invprojectionMat4 = QMatrix4x4(projectionMatrix).inverted().transposed();
+        QMatrix4x4 invmodelViewMat4 = QMatrix4x4(modelViewMatrix).inverted().transposed();
+
+        PointCloudData pcd;
+
+        QSize windowSize = size();
+        int width = windowSize.width();
+        int height = windowSize.height();
+
+        // int znear = this->camera()->zNear();
+        // std::cout<<"znear : "<<znear<<std::endl;
+
+        std::vector<Vec3> positions;
+        std::vector<Vec3> normals;
+        std::vector<char> materialIndex;
+        std::vector<Material> materialList;
+
+        Material gold;
+        gold.AMBIANT_COLOR = Vec3(0.24725, 0.1995, 0.0745);
+        gold.DIFFUSE_COLOR = Vec3(0.75164, 0.60648, 0.22648);
+        gold.SPECULAR_COLOR = Vec3(0.628281, 0.555802, 0.366065);
+        gold.SPECULAR_EXPONENT = 51.2;
+        gold.transparency = 0.0;
+        gold.refractionIndex = 0.0;
+
+        Material silver;
+        silver.AMBIANT_COLOR = Vec3(0.19225, 0.19225, 0.19225);
+        silver.DIFFUSE_COLOR = Vec3(0.50754, 0.50754, 0.50754);
+        silver.SPECULAR_COLOR = Vec3(0.508273, 0.508273, 0.508273);
+        silver.SPECULAR_EXPONENT = 51.2;
+        silver.transparency = 0.0;
+        silver.refractionIndex = 0.0;
+
         switch (event->key())
         {
         case Qt::Key_R:
-                test();
 
-                GLfloat m[16];
-                this->camera()->computeProjectionMatrix();
-                this->camera()->getModelViewProjectionMatrix(m);
+                camPos = this->camera()->position();
+
+                // this->camera()->getModelViewProjectionMatrix(m);
+                // matrix = QMatrix4x4(m);
+                // matrix = matrix.inverted();
+                
+                materialList.push_back(gold);
+                materialList.push_back(silver);
+
 
                 for (int i = 0, sizeMax = this->listPointCloud.size(); i < sizeMax; i++)
                 {
                         std::vector<qglviewer::Vec> p = this->listPointCloud[i].getPositions();
                         std::vector<qglviewer::Vec> n = this->listPointCloud[i].getNormals();
+                        
+                        for(int j = 0 ; j < p.size() ; j ++){
+                                positions.push_back(Vec3(p[j].x,p[j].y,p[j].z));
+                                normals.push_back(Vec3(n[j].x,n[j].y,n[j].z));
+                                materialIndex.push_back(i);
+                        }
+
                 }
+                
+                pcd = getGPUpcd(positions, normals, materialIndex, materialList);
+                
+                cuda_ray_trace_from_camera(width, height, invmodelViewMat4.data(), invprojectionMat4.data(), {camPos.x,camPos.y,camPos.z} , pcd);
 
                 break;
         /*

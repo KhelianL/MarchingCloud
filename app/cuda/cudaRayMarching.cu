@@ -5,6 +5,9 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
+#include <chrono>
+
+#include <iostream>
 
 #include <random>
 #include <memory>
@@ -17,7 +20,6 @@
 
 extern "C" struct cVec3 {
    float mVals[3];
-   
 
    __device__ cVec3( float x , float y , float z ) {
       mVals[0] = x; mVals[1] = y; mVals[2] = z;
@@ -63,19 +65,15 @@ extern "C" struct cVec3 {
    
 
 };
-
 float __device__  dot( cVec3 const & a , cVec3 const & b ) {
    return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 }
-
 cVec3 __device__ operator + (cVec3 const & a , cVec3 const & b) {
    return cVec3(a[0]+b[0] , a[1]+b[1] , a[2]+b[2]);
 }
-
 cVec3 __device__ operator - (cVec3 const & a , cVec3 const & b) {
    return cVec3(a[0]-b[0] , a[1]-b[1] , a[2]-b[2]);
 }
-
 cVec3 __device__ operator * (float a , cVec3 const & b) {
    return cVec3(a*b[0] , a*b[1] , a*b[2]);
 }
@@ -93,90 +91,6 @@ cVec3 __device__ project(cVec3 point,cVec3 normalePlan,cVec3 pointPlan){
 cVec3 __device__ operator / (cVec3 const &  a , float b) {
    return cVec3(a[0]/b , a[1]/b , a[2]/b);
 }
-
-/*
-
-
-   cVec3(){
-   }
-
-   cVec3( float x , float y , float z ) {
-      mVals[0] = x; mVals[1] = y; mVals[2] = z;
-   }
-
-   float __device__ operator [] (unsigned int c) { return mVals[c]; }
-
-   float __device__ operator [] (unsigned int c) const { return mVals[c]; }
-
-   void __device__ operator = (cVec3 const & other) {
-      mVals[0] = other[0] ; mVals[1] = other[1]; mVals[2] = other[2];
-   }
-   
-   void __device__ normalize() { float L = length(); mVals[0] /= L; mVals[1] /= L; mVals[2] /= L; }
-
-
-   static float __device__ dot( cVec3 const & a , cVec3 const & b ) {
-      return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-   }
-
-   static cVec3 __device__ cross( cVec3 const & a , cVec3 const & b ) {
-      return cVec3(
-         a[1]*b[2] - a[2]*b[1] ,
-         a[2]*b[0] - a[0]*b[2] ,
-         a[0]*b[1] - a[1]*b[0]
-         );
-   }
-
-   void __device__ operator += (cVec3 const & other) {
-      mVals[0] += other[0];
-      mVals[1] += other[1];
-      mVals[2] += other[2];
-   }
-
-   void __device__ operator -= (cVec3 const & other) {
-      mVals[0] -= other[0];
-      mVals[1] -= other[1];
-      mVals[2] -= other[2];
-   }
-
-   void __device__ operator *= (float s) {
-      mVals[0] *= s;
-      mVals[1] *= s;
-      mVals[2] *= s;
-   }
-
-   void __device__ operator /= (float s) {
-      mVals[0] /= s;
-      mVals[1] /= s;
-      mVals[2] /= s;
-   }
-};
-
-static inline cVec3 __device__ operator + (cVec3 const & a , cVec3 const & b) {
-   return cVec3(a[0]+b[0] , a[1]+b[1] , a[2]+b[2]);
-}
-static inline cVec3 __device__ operator - (cVec3 const & a , cVec3 const & b) {
-   return cVec3(a[0]-b[0] , a[1]-b[1] , a[2]-b[2]);
-}
-static inline cVec3 __device__ operator * (float a , cVec3 const & b) {
-   return cVec3(a*b[0] , a*b[1] , a*b[2]);
-}
-static inline cVec3 __device__ operator * (cVec3 const & a , cVec3 const & b) {
-   return cVec3(a[0]*b[0] , a[1]*b[1] , a[2]*b[2]);
-}
-static inline cVec3 __device__ operator / (cVec3 const &  a , float b) {
-   return cVec3(a[0]/b , a[1]/b , a[2]/b);
-}
-static inline std::ostream & __device__ operator << (std::ostream & s , cVec3 const & p) {
-    s << p[0] << " " << p[1] << " " << p[2];
-    return s;
-}
-static inline std::istream & __device__ operator >> (std::istream & s , cVec3 & p) {
-    s >> p[0] >> p[1] >> p[2];
-    return s;
-}
-*/
-
 
 extern "C" struct kd_tree_node{
     int ind;
@@ -201,16 +115,6 @@ extern "C" struct kd_tree_node{
         right = g;
     }    
 };
-
-/*
-    cudaMalloc(void **devPtr, size_t count);
-    cudaFree(void *devPtr);
-
-    cudaMemcpy(void *dst, void *src, size_t count, cudaMemcpyKind kind)
-
-    kind -> cudaMemcpyHostToDevice
-    kind -> cudaMemcpyDeviceToHost
-*/
 
 std::ostream& operator<<(std::ostream& os, const kd_tree_node& kdn){
     os <<"node : \n"<< "\tpoint index : "<<kdn.ind<<"\n\tpoint : ("<<kdn.x<<" "<<kdn.y<<" "<<kdn.z<<")\n\taxis : "<<kdn.axis<<"\n\tleft : "<<kdn.left<<" right : "<<kdn.right;
@@ -297,32 +201,6 @@ extern "C" kd_tree_node* send_kd_tree(std::vector<kd_tree_node> kd_tree){
     return res;
 }
 
-    // __device__ pointQueue(int nb){
-    //     size = nb;
-    //     nbInQueue = 0;
-
-    //     ind = (int *) malloc(nb * sizeof(int));
-    //     dist = (float *) malloc(nb * sizeof(float));
-
-    //     for(int i = 0 ; i < nb ; i ++){
-    //         dist[i] = -1.0;
-    //         ind[i] = 0;
-    //     }
-    // }
-    // __device__ pointQueue(){
-    //     int nb = 10;
-    //     size = nb;
-    //     nbInQueue = 0;
-
-    //     ind = (int *) malloc(nb * sizeof(int));
-    //     dist = (float *) malloc(nb * sizeof(float));
-
-    //     for(int i = 0 ; i < nb ; i ++){
-    //         dist[i] = -1.0;
-    //         ind[i] = 0;
-    //     }
-    // }
-
 struct pointQueue{
     int size;
     int nbInQueue;
@@ -349,7 +227,6 @@ __device__ void freePointQueue(pointQueue * ptc){
     free(ptc->dist);
 }
 
-
 float __device__ getThresholdDist(pointQueue* queue){
     if(queue->nbInQueue == queue->size){
         return queue->dist[queue->size -1];
@@ -357,15 +234,15 @@ float __device__ getThresholdDist(pointQueue* queue){
     return -1;
 }
 
-
-// c'est bien moi qui ai écrit cette fonction, elle a seulement été commentée par chatGPT
-
-// Ajoute un élément (un indice et une distance) à une file d'attente structurée en utilisant un algorithme de tri par insertion.
-//
-// queue: pointeur vers la file d'attente à laquelle ajouter l'élément
-// index: indice de l'élément à ajouter à la file d'attente
-// distance: distance de l'élément à ajouter à la file d'attente
 void __device__ addToPointQueue(pointQueue* queue, int index, float distance) {
+    // c'est bien moi qui ai écrit cette fonction, elle a seulement été commentée par chatGPT
+
+    // Ajoute un élément (un indice et une distance) à une file d'attente structurée en utilisant un algorithme de tri par insertion.
+    //
+    // queue: pointeur vers la file d'attente à laquelle ajouter l'élément
+    // index: indice de l'élément à ajouter à la file d'attente
+    // distance: distance de l'élément à ajouter à la file d'attente
+
     // variables temporaires pour stocker l'indice et la distance passés en paramètre
     int currentIndex = index;
     float currentDistance = distance;
@@ -614,25 +491,15 @@ __device__ float HPSSDist(
 } 
 
 __device__ float globalDist(cVec3 pos, PointCloudData pcd){
-    //printf("globalDist\n");
     return HPSSDist(pos, pcd);
 
-    // pointQueue* resQueue = new pointQueue();
-    // initPointQueue(resQueue, 10);
-
-
-    // freePointQueue(resQueue);
-    // delete resQueue;
-
-
-
+    //float cube = max(abs(pos[0])-1,max(abs(pos[1])-1,abs(pos[0])-1));
     // float sphere = pos.length() - 1.0;
 
-    // float cube = max(abs(pos[0])-1,max(abs(pos[1])-1,abs(pos[0])-1));
+    
     // return sphere;
     // return min(sphere,cube); 
 }
-
 
 __device__ cIntersection intersect(cVec3 pos, cVec3 dir, PointCloudData pcd){
     float seuilMin = 0.01;
@@ -679,7 +546,6 @@ __device__ int getGlobalIdx_1D_2D(){
     + threadIdx.y * blockDim.x + threadIdx.x;
 }
 
-
 __device__ cVec3 computeColor(cVec3 positionCamera, cVec3 positionPoint, cVec3 normalePoint, cVec3 positionLumiere, Material& material) {
 
   // Calcul de la direction de la lumière
@@ -703,38 +569,6 @@ __device__ cVec3 computeColor(cVec3 positionCamera, cVec3 positionPoint, cVec3 n
 
   return couleurFinale;
 }
-
-// __global__ void cuda_ray_trace(float* rayPos, float * rayDir, float * image, int imgSize, PointCloudData pcd){
-//     //printf("cuda_ray_trace\n");
-
-//     int index = getGlobalIdx_1D_2D();
-    
-//     if(index < imgSize){
-//         cVec3 pos = cVec3(rayPos[0],rayPos[1],rayPos[2]);
-//         cVec3 dir = cVec3(rayDir[index*3+0], rayDir[index*3+1], rayDir[index*3+2]);
-
-//         auto it = intersect(pos, dir, pcd);
-
-//         //cIntersection it = {true,cVec3(0,0,0),10.0};
-
-//         if(it.intersected){
-//             int nearestPoint = findNearest(pcd.kdTree, it.position);
-//             //int nearestPoint = 0;
-
-//             auto norm = normale(it.position, pcd);
-
-//             auto c = computeColor(pos, it.position, norm, cVec3(1,1,1), pcd.materialList[pcd.materialIndex[nearestPoint]]);
-
-//             image[index*3+0] = c[0] > 1.0 ? 1.0 : c[0] < 0.0 ? 0.0 : c[0] ;
-//             image[index*3+1] = c[1] > 1.0 ? 1.0 : c[1] < 0.0 ? 0.0 : c[1] ;
-//             image[index*3+2] = c[2] > 1.0 ? 1.0 : c[2] < 0.0 ? 0.0 : c[2] ;
-//         }else{
-//             image[index*3+0] = 0.1;
-//             image[index*3+1] = 0.1;
-//             image[index*3+2] = 0.1;
-//         }
-//     }
-// }
 
 __device__ cVec3 computeTransmission(const cVec3& ray, const cVec3& normal, const cVec3& intersection, float refractionIndex) {
     // Calculer la composante parallèle et perpendiculaire du rayon par rapport à la normale
@@ -818,19 +652,19 @@ __global__ void cuda_ray_trace(float* rayPos, float * rayDir, float * image, int
     }
 }
 
-
 extern "C" PointCloudData getGPUpcd(std::vector<Vec3> positions, std::vector<Vec3> normals, std::vector<char> materialIndex, std::vector<Material> materialList){
     PointCloudData res;
 
     // Allouer de la mémoire sur le GPU pour les champs positions, normals, materialIndex et materialList de la structure PointCloudData
-    cudaMalloc(&(res.positions), positions.size()*sizeof(cVec3));
-    cudaMalloc(&(res.normals), normals.size()*sizeof(cVec3));
+    cudaMalloc(&(res.positions), positions.size()*sizeof(Vec3));
+    cudaMalloc(&(res.normals), normals.size()*sizeof(Vec3));
     cudaMalloc(&(res.materialIndex), materialIndex.size()*sizeof(char));
     cudaMalloc(&(res.materialList), materialList.size()*sizeof(Material));
 
+
     // Copier les données depuis le CPU vers le GPU
-    cudaMemcpy(res.positions, (void *)positions.data(), positions.size()*sizeof(cVec3), cudaMemcpyHostToDevice);
-    cudaMemcpy(res.normals, (void *)normals.data(), normals.size()*sizeof(cVec3), cudaMemcpyHostToDevice);
+    cudaMemcpy(res.positions, (void *)positions.data(), positions.size()*sizeof(Vec3), cudaMemcpyHostToDevice);
+    cudaMemcpy(res.normals, (void *)normals.data(), normals.size()*sizeof(Vec3), cudaMemcpyHostToDevice);
     cudaMemcpy(res.materialIndex, (void *)materialIndex.data(), materialIndex.size()*sizeof(char), cudaMemcpyHostToDevice);
     cudaMemcpy(res.materialList, (void *)materialList.data(), materialList.size()*sizeof(Material), cudaMemcpyHostToDevice);
 
@@ -840,35 +674,77 @@ extern "C" PointCloudData getGPUpcd(std::vector<Vec3> positions, std::vector<Vec
         res.kdTree = send_kd_tree(my_kd_tree);
     std::cout<<"End kd-tree building"<<std::endl;
 
+
+
     return res;
 }
 
+void mult( const float m[16] , float x , float y , float z , float w , float & resX , float & resY , float & resZ , float & resW ) {
+    resX = m[0] * x + m[4] * y + m[8] * z + m[12] * w;
+    resY = m[1] * x + m[5] * y + m[9] * z + m[13] * w;
+    resZ = m[2] * x + m[6] * y + m[10] * z + m[14] * w;
+    resW = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
+}
 
-//calcul la couleur des pixels, par ray marching
+Vec3 screen_space_to_worldSpace(float u, float v, float invModelViewMatrix[16], float invProjectionMatrix[16]) {
+    // u et v sont entre 0 et 1 (0,0 est en haut à gauche de l'écran)
+    float resInt[4];
+    mult(invProjectionMatrix , (float)2.f*u - 1.f , -((float)2.f*v - 1.f) , 0 , (float)1.0 , resInt[0] , resInt[1] , resInt[2] , resInt[3]);
+    float res[4];
+    mult(invModelViewMatrix , resInt[0] , resInt[1] , resInt[2] , resInt[3] , res[0] , res[1] , res[2] , res[3]);
+    return Vec3( res[0] / res[3] , res[1] / res[3] , res[2] / res[3] );
+}
 
-extern "C" void cuda_ray_trace_from_camera(int w, int h, Vec3 (*cameraSpaceToWorldSpace)(const Vec3&), Vec3 (*screen_space_to_worldSpace)(float, float), PointCloudData pcd){
+/*
+Vec3 screen_space_to_worldSpace(float u, float v, float invModelViewMatrix[16], float invProjectionMatrix[16]) {
+    // u et v sont entre 0 et 1 (0,0 est en haut à gauche de l'écran)
+    float screenCoords[4] = { (float)2.f*u - 1.f, -((float)2.f*v - 1.f), 0.0f, 1.0f };
 
-    std::vector<float> image(3*w*h, 0.5f);   
+    // Appliquer la transformation inverse de projection
+    float resInt[4];
+    resInt[0] = invProjectionMatrix[0] * screenCoords[0] + invProjectionMatrix[4] * screenCoords[1] + invProjectionMatrix[8] * screenCoords[2] + invProjectionMatrix[12] * screenCoords[3];
+    resInt[1] = invProjectionMatrix[1] * screenCoords[0] + invProjectionMatrix[5] * screenCoords[1] + invProjectionMatrix[9] * screenCoords[2] + invProjectionMatrix[13] * screenCoords[3];
+    resInt[2] = invProjectionMatrix[2] * screenCoords[0] + invProjectionMatrix[6] * screenCoords[1] + invProjectionMatrix[10] * screenCoords[2] + invProjectionMatrix[14] * screenCoords[3];
+    resInt[3] = invProjectionMatrix[3] * screenCoords[0] + invProjectionMatrix[7] * screenCoords[1] + invProjectionMatrix[11] * screenCoords[2] + invProjectionMatrix[15] * screenCoords[3];
+
+    // Appliquer la transformation inverse de vue
+    float res[4];
+    res[0] = invModelViewMatrix[0] * resInt[0] + invModelViewMatrix[4] * resInt[1] + invModelViewMatrix[8] * resInt[2] + invModelViewMatrix[12] * resInt[3];
+    res[1] = invModelViewMatrix[1] * resInt[0] + invModelViewMatrix[5] * resInt[1] + invModelViewMatrix[9] * resInt[2] + invModelViewMatrix[13] * resInt[3];
+    res[2] = invModelViewMatrix[2] * resInt[0] + invModelViewMatrix[6] * resInt[1] + invModelViewMatrix[10] * resInt[2] + invModelViewMatrix[14] * resInt[3];
+    res[3] = invModelViewMatrix[3] * resInt[0] + invModelViewMatrix[7] * resInt[1] + invModelViewMatrix[11] * resInt[2] + invModelViewMatrix[15] * resInt[3];
+
+    return Vec3( res[0] / res[3] , res[1] / res[3] , res[2] / res[3] );
+}
+*/
+
+
+extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[16], float projectionMatrix[16], Vec3 cameraPos, PointCloudData pcd){
+
+    std::vector<float> image(3*w*h, 0.5f);    
     std::vector<float> rayDir(3*w*h);
+
 
     std::cout << "Ray tracing a " << w << " x " << h << " image" << std::endl;
 
     // Init
-    auto pos = cameraSpaceToWorldSpace(Vec3(0, 0, 0));
+    auto pos = cameraPos;
+
 
     for (int y = 0; y < h; y++){
         for (int x = 0; x < w; x++){
             float u = ((float)(x) + (float)(rand()) / (float)(RAND_MAX)) / w;
             float v = ((float)(y) + (float)(rand()) / (float)(RAND_MAX)) / h;
-            Vec3 dir = screen_space_to_worldSpace(u, v) - pos;
+
+            Vec3 dir = screen_space_to_worldSpace(u, v, ModelViewMatrix,projectionMatrix) - pos;
             dir.normalize();
 
             rayDir[3*(y*w+x) + 0] = dir[0];
             rayDir[3*(y*w+x) + 1] = dir[1];
             rayDir[3*(y*w+x) + 2] = dir[2];
-
         }
     }
+
 
     float * cudaDirTab;
     cudaMalloc(&cudaDirTab, 3*rayDir.size()*sizeof(float));
@@ -898,18 +774,15 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, Vec3 (*cameraSpaceToWor
     dim3 threadsPerBlock(nbth, nbth);
     dim3 numBlocks(nbBlock, 1);
 
+    auto l_clock = std::chrono::high_resolution_clock::now();
+
     cuda_ray_trace<<<numBlocks,threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h*w, pcd, 0);
-
-    std::cout<<"GPU termined"<<std::endl;
-
     cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size()*sizeof(float), cudaMemcpyDeviceToHost);
 
-    // for(int i = 0 ; i < image.size()/3 ; i ++){
-    //     std::cout<<image[i*3+0]<<" "<<image[i*3+1]<<" "<<image[i*3+2]<<std::endl;
-    // }
+    auto l_endClock = std::chrono::high_resolution_clock::now();
+    std::cout <<"Rendu terminé, durée : " << std::chrono::duration_cast<std::chrono::milliseconds>(l_endClock - l_clock).count()/1000 << "s" << std::endl;
 
-
-    std::string filename = "./rendu.ppm";
+    std::string filename = "./renduTMP.ppm";
 
     std::ofstream f(filename.c_str(), std::ios::binary);
 
@@ -931,11 +804,6 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, Vec3 (*cameraSpaceToWor
     image.resize(w * h * 3);
     fill(image.begin(), image.end(), 0.0f);    
 }
-
-//rempli la mémoire du GPU avec les position et les direction de chaque rayon
-//lance une fonction kernel pour calculer le ray marching
-//récupère l'image de la mémoire du GPU et en fait une image
-
 
 extern "C" void test()
 {
