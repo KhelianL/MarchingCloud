@@ -12,7 +12,7 @@
 #include <Vec3.h> 
 
 
-#define M_PI = 3.14159265358979323846
+#define M_PI 3.14159265358979323846
 
 extern "C" struct Material{
     Vec3 AMBIANT_COLOR = Vec3(0,0,0);
@@ -37,6 +37,10 @@ public:
     // Load-Save
     void setMaterial(Material m);
     void loadPointCloud(const std::string &filename);
+
+    //generate
+    void generateCornellBox(int resolution);
+    void addSphere(float centerX, float centerY, float centerZ, float radius, int resolution);
 
     // Transform
     void move(const qglviewer::Vec v);

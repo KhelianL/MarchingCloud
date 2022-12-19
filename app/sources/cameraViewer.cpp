@@ -12,6 +12,12 @@
 
 #include <chrono>
 
+#include <random>
+#include <ctime>
+
+#include <alsa/asoundlib.h>
+
+
 extern "C" void test();
 
 struct cVec3 {
@@ -95,6 +101,57 @@ void CameraViewer::draw()
                 this->listPointCloud[i].draw();
 }
 
+void playHappySound(){
+        // int err;
+        // snd_pcm_t *playback_handle;
+        // snd_pcm_hw_params_t *hw_params;
+
+        // // Ouvre le périphérique audio
+        // if ((err = snd_pcm_open(&playback_handle, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0)
+        // {
+        // // Erreur d'ouverture du périphérique audio
+        // return;
+        // }
+
+        // // Alloue de la mémoire pour les paramètres du périphérique
+        // snd_pcm_hw_params_alloca(&hw_params);
+
+        // // Initialise les paramètres du périphérique
+        // snd_pcm_hw_params_any(playback_handle, hw_params);
+
+        // // Configure le format du son (16 bits, signé)
+        // snd_pcm_hw_params_set_format(playback_handle, hw_params, SND_PCM_FORMAT_S16_LE);
+
+        // // Configure la fréquence d'échantillonnage (44100 Hz)
+        // unsigned int freq = 44100;
+
+        // snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &freq, 0);
+
+        // // Configure le nombre de canaux (mono)
+        // snd_pcm_hw_params_set_channels(playback_handle, hw_params, 1);
+
+        // // Applique les paramètres au périphérique
+        // snd_pcm_hw_params(playback_handle, hw_params);
+
+        // // Charge le son à partir du fichier
+        // // Remplacez "nom_du_fichier.wav" par le nom du fichier que vous souhaitez jouer
+        // FILE *sound_file = fopen("data/ahhhhhh.wav", "rb");
+
+        // // Vérifie que le fichier a été ouvert correctement
+        // if (!sound_file)
+        // {
+        // // Erreur d'ouverture du fichier
+        // return;
+        // }
+
+        // // ... Le reste du code va ici ...
+
+        // // Ferme le fichier et le périphérique audio
+        // fclose(sound_file);
+        // snd_pcm_close(playback_handle);
+    
+}
+
 void CameraViewer::init()
 {
         // Init
@@ -136,6 +193,70 @@ void CameraViewer::init()
         copper.transparency = 0.0;
         copper.refractionIndex = 0.0;
 
+        Material wood;
+        wood.AMBIANT_COLOR = Vec3(0.3, 0.1, 0.1);
+        wood.DIFFUSE_COLOR = Vec3(0.6, 0.3, 0.3);
+        wood.SPECULAR_COLOR = Vec3(0.1, 0.1, 0.1);
+        wood.SPECULAR_EXPONENT = 10.0;
+        wood.transparency = 0.0;
+        wood.refractionIndex = 0.0;
+
+        Material redPlastic;
+        redPlastic.AMBIANT_COLOR = Vec3(0.3, 0.0, 0.0);
+        redPlastic.DIFFUSE_COLOR = Vec3(0.6, 0.0, 0.0);
+        redPlastic.SPECULAR_COLOR = Vec3(0.8, 0.8, 0.8);
+        redPlastic.SPECULAR_EXPONENT = 10.0;
+        redPlastic.transparency = 0.0;
+        redPlastic.refractionIndex = 0.0;
+
+        Material greenPlastic;
+        greenPlastic.AMBIANT_COLOR = Vec3(0.0, 0.3, 0.0);
+        greenPlastic.DIFFUSE_COLOR = Vec3(0.0, 0.6, 0.0);
+        greenPlastic.SPECULAR_COLOR = Vec3(0.8, 0.8, 0.8);
+        greenPlastic.SPECULAR_EXPONENT = 10.0;
+        greenPlastic.transparency = 0.0;
+        greenPlastic.refractionIndex = 0.0;
+
+        Material bluePlastic;
+        bluePlastic.AMBIANT_COLOR = Vec3(0.0, 0.0, 0.3);
+        bluePlastic.DIFFUSE_COLOR = Vec3(0.0, 0.0, 0.6);
+        bluePlastic.SPECULAR_COLOR = Vec3(0.8, 0.8, 0.8);
+        bluePlastic.SPECULAR_EXPONENT = 10.0;
+        bluePlastic.transparency = 0.0;
+        bluePlastic.refractionIndex = 0.0;
+
+        Material ruby;
+        ruby.AMBIANT_COLOR = Vec3(0.1745, 0.01175, 0.01175);
+        ruby.DIFFUSE_COLOR = Vec3(0.61424, 0.04136, 0.04136);
+        ruby.SPECULAR_COLOR = Vec3(0.727811, 0.626959, 0.626959);
+        ruby.SPECULAR_EXPONENT = 76.8;
+        ruby.transparency = 0.0;
+        ruby.refractionIndex = 0.0;
+
+        Material crystal;
+        crystal.AMBIANT_COLOR = Vec3(0.1, 0.1, 0.1);
+        crystal.DIFFUSE_COLOR = Vec3(0.4, 0.4, 0.4);
+        crystal.SPECULAR_COLOR = Vec3(0.9, 0.9, 0.9);
+        crystal.SPECULAR_EXPONENT = 100.0;
+        crystal.transparency = 0.9;
+        crystal.refractionIndex = 1.5;
+
+        Material water;
+        water.AMBIANT_COLOR = Vec3(0.0, 0.0, 0.2);
+        water.DIFFUSE_COLOR = Vec3(0.0, 0.0, 0.6);
+        water.SPECULAR_COLOR = Vec3(0.9, 0.9, 0.9);
+        water.SPECULAR_EXPONENT = 100.0;
+        water.transparency = 0.9;
+        water.refractionIndex = 1.33;
+
+        Material glass;
+        glass.AMBIANT_COLOR = Vec3(0.0, 0.0, 0.0);
+        glass.DIFFUSE_COLOR = Vec3(0.5, 0.5, 0.5);
+        glass.SPECULAR_COLOR = Vec3(0.9, 0.9, 0.9);
+        glass.SPECULAR_EXPONENT = 100.0;
+        glass.transparency = 0.9;
+        glass.refractionIndex = 1.5;
+
         // Scene
         PointCloud igea;
         igea.loadPointCloud("data/pointsets/igea2_subsampled_extreme.pn");
@@ -148,19 +269,35 @@ void CameraViewer::init()
 
         PointCloud african_statue;
         african_statue.loadPointCloud("data/pointsets/african_statue.pn");
-        african_statue.setMaterial(bronze);
+        african_statue.setMaterial(gold);
         african_statue.move({-0.5,0,0});
 
         PointCloud face;
         face.loadPointCloud("data/pointsets/face.pn");
         face.setMaterial(copper);
         face.move({0,0.5,0});
-        
 
-        this->listPointCloud.push_back(igea);
-        this->listPointCloud.push_back(dino);
-        this->listPointCloud.push_back(african_statue);
-        this->listPointCloud.push_back(face);
+        
+        PointCloud boule1;
+        PointCloud boule2;
+        PointCloud boite;
+
+        boite.generateCornellBox(100);
+        boule1.addSphere(2,-2,0,1,100);
+        boule2.addSphere(2,0,0,1,100);
+
+        boite.setMaterial(silver);
+        boule1.setMaterial(ruby);
+        boule2.setMaterial(redPlastic);
+
+        //this->listPointCloud.push_back(boite);
+        this->listPointCloud.push_back(boule1);
+        this->listPointCloud.push_back(boule2);
+
+        // this->listPointCloud.push_back(igea);
+        // this->listPointCloud.push_back(dino);
+        //this->listPointCloud.push_back(african_statue);
+        // this->listPointCloud.push_back(face);
 
         // Help window
         // help();
@@ -168,21 +305,61 @@ void CameraViewer::init()
         //
 }
 
-constexpr double kPricePerKWh = 0.15; // Le prix d'un kilowattheure en euros
-constexpr double kPowerConsumption = 100.0; // La consommation en watts
 
 void displayElectricityPrice(int duration)
 {
-  // Convertir la durée en heures
-  double durationInHours = static_cast<double>(duration) / 3600.0;
-  // Calculer la consommation en kilowattheures
-  double consumptionInKWh = kPowerConsumption * durationInHours / 1000.0;
-  // Calculer le prix en euros
-  double price = consumptionInKWh * kPricePerKWh;
-  // Convertir le prix en centimes d'euros
-  float priceInCents = price * 100.0;
+        constexpr double kPricePerKWh = 0.15; // Le prix d'un kilowattheure en euros
+        constexpr double kPowerConsumption = 100.0; // La consommation en watts
+        // Convertir la durée en heures
+        double durationInHours = static_cast<double>(duration) / 3600.0;
+        // Calculer la consommation en kilowattheures
+        double consumptionInKWh = kPowerConsumption * durationInHours / 1000.0;
+        // Calculer le prix en euros
+        double price = consumptionInKWh * kPricePerKWh;
+        // Convertir le prix en centimes d'euros
+        float priceInCents = price * 100.0;
 
-  std::cout << "Le rendu a durré " << duration << " secondes et a couté " << priceInCents << " centimes d'euros." << std::endl;
+        std::cout << "Le rendu a durré " << duration << " secondes et a couté " << priceInCents << " centimes d'euros." << std::endl;
+}
+
+void decimate(std::vector<Vec3>& positions, std::vector<Vec3>& normals, std::vector<char>& materialIndex, float keepingPart)
+{
+    // On commence par vérifier que la valeur de keepingPart est correcte
+    if (keepingPart <= 0 || keepingPart > 1)
+    {
+        std::cerr << "Error: keepingPart must be a value between 0 and 1" << std::endl;
+        return;
+    }
+
+    // On utilise un générateur de nombres aléatoires pour sélectionner les points à conserver
+    std::mt19937 randomGenerator(time(nullptr));
+    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+    // On parcours chaque point et on décide s'il doit être conservé ou non
+    std::vector<Vec3> newPositions;
+    std::vector<Vec3> newNormals;
+    std::vector<char> newMaterialIndex;
+    for (int i = 0; i < positions.size(); i++)
+    {
+        float randomNumber = distribution(randomGenerator);
+        if (randomNumber <= keepingPart)
+        {
+            // On conserve le point et les informations associées
+            newPositions.push_back(positions[i]);
+            newNormals.push_back(normals[i]);
+            newMaterialIndex.push_back(materialIndex[i]);
+        }
+    }
+
+    positions.resize(newPositions.size());
+    normals.resize(newNormals.size());
+    materialIndex.resize(newMaterialIndex.size());
+
+    for(int i = 0 ; i < newPositions.size() ; i ++){
+        positions[i] = newPositions[i];
+        normals[i] = newNormals[i];
+        materialIndex[i] = newMaterialIndex[i];
+    }
 }
 
 void CameraViewer::keyPressEvent(QKeyEvent *event)
@@ -236,11 +413,17 @@ void CameraViewer::keyPressEvent(QKeyEvent *event)
                         }
 
                 }
+
+
+                //decimate(positions,normals, materialIndex, 0.1);
                 
                 pcd = getGPUpcd(positions, normals, materialIndex, materialList);
                 
                 
                 cuda_ray_trace_from_camera(width, height, invmodelViewMat4.data(), invprojectionMat4.data(), {camPos.x,camPos.y,camPos.z} , pcd);
+
+                std::cout<<"Rendu de "<<positions.size()<<" points"<<std::endl;
+                playHappySound();
                 displayElectricityPrice(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - l_clock).count()/1000);
 
                 break;

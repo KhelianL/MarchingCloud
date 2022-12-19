@@ -511,6 +511,7 @@ __device__ cIntersection intersect(cVec3 pos, cVec3 dir, PointCloudData pcd){
     int i = 0;
     for(int i = 0 ; i < maxItt ; i ++){
         float dist = abs(globalDist(pos, pcd));
+        //float dist = globalDist(pos, pcd);
 
         if(dist > seuilMax){
             break;
@@ -609,7 +610,7 @@ __global__ void cuda_ray_trace(float* rayPos, float * rayDir, float * image, int
 
             auto norm = normale(it.position, pcd);
 
-            cVec3 color = computeColor(pos, it.position, norm, cVec3(1,1,1), pcd.materialList[pcd.materialIndex[nearestPoint]]);
+            cVec3 color = computeColor(pos, it.position, norm, cVec3(0,4,0), pcd.materialList[pcd.materialIndex[nearestPoint]]);
 
             // Transparence
             float transparency = pcd.materialList[pcd.materialIndex[nearestPoint]].transparency;
@@ -693,29 +694,6 @@ Vec3 screen_space_to_worldSpace(float u, float v, float invModelViewMatrix[16], 
     mult(invModelViewMatrix , resInt[0] , resInt[1] , resInt[2] , resInt[3] , res[0] , res[1] , res[2] , res[3]);
     return Vec3( res[0] / res[3] , res[1] / res[3] , res[2] / res[3] );
 }
-
-/*
-Vec3 screen_space_to_worldSpace(float u, float v, float invModelViewMatrix[16], float invProjectionMatrix[16]) {
-    // u et v sont entre 0 et 1 (0,0 est en haut à gauche de l'écran)
-    float screenCoords[4] = { (float)2.f*u - 1.f, -((float)2.f*v - 1.f), 0.0f, 1.0f };
-
-    // Appliquer la transformation inverse de projection
-    float resInt[4];
-    resInt[0] = invProjectionMatrix[0] * screenCoords[0] + invProjectionMatrix[4] * screenCoords[1] + invProjectionMatrix[8] * screenCoords[2] + invProjectionMatrix[12] * screenCoords[3];
-    resInt[1] = invProjectionMatrix[1] * screenCoords[0] + invProjectionMatrix[5] * screenCoords[1] + invProjectionMatrix[9] * screenCoords[2] + invProjectionMatrix[13] * screenCoords[3];
-    resInt[2] = invProjectionMatrix[2] * screenCoords[0] + invProjectionMatrix[6] * screenCoords[1] + invProjectionMatrix[10] * screenCoords[2] + invProjectionMatrix[14] * screenCoords[3];
-    resInt[3] = invProjectionMatrix[3] * screenCoords[0] + invProjectionMatrix[7] * screenCoords[1] + invProjectionMatrix[11] * screenCoords[2] + invProjectionMatrix[15] * screenCoords[3];
-
-    // Appliquer la transformation inverse de vue
-    float res[4];
-    res[0] = invModelViewMatrix[0] * resInt[0] + invModelViewMatrix[4] * resInt[1] + invModelViewMatrix[8] * resInt[2] + invModelViewMatrix[12] * resInt[3];
-    res[1] = invModelViewMatrix[1] * resInt[0] + invModelViewMatrix[5] * resInt[1] + invModelViewMatrix[9] * resInt[2] + invModelViewMatrix[13] * resInt[3];
-    res[2] = invModelViewMatrix[2] * resInt[0] + invModelViewMatrix[6] * resInt[1] + invModelViewMatrix[10] * resInt[2] + invModelViewMatrix[14] * resInt[3];
-    res[3] = invModelViewMatrix[3] * resInt[0] + invModelViewMatrix[7] * resInt[1] + invModelViewMatrix[11] * resInt[2] + invModelViewMatrix[15] * resInt[3];
-
-    return Vec3( res[0] / res[3] , res[1] / res[3] , res[2] / res[3] );
-}
-*/
 
 extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[16], float projectionMatrix[16], Vec3 cameraPos, PointCloudData pcd){
 

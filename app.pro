@@ -25,7 +25,7 @@ UI_DIR = ./app/build/.ui
 
 LIBS *= -lGLU
 LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5
-INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
+INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer ./lib/
 DEPENDPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
 
 #####################################################################

@@ -135,3 +135,69 @@ Material PointCloud::getMaterial(){
     return this->mat;
 }
 
+void PointCloud::generateCornellBox(int resolution) {
+    this->isSet = true;
+
+  // Taille de la boîte de Cornell
+  const float boxSize = 5.0f;
+
+  // Nombre de points par ligne
+  const int numPointsPerLine = resolution + 1;
+
+  // Étape de génération des points
+  const float step = 2.0f * boxSize / resolution;
+
+  // Création des points de la boîte
+  for (int i = 0; i < numPointsPerLine; ++i) {
+    for (int j = 0; j < numPointsPerLine; ++j) {
+      // Face avant
+    //   this->positions.push_back({-boxSize + i * step,  boxSize - j * step,  boxSize});
+    //   this->normals.push_back({0.0f, 0.0f, 1.0f});
+      // Face arrière
+      this->positions.push_back({ boxSize - i * step,  boxSize - j * step, -boxSize});
+      this->normals.push_back({0.0f, 0.0f, -1.0f});
+      // Face gauche
+      this->positions.push_back({-boxSize,  boxSize - i * step, -boxSize + j * step});
+      this->normals.push_back({-1.0f, 0.0f, 0.0f});
+      // Face droite
+      this->positions.push_back({ boxSize,  boxSize - i * step,  boxSize - j * step});
+      this->normals.push_back({1.0f, 0.0f, 0.0f});
+      // Face haut
+      this->positions.push_back({-boxSize + i * step,  boxSize, -boxSize + j * step});
+      this->normals.push_back({0.0f, 1.0f, 0.0f});
+      // Face bas
+      this->positions.push_back({-boxSize + i * step, -boxSize,  boxSize - j * step});
+      this->normals.push_back({0.0f, -1.0f, 0.0f});
+    }
+  }
+}
+
+void PointCloud::addSphere(float centerX, float centerY, float centerZ, float radius, int resolution) {
+    this->isSet = true;
+    const int numTheta = resolution;
+    const int numPhi = 2 * resolution;
+
+    for (int i = 0; i < numTheta; ++i) {
+        for (int j = 0; j < numPhi; ++j) {
+        // Calcul des angles de la sphère
+        const float theta = i * M_PI / numTheta;
+        const float phi = j * 2 * M_PI / numPhi;
+
+        // Calcul des coordonnées du point sur la sphère
+        const float x = centerX + radius * sinf(theta) * cosf(phi);
+        const float y = centerY + radius * sinf(theta) * sinf(phi);
+        const float z = centerZ + radius * cosf(theta);
+
+        // Calcul et normalisation de la normale
+        const float nx = x - centerX;
+        const float ny = y - centerY;
+        const float nz = z - centerZ;
+        const float norm = sqrtf(nx * nx + ny * ny + nz * nz);
+        const qglviewer::Vec normal = {nx / norm, ny / norm, nz / norm};
+
+        // Ajout du point et de sa normale au vecteur
+        positions.push_back({x, y, z});
+        normals.push_back(normal);
+        }
+    }
+}
