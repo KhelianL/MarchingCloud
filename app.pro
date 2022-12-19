@@ -24,8 +24,8 @@ UI_DIR = ./app/build/.ui
 #####################################################################
 
 LIBS *= -lGLU
-LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5
-INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer ./lib/
+LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5 -lasound
+INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer ./lib/alsa-lib/include
 DEPENDPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
 
 #####################################################################

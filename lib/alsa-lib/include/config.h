@@ -5,7 +5,7 @@
 #define ALOAD_DEVICE_DIRECTORY "/dev/"
 
 /* directory containing ALSA configuration database */
-#define ALSA_CONFIG_DIR "/system/usr/share/alsa"
+#define ALSA_CONFIG_DIR "/usr/share/alsa"
 
 /* Enable assert at error message handler */
 /* #undef ALSA_DEBUG_ASSERT */
@@ -14,10 +14,10 @@
 #define ALSA_DEVICE_DIRECTORY "/dev/snd/"
 
 /* directory containing pkgconfig files */
-#define ALSA_PKGCONF_DIR "/usr/lib64/pkgconfig"
+#define ALSA_PKGCONF_DIR "/usr/lib/pkgconfig"
 
 /* directory containing ALSA add-on modules */
-#define ALSA_PLUGIN_DIR "/system/lib/alsa-lib"
+#define ALSA_PLUGIN_DIR "/usr/lib/alsa-lib"
 
 /* Build hwdep component */
 #define BUILD_HWDEP "1"
@@ -71,7 +71,7 @@
 #define HAVE_LIBDL 1
 
 /* Have libpthread */
-/* #define HAVE_LIBPTHREAD 1 */
+#define HAVE_LIBPTHREAD 1
 
 /* Define to 1 if you have the `resmgr' library (-lresmgr). */
 /* #undef HAVE_LIBRESMGR */
@@ -107,10 +107,10 @@
 #define HAVE_UNISTD_H 1
 
 /* Define to 1 if you have the `uselocale' function. */
-/* #define HAVE_USELOCALE 1 */
+#define HAVE_USELOCALE 1
 
 /* Define to 1 if you have the <wordexp.h> header file. */
-/* #define HAVE_WORDEXP_H 1 */
+#define HAVE_WORDEXP_H 1
 
 /* No assert debug */
 /* #undef NDEBUG */
@@ -155,7 +155,7 @@
 #define VERSION "1.0.25"
 
 /* compiled with versioned symbols */
-/* #define VERSIONED_SYMBOLS */
+#define VERSIONED_SYMBOLS /**/
 
 /* Toolchain Symbol Prefix */
 #define __SYMBOL_PREFIX ""

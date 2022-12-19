@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     
     CameraViewer viewer;
     viewer.setWindowTitle("MarchingCloud");
-
+ 
     viewer.show();
 
     return app.exec();

@@ -101,55 +101,74 @@ void CameraViewer::draw()
                 this->listPointCloud[i].draw();
 }
 
+const int BUFFER_SIZE = 1024;
+
 void playHappySound(){
-        // int err;
-        // snd_pcm_t *playback_handle;
-        // snd_pcm_hw_params_t *hw_params;
+        int err;
+        snd_pcm_t *playback_handle;
+        snd_pcm_hw_params_t *hw_params;
 
-        // // Ouvre le périphérique audio
-        // if ((err = snd_pcm_open(&playback_handle, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0)
-        // {
-        // // Erreur d'ouverture du périphérique audio
-        // return;
-        // }
+        // Ouvre le périphérique audio
+        if ((err = snd_pcm_open(&playback_handle, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0)
+        {
+        std::cout<<"Erreur d'ouverture du périphérique audio"<<std::endl;
+        return;
+        }
 
-        // // Alloue de la mémoire pour les paramètres du périphérique
-        // snd_pcm_hw_params_alloca(&hw_params);
+        // Alloue de la mémoire pour les paramètres du périphérique
+        snd_pcm_hw_params_alloca(&hw_params);
 
-        // // Initialise les paramètres du périphérique
-        // snd_pcm_hw_params_any(playback_handle, hw_params);
+        // Initialise les paramètres du périphérique
+        snd_pcm_hw_params_any(playback_handle, hw_params);
 
-        // // Configure le format du son (16 bits, signé)
-        // snd_pcm_hw_params_set_format(playback_handle, hw_params, SND_PCM_FORMAT_S16_LE);
+        // Configure le format du son (16 bits, signé)
+        snd_pcm_hw_params_set_format(playback_handle, hw_params, SND_PCM_FORMAT_S16_LE);
 
-        // // Configure la fréquence d'échantillonnage (44100 Hz)
-        // unsigned int freq = 44100;
+        // Configure la fréquence d'échantillonnage (44100 Hz)
+        unsigned int freq = 44100;
 
-        // snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &freq, 0);
+        snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &freq, 0);
 
-        // // Configure le nombre de canaux (mono)
-        // snd_pcm_hw_params_set_channels(playback_handle, hw_params, 1);
+        // Configure le nombre de canaux (mono)
+        snd_pcm_hw_params_set_channels(playback_handle, hw_params, 1);
 
-        // // Applique les paramètres au périphérique
-        // snd_pcm_hw_params(playback_handle, hw_params);
+        // Applique les paramètres au périphérique
+        snd_pcm_hw_params(playback_handle, hw_params);
 
-        // // Charge le son à partir du fichier
-        // // Remplacez "nom_du_fichier.wav" par le nom du fichier que vous souhaitez jouer
-        // FILE *sound_file = fopen("data/ahhhhhh.wav", "rb");
+        // Charge le son à partir du fichier
+        // Remplacez "nom_du_fichier.wav" par le nom du fichier que vous souhaitez jouer
+        FILE *sound_file = fopen("data/ahhhhhh.wav", "rb");
 
-        // // Vérifie que le fichier a été ouvert correctement
-        // if (!sound_file)
-        // {
-        // // Erreur d'ouverture du fichier
-        // return;
-        // }
+        // Vérifie que le fichier a été ouvert correctement
+        if (!sound_file)
+        {
+        std::cout<<"Erreur d'ouverture du fichier"<<std::endl;
+        return;
+        }
 
-        // // ... Le reste du code va ici ...
+         std::vector<short> audio_buffer(BUFFER_SIZE);
 
-        // // Ferme le fichier et le périphérique audio
-        // fclose(sound_file);
-        // snd_pcm_close(playback_handle);
-    
+        // Boucle jusqu'à ce que le fichier soit entièrement lu
+        while (!feof(sound_file))
+        {
+        // Lit des données audio depuis le fichier
+        size_t samples_read = fread(audio_buffer.data(), sizeof(short), audio_buffer.size(), sound_file);
+
+        // Vérifie que la lecture a réussi
+        if (samples_read < audio_buffer.size())
+        {
+            // Si la fin du fichier a été atteinte, ajuste la taille du tampon
+            audio_buffer.resize(samples_read);
+        }
+
+        // Écrit les données audio dans le périphérique audio
+        snd_pcm_writei(playback_handle, audio_buffer.data(), audio_buffer.size());
+    }
+
+    // Ferme le fichier et le périphérique audio
+        // Ferme le fichier et le périphérique audio
+        fclose(sound_file);
+        snd_pcm_close(playback_handle);
 }
 
 void CameraViewer::init()
