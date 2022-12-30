@@ -1,56 +1,47 @@
 #ifndef POINTCLOUD_H
 #define POINTCLOUD_H
 
-/* C LIBS */
-#include <fstream>
-#include <string>
+/* C++ */
 #include <vector>
 
-/* libQGLViewer */
-#include <vec.h>
+/* GLUT */
+#include <GL/glut.h>
 
-#include <Vec3.h> 
-
+/* SRC */
+#include <material.h>
+#include <vec3.h>
 
 #define M_PI 3.14159265358979323846
-
-extern "C" struct Material{
-    Vec3 AMBIANT_COLOR = Vec3(0,0,0);
-    Vec3 DIFFUSE_COLOR= Vec3(0.5,0.5,0.5);
-    Vec3 SPECULAR_COLOR= Vec3(0.5,0.5,0.5);
-
-    int SPECULAR_EXPONENT = 32;
-    float transparency = 0.0;
-    float refractionIndex = 1.0;
-};
 
 class PointCloud
 {
 private:
-    std::vector<qglviewer::Vec> positions;
-    std::vector<qglviewer::Vec> normals;
-    bool isSet = false;
+    std::vector<Vec3> positions;
+    std::vector<Vec3> normals;
+    Material material;
 
-    Material mat;
+    bool isSet = false;
 
 public:
     // Load-Save
-    void setMaterial(Material m);
     void loadPointCloud(const std::string &filename);
 
-    //generate
+    // Transform
+    void move(const Vec3 v);
+    void rotate(const float d, const Vec3 v);
+    void scale(const Vec3 v);
+
+    // Generate
     void generateCornellBox(int resolution);
     void addSphere(float centerX, float centerY, float centerZ, float radius, int resolution);
 
-    // Transform
-    void move(const qglviewer::Vec v);
-    void rotate(const float d, const qglviewer::Vec v);
-    void scale(const qglviewer::Vec v);
-
     // Getters
-    std::vector<qglviewer::Vec> &getPositions();
-    std::vector<qglviewer::Vec> &getNormals();
-    Material getMaterial();
+    std::vector<Vec3> &getPositions();
+    std::vector<Vec3> &getNormals();
+    Material &getMaterial();
+
+    // Setters
+    void setMaterial(Material m);
 
     // Draw OpenGL
     void draw();

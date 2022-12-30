@@ -1,4 +1,3 @@
-/* SRC */
 #include <pointCloud.h>
 
 void PointCloud::loadPointCloud(const std::string &filename)
@@ -19,8 +18,8 @@ void PointCloud::loadPointCloud(const std::string &filename)
         unsigned numOfPoints = fread(pn, 4, surfelSize * READ_BUFFER_SIZE, in);
         for (unsigned int i = 0; i < numOfPoints; i += surfelSize)
         {
-            this->positions.push_back(qglviewer::Vec(pn[i], pn[i + 1], pn[i + 2]));
-            this->normals.push_back(qglviewer::Vec(pn[i + 3], pn[i + 4], pn[i + 5]));
+            this->positions.push_back(Vec3(pn[i], pn[i + 1], pn[i + 2]));
+            this->normals.push_back(Vec3(pn[i + 3], pn[i + 4], pn[i + 5]));
         }
 
         if (numOfPoints < surfelSize * READ_BUFFER_SIZE)
@@ -44,7 +43,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     }
 }
 
-void PointCloud::move(const qglviewer::Vec v)
+void PointCloud::move(const Vec3 v)
 {
     if (this->isSet)
     {
@@ -54,7 +53,7 @@ void PointCloud::move(const qglviewer::Vec v)
         }
     }
 }
-void PointCloud::rotate(const float d, const qglviewer::Vec v)
+void PointCloud::rotate(const float d, const Vec3 v)
 {
     if (this->isSet)
     {
@@ -76,7 +75,7 @@ void PointCloud::rotate(const float d, const qglviewer::Vec v)
         // Appliquer la rotation à chaque vecteur de positions
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
-            qglviewer::Vec rotatedVector;
+            Vec3 rotatedVector;
             for (int j = 0; j < 3; j++)
             {
                 rotatedVector[j] = 0;
@@ -89,7 +88,7 @@ void PointCloud::rotate(const float d, const qglviewer::Vec v)
         }
     }
 }
-void PointCloud::scale(const qglviewer::Vec v)
+void PointCloud::scale(const Vec3 v)
 {
     if (this->isSet)
     {
@@ -103,13 +102,94 @@ void PointCloud::scale(const qglviewer::Vec v)
     }
 }
 
-std::vector<qglviewer::Vec> &PointCloud::getPositions()
+std::vector<Vec3> &PointCloud::getPositions()
 {
     return this->positions;
 }
-std::vector<qglviewer::Vec> &PointCloud::getNormals()
+std::vector<Vec3> &PointCloud::getNormals()
 {
     return this->normals;
+}
+Material &PointCloud::getMaterial()
+{
+    return this->material;
+}
+
+void PointCloud::setMaterial(Material m)
+{
+    this->material = m;
+}
+
+void PointCloud::generateCornellBox(int resolution)
+{
+    this->isSet = true;
+
+    // Taille de la boîte de Cornell
+    const float boxSize = 5.0f;
+
+    // Nombre de points par ligne
+    const int numPointsPerLine = resolution + 1;
+
+    // Étape de génération des points
+    const float step = 2.0f * boxSize / resolution;
+
+    // Création des points de la boîte
+    for (int i = 0; i < numPointsPerLine; ++i)
+    {
+        for (int j = 0; j < numPointsPerLine; ++j)
+        {
+            // Face avant
+            //   this->positions.push_back({-boxSize + i * step,  boxSize - j * step,  boxSize});
+            //   this->normals.push_back({0.0f, 0.0f, 1.0f});
+            // Face arrière
+            this->positions.push_back({boxSize - i * step, boxSize - j * step, -boxSize});
+            this->normals.push_back({0.0f, 0.0f, -1.0f});
+            // Face gauche
+            this->positions.push_back({-boxSize, boxSize - i * step, -boxSize + j * step});
+            this->normals.push_back({-1.0f, 0.0f, 0.0f});
+            // Face droite
+            this->positions.push_back({boxSize, boxSize - i * step, boxSize - j * step});
+            this->normals.push_back({1.0f, 0.0f, 0.0f});
+            // Face haut
+            this->positions.push_back({-boxSize + i * step, boxSize, -boxSize + j * step});
+            this->normals.push_back({0.0f, 1.0f, 0.0f});
+            // Face bas
+            this->positions.push_back({-boxSize + i * step, -boxSize, boxSize - j * step});
+            this->normals.push_back({0.0f, -1.0f, 0.0f});
+        }
+    }
+}
+void PointCloud::addSphere(float centerX, float centerY, float centerZ, float radius, int resolution)
+{
+    this->isSet = true;
+    const int numTheta = resolution;
+    const int numPhi = 2 * resolution;
+
+    for (int i = 0; i < numTheta; ++i)
+    {
+        for (int j = 0; j < numPhi; ++j)
+        {
+            // Calcul des angles de la sphère
+            const float theta = i * M_PI / numTheta;
+            const float phi = j * 2 * M_PI / numPhi;
+
+            // Calcul des coordonnées du point sur la sphère
+            const float x = centerX + radius * sinf(theta) * cosf(phi);
+            const float y = centerY + radius * sinf(theta) * sinf(phi);
+            const float z = centerZ + radius * cosf(theta);
+
+            // Calcul et normalisation de la normale
+            const float nx = x - centerX;
+            const float ny = y - centerY;
+            const float nz = z - centerZ;
+            const float norm = sqrtf(nx * nx + ny * ny + nz * nz);
+            const Vec3 normal = {nx / norm, ny / norm, nz / norm};
+
+            // Ajout du point et de sa normale au vecteur
+            positions.push_back({x, y, z});
+            normals.push_back(normal);
+        }
+    }
 }
 
 void PointCloud::draw()
@@ -119,85 +199,10 @@ void PointCloud::draw()
         glBegin(GL_POINTS);
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
-            glVertex3fv(this->positions[i]);
-            glNormal3fv(this->normals[i]);
+            glVertex3f(this->positions[i][0], this->positions[i][1], this->positions[i][2]);
+            glNormal3f(this->normals[i][0], this->normals[i][1], this->normals[i][2]);
             glColor3f(1.0, 1.0, 1.0);
         }
         glEnd();
-    }
-}
-
-void PointCloud::setMaterial(Material m){
-    this->mat = m;
-}
-
-Material PointCloud::getMaterial(){
-    return this->mat;
-}
-
-void PointCloud::generateCornellBox(int resolution) {
-    this->isSet = true;
-
-  // Taille de la boîte de Cornell
-  const float boxSize = 5.0f;
-
-  // Nombre de points par ligne
-  const int numPointsPerLine = resolution + 1;
-
-  // Étape de génération des points
-  const float step = 2.0f * boxSize / resolution;
-
-  // Création des points de la boîte
-  for (int i = 0; i < numPointsPerLine; ++i) {
-    for (int j = 0; j < numPointsPerLine; ++j) {
-      // Face avant
-    //   this->positions.push_back({-boxSize + i * step,  boxSize - j * step,  boxSize});
-    //   this->normals.push_back({0.0f, 0.0f, 1.0f});
-      // Face arrière
-      this->positions.push_back({ boxSize - i * step,  boxSize - j * step, -boxSize});
-      this->normals.push_back({0.0f, 0.0f, -1.0f});
-      // Face gauche
-      this->positions.push_back({-boxSize,  boxSize - i * step, -boxSize + j * step});
-      this->normals.push_back({-1.0f, 0.0f, 0.0f});
-      // Face droite
-      this->positions.push_back({ boxSize,  boxSize - i * step,  boxSize - j * step});
-      this->normals.push_back({1.0f, 0.0f, 0.0f});
-      // Face haut
-      this->positions.push_back({-boxSize + i * step,  boxSize, -boxSize + j * step});
-      this->normals.push_back({0.0f, 1.0f, 0.0f});
-      // Face bas
-      this->positions.push_back({-boxSize + i * step, -boxSize,  boxSize - j * step});
-      this->normals.push_back({0.0f, -1.0f, 0.0f});
-    }
-  }
-}
-
-void PointCloud::addSphere(float centerX, float centerY, float centerZ, float radius, int resolution) {
-    this->isSet = true;
-    const int numTheta = resolution;
-    const int numPhi = 2 * resolution;
-
-    for (int i = 0; i < numTheta; ++i) {
-        for (int j = 0; j < numPhi; ++j) {
-        // Calcul des angles de la sphère
-        const float theta = i * M_PI / numTheta;
-        const float phi = j * 2 * M_PI / numPhi;
-
-        // Calcul des coordonnées du point sur la sphère
-        const float x = centerX + radius * sinf(theta) * cosf(phi);
-        const float y = centerY + radius * sinf(theta) * sinf(phi);
-        const float z = centerZ + radius * cosf(theta);
-
-        // Calcul et normalisation de la normale
-        const float nx = x - centerX;
-        const float ny = y - centerY;
-        const float nz = z - centerZ;
-        const float norm = sqrtf(nx * nx + ny * ny + nz * nz);
-        const qglviewer::Vec normal = {nx / norm, ny / norm, nz / norm};
-
-        // Ajout du point et de sa normale au vecteur
-        positions.push_back({x, y, z});
-        normals.push_back(normal);
-        }
     }
 }

@@ -6,12 +6,11 @@ CONFIG *= qt opengl c++17 warn_off
 TARGET = marchingCloud
 DESTDIR = ./
 
-INCLUDEPATH *= \
-    ./app/headers \
-    ./app/ui
+INCLUDEPATH *= ./app/headers
 
+CUDA_SOURCES = $$files(*.cu, true)
 SOURCES = $$files(*.cpp, true)
-HEADERS = $$files(*.h, true)
+HEADERS = $$files(*.h, true) $$files(*.cuh, true)
 FORMS = $$files(*.ui, true)
 
 OBJECTS_DIR = ./app/build/.obj
@@ -20,50 +19,29 @@ RCC_DIR = ./app/build/.rcc
 UI_DIR = ./app/build/.ui
 
 #####################################################################
+#                   CUDA compiler configuration                     #
+#####################################################################
+
+INCLUDEPATH += $$CUDA_DIR/include
+QMAKE_LIBDIR += $$CUDA_DIR/lib/
+CUDA_LIBS = -lcuda -lcudart
+CUDA_INC = $$join(INCLUDEPATH,'" -I"','-I"','"')
+LIBS += $$CUDA_LIBS
+
+NVCCOPTIONS = -use_fast_math -O2   
+NVCCOPTIONS *= -g -G               
+
+cuda.input = CUDA_SOURCES
+cuda.output = ${OBJECTS_DIR}${QMAKE_FILE_BASE}_cuda.o
+cuda.commands = $$CUDA_DIR/bin/nvcc $$NVCCOPTIONS $$CUDA_INC -c ${QMAKE_FILE_NAME} -o ${QMAKE_FILE_OUT}
+cuda.dependency_type = TYPE_C
+QMAKE_EXTRA_COMPILERS += cuda
+
+#####################################################################
 #                   QGLViewer compiler configuration                #
 #####################################################################
 
 LIBS *= -lGLU
-LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5 -lasound
-INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer ./lib/alsa-lib/include
+LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5
+INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
 DEPENDPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
-
-#####################################################################
-#                   CUDA compiler configuration                     #
-#####################################################################
-
-CUDA_SOURCES = $$files(*.cu, true)
-LIBS *= -L$$CUDA_DIR/lib64 -lcuda -lcudart
-
-# GPU architecture
-SYSTEM_TYPE = 64                    # '32' or '64', depending on your system
-CUDA_ARCH = sm_30                   # Type of CUDA architecture, for example 'compute_10', 'compute_11', 'sm_10'
-NVCCOPTIONS = -use_fast_math -O2
-
-# Mandatory flags for stepping through the code
-debug {
-    NVCCOPTIONS *= -g -G
-}
-
-# Prepare the extra compiler configuration (taken from the nvidia forum - i'm not an expert in this part)
-CUDA_INC = $$join(INCLUDEPATH,' -I','-I',' ')
-
-cuda.input = CUDA_SOURCES
-cuda.output = ${OBJECTS_DIR}${QMAKE_FILE_BASE}_cuda.o
-cuda.commands = $$CUDA_DIR/bin/nvcc $$NVCCOPTIONS $$CUDA_INC $$CUDA_LIBS --machine $$SYSTEM_TYPE -arch=$$CUDA_ARCH -c -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME} 2>&1 | sed -r \"s/\\(([0-9]+)\\)/:\\1/g\" 1>&2
-cuda.dependency_type = TYPE_C
-
-QMAKE_EXTRA_COMPILERS *= cuda
-
-#####################################################################
-#                               HELP                                #
-#####################################################################
-
-# " *= "    : adds value to the list only if it is not already present
-# QT        : list of Qt modules used in a project
-# CONFIG    : General project configuration options
-# DESTDIR   : The directory in which the executable or binary file will be placed
-# TARGET    : renames the resulting executable
-# SOURCES   : list of sources files
-# HEADERS   : list of headers files
-# FORMS     : list of UI files
