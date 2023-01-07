@@ -36,16 +36,19 @@ void Viewer::rayTraceEvent(int width, int height)
         // Get Scene informations
         std::vector<PointCloud> scenePointCloud = this->scene->getListPointCloud();
 
+        int tmpW = this->camera()->screenWidth();
+        int tmpH = this->camera()->screenHeight();
+
         // Get Size
         if (width == 0 || height == 0)
         {
-                QSize windowSize = size();
-                width = windowSize.width();
-                height = windowSize.height();
+                width = tmpW;
+                height = tmpH;
         }
         else
         {
                 this->camera()->setScreenWidthAndHeight(width, height);
+                this->camera()->setAspectRatio(width / height);
         }
 
         // Projection Matrix
@@ -59,7 +62,13 @@ void Viewer::rayTraceEvent(int width, int height)
         // Get Camera Position
         qglviewer::Vec cameraPos = this->camera()->position();
 
-        linkToCuda(scenePointCloud, width, height, invmodelViewMat4.data(), invprojectionMat4.data(), {cameraPos.x, cameraPos.y, cameraPos.z});
+        if (this->scene->getListPointCloud().size() > 0)
+        {
+                linkToCuda(scenePointCloud, width, height, invmodelViewMat4.data(), invprojectionMat4.data(), {cameraPos.x, cameraPos.y, cameraPos.z});
+        }
+
+        this->camera()->setScreenWidthAndHeight(tmpW, tmpH);
+        this->camera()->setAspectRatio(tmpW / tmpH);
 }
 
 Scene *Viewer::getScene()

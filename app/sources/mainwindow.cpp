@@ -59,7 +59,7 @@ MainWindow::~MainWindow()
 }
 
 /*#########################################*/
-/*                 Setters                #*/
+/*                 Others                 #*/
 /*#########################################*/
 
 void MainWindow::setProgress(int n)
