@@ -4,14 +4,6 @@ Scene::Scene()
 {
     this->init();
 }
-
-void Scene::draw()
-{
-    int size = this->listPointCloud.size();
-    for (int i = 0; i < size; i++)
-        this->listPointCloud[i].draw();
-}
-
 void Scene::init()
 {
     /*
@@ -23,6 +15,13 @@ void Scene::init()
     */
 }
 
+void Scene::draw()
+{
+    int size = this->listPointCloud.size();
+    for (int i = 0; i < size; i++)
+        this->listPointCloud[i].draw();
+}
+
 void Scene::generateImport(const std::string &filename, const float &keepingPart)
 {
     PointCloud res;
@@ -32,6 +31,7 @@ void Scene::generateImport(const std::string &filename, const float &keepingPart
 
     this->listPointCloud.push_back(res);
 }
+
 void Scene::generatePrimitive(const PopupType &type, const double &resolution)
 {
     PointCloud res;
