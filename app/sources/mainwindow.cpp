@@ -18,6 +18,10 @@ MainWindow::MainWindow()
     layoutComponent->addWidget(createMaterialComponent());
     this->addLine(layoutComponent);
     layoutComponent->addWidget(createRenderComponent());
+    this->addLine(layoutComponent);
+    QPushButton *renderButton = new QPushButton(tr("MarchingCloud!"), this);
+    connect(renderButton, &QPushButton::released, this, &MainWindow::marchingCloud);
+    layoutComponent->addWidget(renderButton);
     rightSide->setLayout(layoutComponent);
     enableEdit(false);
 
@@ -334,15 +338,11 @@ QWidget *MainWindow::createRenderComponent()
     this->editHeight = new QLineEdit("300");
     editWidth->setAlignment(Qt::AlignCenter);
     editHeight->setAlignment(Qt::AlignCenter);
-    QPushButton *renderButton = new QPushButton(tr("MarchingCloud!"), this);
-    connect(renderButton, &QPushButton::released, this, &MainWindow::marchingCloud);
 
     renderParamLayout->addWidget(labelWidth, 0, 0);
     renderParamLayout->addWidget(labelHeight, 1, 0);
     renderParamLayout->addWidget(editWidth, 0, 1);
     renderParamLayout->addWidget(editHeight, 1, 1);
-    renderParamLayout->addWidget(renderButton, 2, 0, 2, 2);
-
     combineWidget->setLayout(renderParamLayout);
 
     QFont boldFont = labelTitle->font();
@@ -363,8 +363,6 @@ QWidget *MainWindow::createRenderComponent()
 
     combineWidget->setMaximumHeight(100);
     resWidget->setMaximumHeight(150);
-
-    // resWidget->setStyleSheet("border : 1px solid red");
 
     return resWidget;
 }
