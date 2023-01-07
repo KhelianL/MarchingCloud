@@ -43,6 +43,12 @@ void PointCloud::loadPointCloud(const std::string &filename)
     }
 }
 
+void PointCloud::reset()
+{
+    this->positions.clear();
+    this->normals.clear();
+}
+
 void PointCloud::move(const Vec3 v)
 {
     if (this->isSet)
@@ -120,48 +126,36 @@ void PointCloud::setMaterial(Material m)
     this->material = m;
 }
 
-void PointCloud::generateCornellBox(int resolution)
+void PointCloud::generatePlane(int resolution)
 {
-    this->isSet = true;
+    this->reset();
 
-    // Taille de la boîte de Cornell
-    const float boxSize = 5.0f;
+    // Calcule le nombre de sommets nécessaires pour le plan
+    const int numVertices = (resolution + 1) * (resolution + 1);
+    this->positions.resize(numVertices);
+    this->normals.resize(numVertices);
 
-    // Nombre de points par ligne
-    const int numPointsPerLine = resolution + 1;
-
-    // Étape de génération des points
-    const float step = 2.0f * boxSize / resolution;
-
-    // Création des points de la boîte
-    for (int i = 0; i < numPointsPerLine; ++i)
+    // Initialise les sommets et les normales
+    for (int i = 0; i <= resolution; ++i)
     {
-        for (int j = 0; j < numPointsPerLine; ++j)
+        for (int j = 0; j <= resolution; ++j)
         {
-            // Face avant
-            //   this->positions.push_back({-boxSize + i * step,  boxSize - j * step,  boxSize});
-            //   this->normals.push_back({0.0f, 0.0f, 1.0f});
-            // Face arrière
-            this->positions.push_back({boxSize - i * step, boxSize - j * step, -boxSize});
-            this->normals.push_back({0.0f, 0.0f, -1.0f});
-            // Face gauche
-            this->positions.push_back({-boxSize, boxSize - i * step, -boxSize + j * step});
-            this->normals.push_back({-1.0f, 0.0f, 0.0f});
-            // Face droite
-            this->positions.push_back({boxSize, boxSize - i * step, boxSize - j * step});
-            this->normals.push_back({1.0f, 0.0f, 0.0f});
-            // Face haut
-            this->positions.push_back({-boxSize + i * step, boxSize, -boxSize + j * step});
-            this->normals.push_back({0.0f, 1.0f, 0.0f});
-            // Face bas
-            this->positions.push_back({-boxSize + i * step, -boxSize, boxSize - j * step});
-            this->normals.push_back({0.0f, -1.0f, 0.0f});
+            // Calcule les coordonnées du sommet (x, y) en fonction de la résolution
+            float x = (float)i / resolution * 2.0 - 1.0;
+            float y = (float)j / resolution * 2.0 - 1.0;
+
+            // Affecte les coordonnées du sommet et la normale (0, 0, 1)
+            this->positions[i * (resolution + 1) + j] = Vec3(x, y, 0.0);
+            this->normals[i * (resolution + 1) + j] = Vec3(0.0, 0.0, 1.0);
         }
     }
-}
-void PointCloud::addSphere(float centerX, float centerY, float centerZ, float radius, int resolution)
-{
+
     this->isSet = true;
+}
+void PointCloud::generateSphere(int resolution)
+{
+    this->reset();
+
     const int numTheta = resolution;
     const int numPhi = 2 * resolution;
 
@@ -174,22 +168,54 @@ void PointCloud::addSphere(float centerX, float centerY, float centerZ, float ra
             const float phi = j * 2 * M_PI / numPhi;
 
             // Calcul des coordonnées du point sur la sphère
-            const float x = centerX + radius * sinf(theta) * cosf(phi);
-            const float y = centerY + radius * sinf(theta) * sinf(phi);
-            const float z = centerZ + radius * cosf(theta);
+            const float x = sinf(theta) * cosf(phi);
+            const float y = sinf(theta) * sinf(phi);
+            const float z = cosf(theta);
 
             // Calcul et normalisation de la normale
-            const float nx = x - centerX;
-            const float ny = y - centerY;
-            const float nz = z - centerZ;
-            const float norm = sqrtf(nx * nx + ny * ny + nz * nz);
-            const Vec3 normal = {nx / norm, ny / norm, nz / norm};
+            const float norm = sqrtf(x * x + y * y + z * z);
+            const Vec3 normal = {x / norm, y / norm, z / norm};
 
             // Ajout du point et de sa normale au vecteur
-            positions.push_back({x, y, z});
-            normals.push_back(normal);
+            this->positions.push_back({x, y, z});
+            this->normals.push_back(normal);
         }
     }
+
+    this->isSet = true;
+}
+void PointCloud::generateCube(int resolution)
+{
+    this->reset();
+
+    // Création du cube
+    for (int i = 0; i < resolution; ++i)
+    {
+        for (int j = 0; j < resolution; ++j)
+        {
+            for (int k = 0; k < resolution; ++k)
+            {
+                if (i == 0 || i == resolution - 1 || j == 0 || j == resolution - 1 || k == 0 || k == resolution - 1)
+                {
+                    Vec3 position = Vec3(i / (float)(resolution - 1) - 0.5, j / (float)(resolution - 1) - 0.5, k / (float)(resolution - 1) - 0.5);
+                    position *= 2;
+                    this->positions.push_back(position);
+
+                    Vec3 normal = Vec3(i - resolution / 2, j - resolution / 2, k - resolution / 2);
+                    normal.normalize();
+                    this->normals.push_back(normal);
+                }
+            }
+        }
+    }
+
+    this->isSet = true;
+}
+void PointCloud::generateTorus(int resolution)
+{
+    this->reset();
+
+    this->isSet = true;
 }
 
 void PointCloud::draw()

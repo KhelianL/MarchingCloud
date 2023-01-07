@@ -14,29 +14,32 @@ void Scene::draw()
 
 void Scene::init()
 {
-    /* 
-    PointCloud dino1;
-    dino1.loadPointCloud("dataPointsets/dino.pn");
-    dino1.move({-0.5, 0.0, 0.0});
-    this->listPointCloud.push_back(dino1);
-
-    PointCloud dino2;
-    dino2.loadPointCloud("dataPointsets/dino_subsampled.pn");
-    this->listPointCloud.push_back(dino2);
-    */
-
-
+    /*
     PointCloud dino3;
     dino3.loadPointCloud("dataPointsets/dino_subsampled_extreme.pn");
     dino3.move({2.0, 0.0, 0.0});
     dino3.setMaterial(Material(MaterialType::Gold));
     this->listPointCloud.push_back(dino3);
+    */
     
+    PointCloud testSphere;
+    testSphere.generateSphere(50);
+    this->listPointCloud.push_back(testSphere);
 
-    PointCloud boule;
-    boule.addSphere(0, 0, 0, 1, 50);
-    dino3.setMaterial(Material(MaterialType::Mirror));
-    this->listPointCloud.push_back(boule);
+    PointCloud testPlane;
+    testPlane.generatePlane(50);
+    this->listPointCloud.push_back(testPlane);
+
+    PointCloud testCube;
+    testCube.generateCube(50);
+    this->listPointCloud.push_back(testCube);
+}
+
+void Scene::generateImport(const std::string &filename)
+{
+    PointCloud p;
+    p.loadPointCloud(filename);
+    this->listPointCloud.push_back(p);
 }
 
 std::vector<PointCloud> &Scene::getListPointCloud()

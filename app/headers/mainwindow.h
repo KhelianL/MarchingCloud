@@ -22,10 +22,14 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QGraphicsDropShadowEffect>
+#include <QFileDialog>
+#include <QString>
 
 /* SRC */
 #include <scene.h>
 #include <viewer.h>
+#include <popupWindow.h>
+#include <standardCamera.h>
 
 class MainWindow : public QMainWindow
 {
@@ -38,11 +42,11 @@ public:
 
 private slots:
     void showCustomMenu();
-    
+
     void newScene();
     void openScene();
     void saveScene();
-    
+
     void undo();
     void redo();
 
@@ -53,9 +57,10 @@ private slots:
     void createTorus();
 
     void about();
-    
+
 private:
     Scene *const scene = new Scene();
+    StandardCamera *const camera = new StandardCamera();
     Viewer *viewer;
     QProgressBar *progressBar = new QProgressBar();
 
@@ -73,7 +78,7 @@ private:
     QMenu *editMenu;
     QMenu *pointCloudMenu;
     QMenu *helpMenu;
-    
+
     QAction *newSceneAct;
     QAction *openSceneAct;
     QAction *saveSceneAct;

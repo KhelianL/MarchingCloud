@@ -14,9 +14,13 @@ private:
 
 public:
     Scene();
+
     void draw();
     void init();
+
     std::vector<PointCloud> &getListPointCloud();
+
+    void generateImport(const std::string &filename);
 };
 
 #endif

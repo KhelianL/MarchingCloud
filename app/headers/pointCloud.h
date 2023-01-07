@@ -1,6 +1,9 @@
 #ifndef POINTCLOUD_H
 #define POINTCLOUD_H
 
+/* QT */
+#include <QString>
+
 /* C++ */
 #include <vector>
 
@@ -23,8 +26,9 @@ private:
     bool isSet = false;
 
 public:
-    // Load-Save
+    // Load-Reset
     void loadPointCloud(const std::string &filename);
+    void reset();
 
     // Transform
     void move(const Vec3 v);
@@ -32,8 +36,10 @@ public:
     void scale(const Vec3 v);
 
     // Generate
-    void generateCornellBox(int resolution);
-    void addSphere(float centerX, float centerY, float centerZ, float radius, int resolution);
+    void generatePlane(int resolution);
+    void generateSphere(int resolution);
+    void generateCube(int resolution);
+    void generateTorus(int resolution);
 
     // Getters
     std::vector<Vec3> &getPositions();

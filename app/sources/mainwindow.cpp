@@ -21,7 +21,7 @@ MainWindow::MainWindow()
     rightSide->setLayout(layoutComponent);
 
     // Left/Right side
-    this->viewer = new Viewer(this->scene, splitter);
+    this->viewer = new Viewer(this->scene, this->camera, splitter);
     splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
@@ -35,6 +35,7 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     delete this->scene;
+    delete this->camera;
     delete this->progressBar;
 }
 
@@ -399,6 +400,12 @@ void MainWindow::redo()
 void MainWindow::importPointCloud()
 {
     this->statusBar()->showMessage(tr("Invoked <IMPORT POINT CLOUD>"));
+    QString fileName = QFileDialog::getOpenFileName();
+
+    PopupWindow popup(PopupType::IMPORT);
+    popup.exec();
+
+    this->scene->generateImport(fileName.toStdString());
 }
 
 void MainWindow::createPlane()
