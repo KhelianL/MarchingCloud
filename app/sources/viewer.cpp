@@ -37,11 +37,15 @@ void Viewer::rayTraceEvent(int width, int height)
         std::vector<PointCloud> scenePointCloud = this->scene->getListPointCloud();
 
         // Get Size
-        QSize windowSize = size();
         if (width == 0 || height == 0)
         {
+                QSize windowSize = size();
                 width = windowSize.width();
                 height = windowSize.height();
+        }
+        else
+        {
+                this->camera()->setScreenWidthAndHeight(width, height);
         }
 
         // Projection Matrix

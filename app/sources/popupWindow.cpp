@@ -1,7 +1,5 @@
 #include <popupWindow.h>
 
-#include <iostream>
-
 PopupWindow::PopupWindow(PopupType type, QWidget *parent) : QDialog(parent)
 {
     // Type
