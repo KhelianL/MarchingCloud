@@ -38,25 +38,22 @@ public:
 
 private slots:
     void showCustomMenu();
-    void newFile();
-    void open();
-    void save();
-    void print();
+    
+    void newScene();
+    void openScene();
+    void saveScene();
+    
     void undo();
     void redo();
-    void cut();
-    void copy();
-    void paste();
-    void bold();
-    void italic();
-    void leftAlign();
-    void rightAlign();
-    void justify();
-    void center();
-    void setLineSpacing();
-    void setParagraphSpacing();
-    void about();
 
+    void importPointCloud();
+    void createPlane();
+    void createCube();
+    void createSphere();
+    void createTorus();
+
+    void about();
+    
 private:
     Scene *const scene = new Scene();
     Viewer *viewer;
@@ -70,32 +67,28 @@ private:
     void createActions();
     void createMenus();
 
+    QShortcut *shortcut;
+
     QMenu *fileMenu;
     QMenu *editMenu;
-    QMenu *formatMenu;
+    QMenu *pointCloudMenu;
     QMenu *helpMenu;
-    QActionGroup *alignmentGroup;
-    QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
-    QAction *printAct;
+    
+    QAction *newSceneAct;
+    QAction *openSceneAct;
+    QAction *saveSceneAct;
     QAction *exitAct;
+
     QAction *undoAct;
     QAction *redoAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *boldAct;
-    QAction *italicAct;
-    QAction *leftAlignAct;
-    QAction *rightAlignAct;
-    QAction *justifyAct;
-    QAction *centerAct;
-    QAction *setLineSpacingAct;
-    QAction *setParagraphSpacingAct;
+
+    QAction *importPointCloudAct;
+    QAction *genPlaneAct;
+    QAction *genCubeAct;
+    QAction *genSphereAct;
+    QAction *genTorusAct;
+
     QAction *aboutAct;
-    QLabel *infoLabel;
-    QShortcut *shortcut;
 };
 
 #endif
