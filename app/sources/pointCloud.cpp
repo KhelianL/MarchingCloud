@@ -215,6 +215,75 @@ void PointCloud::generateTorus(int resolution)
 {
     this->reset();
 
+    const int numTheta = resolution;
+    const int numPhi = 2 * resolution;
+
+    for (int i = 0; i < numTheta; ++i)
+    {
+        for (int j = 0; j < numPhi; ++j)
+        {
+            // Calcul des angles polaires
+            const float theta = i * 2 * M_PI / numTheta;
+            const float phi = j * 2 * M_PI / numPhi;
+
+            // Calcul des coordonnées du point sur le tore
+            const float x = (2 + cos(theta)) * cos(phi);
+            const float y = (2 + cos(theta)) * sin(phi);
+            const float z = sin(theta);
+
+            // Calcul et normalisation de la normale
+            const float norm = sqrtf(x * x + y * y + z * z);
+            const Vec3 normal = {x / norm, y / norm, z / norm};
+
+            // Ajout du point et de sa normale au vecteur
+            this->positions.push_back({x, y, z});
+            this->normals.push_back(normal);
+        }
+    }
+
+    this->isSet = true;
+}
+
+void PointCloud::generateRabbit(int resolution)
+{
+    int numLevels = 5;
+        this->reset();
+
+    for (int i = 0; i < numLevels; ++i)
+    {
+        const int numHeight = resolution;
+        const int numRadius = 2 * resolution;
+
+        const float height = i / (numLevels - 1.0f);
+        const float radius = 0.1f + 0.9f * height;
+
+        for (int j = 0; j < numHeight; ++j)
+        {
+            for (int k = 0; k < numRadius; ++k)
+            {
+                // Calcul de l'angle radial
+                const float theta = k * 2 * M_PI / numRadius;
+
+                // Calcul des coordonnées du point sur le cône
+                // const float x = radius * cos(theta);
+                // const float y = radius * sin(theta);
+                // const float z = j / (numHeight - 1.0f) + i;
+
+                const float x = cos(radius) * (height - j) / height;
+                const float y = sin(radius) * (height - j) / height;
+                const float z = j / (height - 1.0f) + i;
+
+                // Calcul et normalisation de la normale
+                const float norm = sqrtf(x * x + y * y + z * z);
+                const Vec3 normal = {x / norm, y / norm, z / norm};
+
+                // Ajout du point et de sa normale au vecteur
+                this->positions.push_back({x, y, z});
+                this->normals.push_back(normal);
+            }
+        }
+    }
+
     this->isSet = true;
 }
 

@@ -33,6 +33,16 @@ void Scene::init()
     PointCloud testCube;
     testCube.generateCube(50);
     this->listPointCloud.push_back(testCube);
+
+    PointCloud testTorus;
+    testTorus.generateTorus(50);
+    this->listPointCloud.push_back(testTorus);
+
+    // PointCloud testRabbit;
+    // testRabbit.generateRabbit(50);
+    // this->listPointCloud.push_back(testRabbit);
+
+    
 }
 
 void Scene::generateImport(const std::string &filename)

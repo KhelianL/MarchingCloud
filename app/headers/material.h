@@ -26,7 +26,7 @@ class Material
 private:
     Vec3 ambiant, diffuse, specular;
     int spec_exp;
-    float transparency, refractionIndex, reflection;
+    float transparency, refractionIndex;
 
 public:
     Material();
