@@ -20,6 +20,8 @@ class Viewer : public QGLViewer
 {
 private:
     Scene *const scene;
+    QLineEdit *editWidth;
+    QLineEdit *editHeight;
 
 protected:
     virtual void init();
@@ -28,7 +30,7 @@ protected:
     virtual QString helpString() const;
 
 public:
-    Viewer(Scene *const s, QWidget *parent);
+    Viewer(Scene *const s, QLineEdit *w, QLineEdit *h, QWidget *parent);
     Scene *getScene();
     void rayTraceEvent(int width, int height);
 };

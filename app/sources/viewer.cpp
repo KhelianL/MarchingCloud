@@ -1,6 +1,6 @@
 #include <viewer.h>
 
-Viewer::Viewer(Scene *const s, QWidget *parent) : scene(s), QGLViewer(parent)
+Viewer::Viewer(Scene *const s, QLineEdit *w, QLineEdit *h, QWidget *parent) : scene(s), editWidth(w), editHeight(h), QGLViewer(parent)
 {
         this->init();
 }
@@ -24,7 +24,7 @@ void Viewer::keyPressEvent(QKeyEvent *event)
         switch (event->key())
         {
         case Qt::Key_R:
-                rayTraceEvent(0, 0);
+                rayTraceEvent(this->editWidth->text().toInt(), this->editHeight->text().toInt());
                 break;
         default:
                 QGLViewer::keyPressEvent(event);
@@ -37,7 +37,7 @@ void Viewer::rayTraceEvent(int width, int height)
         std::vector<PointCloud> scenePointCloud = this->scene->getListPointCloud();
 
         int tmpW = this->camera()->screenWidth();
-        int tmpH = this->camera()->screenHeight(); 
+        int tmpH = this->camera()->screenHeight();
 
         // Get Size
         if (width == 0 || height == 0)
@@ -59,7 +59,7 @@ void Viewer::rayTraceEvent(int width, int height)
         this->camera()->getModelViewMatrix(modelViewMatrix);
         QMatrix4x4 invprojectionMat4 = QMatrix4x4(projectionMatrix).inverted().transposed();
         QMatrix4x4 invmodelViewMat4 = QMatrix4x4(modelViewMatrix).inverted().transposed();
-        
+
         // Reset
         this->camera()->setScreenWidthAndHeight(tmpW, tmpH);
 

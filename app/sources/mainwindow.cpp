@@ -26,13 +26,13 @@ MainWindow::MainWindow()
     enableEdit(false);
 
     // Left/Right side
-    this->viewer = new Viewer(this->scene, splitter);
+    this->viewer = new Viewer(this->scene, this->editWidth, this->editHeight, splitter);
     splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
     this->createActions();
     this->createMenus();
-    this->statusBar()->showMessage(tr("A context menu is available by right-clicking"));
+    this->statusBar()->showMessage(tr("A context menu is available with <CTRL+A>"));
     this->setWindowTitle(tr("Menu"));
     this->setMinimumSize(1024, 576);
 }
