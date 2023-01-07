@@ -2,48 +2,366 @@
 
 MainWindow::MainWindow()
 {
-    // Création des divers widgets
-    QProgressBar *progressBar = new QProgressBar;
-    QSplitter *splitter = new QSplitter;
-    QGridLayout *optionLayout = new QGridLayout;
-    QWidget *optionWidget = new QWidget;
-    QPushButton *button1 = new QPushButton(tr("Bouton 1"));
-    QPushButton *button2 = new QPushButton(tr("Bouton 2"));
-    QPushButton *button3 = new QPushButton(tr("Bouton 3"));
-    QPushButton *button4 = new QPushButton(tr("Bouton 4"));
-    QPushButton *button5 = new QPushButton(tr("Bouton 5"));
-
     // Configuration de la barre d'état et ajout de la barre de progression
-    progressBar->setRange(0, 100);
-    progressBar->setValue(50);
-    this->statusBar()->addPermanentWidget(progressBar);
+    this->progressBar->setRange(0, 100);
+    this->progressBar->setValue(0);
+    this->statusBar()->addPermanentWidget(this->progressBar);
 
-    // Liaisons des widgets et création du viewer
-    optionLayout->addWidget(button1, 0, 0);
-    optionLayout->addWidget(button2, 0, 1);
-    optionLayout->addWidget(button3, 1, 0);
-    optionLayout->addWidget(button4, 1, 1);
-    optionLayout->addWidget(button5, 2, 0, 1, 2);
-    optionWidget->setLayout(optionLayout);
+    // Création des widget main
+    QSplitter *splitter = new QSplitter;
+    QWidget *rightSide = new QWidget;
+
+    // Ajout des composants
+    QVBoxLayout *layoutComponent = new QVBoxLayout;
+    layoutComponent->addWidget(createTransformComponent());
+    this->addLine(layoutComponent);
+    layoutComponent->addWidget(createMaterialComponent());
+    this->addLine(layoutComponent);
+    layoutComponent->addWidget(createRenderComponent());
+    rightSide->setLayout(layoutComponent);
+
+    // Left/Right side
     this->viewer = new Viewer(this->scene, splitter);
-    splitter->addWidget(optionWidget);
+    splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
-
     this->createActions();
     this->createMenus();
-
     this->statusBar()->showMessage(tr("A context menu is available by right-clicking"));
-
     this->setWindowTitle(tr("Menus"));
-    this->setMinimumSize(160, 160);
-    this->resize(480, 320);
+    this->setMinimumSize(1024, 576);
 }
 
 MainWindow::~MainWindow()
 {
     delete this->scene;
+    delete this->progressBar;
 }
+
+/*#########################################*/
+/*                 Setters                #*/
+/*#########################################*/
+
+void MainWindow::setProgress(int n)
+{
+    this->progressBar->setValue(n);
+}
+
+/*#########################################*/
+/*            CreateComponents            #*/
+/*#########################################*/
+
+QWidget *MainWindow::createTransformComponent()
+{
+    QWidget *resWidget = new QWidget;
+    QWidget *combineWidget = new QWidget;
+    QWidget *labelWidget = new QWidget;
+    QWidget *editWidget = new QWidget;
+
+    QVBoxLayout *resLayout = new QVBoxLayout;
+    QHBoxLayout *combineLayout = new QHBoxLayout;
+    QGridLayout *editTransform = new QGridLayout;
+    QGridLayout *labelTransform = new QGridLayout;
+
+    QLabel *labelTitle = new QLabel(tr("Transform:"), this);
+    QLabel *labelPos = new QLabel(tr("Position:"), this);
+    QLabel *labelRot = new QLabel(tr("Rotation:"), this);
+    QLabel *labelScl = new QLabel(tr("Scale:"), this);
+    QLabel *labelPosX = new QLabel("X :", this);
+    QLabel *labelPosY = new QLabel("Y :", this);
+    QLabel *labelPosZ = new QLabel("Z :", this);
+    QLabel *labelRotX = new QLabel("X :", this);
+    QLabel *labelRotY = new QLabel("Y :", this);
+    QLabel *labelRotZ = new QLabel("Z :", this);
+    QLabel *labelSclX = new QLabel("X :", this);
+    QLabel *labelSclY = new QLabel("Y :", this);
+    QLabel *labelSclZ = new QLabel("Z :", this);
+    QLineEdit *editPosX = new QLineEdit("0.0");
+    QLineEdit *editPosY = new QLineEdit("0.0");
+    QLineEdit *editPosZ = new QLineEdit("0.0");
+    QLineEdit *editRotX = new QLineEdit("0.0");
+    QLineEdit *editRotY = new QLineEdit("0.0");
+    QLineEdit *editRotZ = new QLineEdit("0.0");
+    QLineEdit *editSclX = new QLineEdit("0.0");
+    QLineEdit *editSclY = new QLineEdit("0.0");
+    QLineEdit *editSclZ = new QLineEdit("0.0");
+    editPosX->setAlignment(Qt::AlignCenter);
+    editPosY->setAlignment(Qt::AlignCenter);
+    editPosZ->setAlignment(Qt::AlignCenter);
+    editRotX->setAlignment(Qt::AlignCenter);
+    editRotY->setAlignment(Qt::AlignCenter);
+    editRotZ->setAlignment(Qt::AlignCenter);
+    editSclX->setAlignment(Qt::AlignCenter);
+    editSclY->setAlignment(Qt::AlignCenter);
+    editSclZ->setAlignment(Qt::AlignCenter);
+
+    labelTransform->addWidget(labelPos, 0, 0);
+    labelTransform->addWidget(labelRot, 1, 0);
+    labelTransform->addWidget(labelScl, 2, 0);
+
+    editTransform->addWidget(labelPosX, 0, 2, 1, 1);
+    editTransform->addWidget(editPosX, 0, 3, 1, 1);
+    editTransform->addWidget(labelPosY, 0, 4, 1, 1);
+    editTransform->addWidget(editPosY, 0, 5, 1, 1);
+    editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
+    editTransform->addWidget(editPosZ, 0, 7, 1, 1);
+
+    editTransform->addWidget(labelRotX, 1, 2, 1, 1);
+    editTransform->addWidget(editRotX, 1, 3, 1, 1);
+    editTransform->addWidget(labelRotY, 1, 4, 1, 1);
+    editTransform->addWidget(editRotY, 1, 5, 1, 1);
+    editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
+    editTransform->addWidget(editRotZ, 1, 7, 1, 1);
+
+    editTransform->addWidget(labelSclX, 2, 2, 1, 1);
+    editTransform->addWidget(editSclX, 2, 3, 1, 1);
+    editTransform->addWidget(labelSclY, 2, 4, 1, 1);
+    editTransform->addWidget(editSclY, 2, 5, 1, 1);
+    editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
+    editTransform->addWidget(editSclZ, 2, 7, 1, 1);
+
+    labelWidget->setLayout(labelTransform);
+    editWidget->setLayout(editTransform);
+
+    combineLayout->addWidget(labelWidget);
+    combineLayout->addWidget(editWidget);
+
+    combineWidget->setLayout(combineLayout);
+
+    QFont boldFont = labelTitle->font();
+    boldFont.setBold(true);
+    labelTitle->setFont(boldFont);
+    labelTitle->setFixedHeight(25);
+
+    resLayout->addWidget(labelTitle);
+    resLayout->addWidget(combineWidget);
+
+    resWidget->setLayout(resLayout);
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(8);
+    shadow->setColor(Qt::gray);
+    shadow->setOffset(2, 2);
+    resWidget->setGraphicsEffect(shadow);
+
+    editWidget->setMaximumHeight(100);
+    labelWidget->setMaximumHeight(100);
+    combineWidget->setMaximumHeight(100);
+    resWidget->setMaximumHeight(150);
+
+    return resWidget;
+}
+QWidget *MainWindow::createMaterialComponent()
+{
+    QWidget *resWidget = new QWidget;
+    QWidget *combineWidget = new QWidget;
+    QWidget *labelWidget = new QWidget;
+    QWidget *editWidget = new QWidget;
+
+    QVBoxLayout *resLayout = new QVBoxLayout;
+    QHBoxLayout *combineLayout = new QHBoxLayout;
+    QGridLayout *editTransform = new QGridLayout;
+    QGridLayout *labelTransform = new QGridLayout;
+
+    QLabel *labelTitle = new QLabel(tr("Material:"), this);
+    QLabel *labelPos = new QLabel(tr("Position:"), this);
+    QLabel *labelRot = new QLabel(tr("Rotation:"), this);
+    QLabel *labelScl = new QLabel(tr("Scale:"), this);
+    QLabel *labelPosX = new QLabel("X :", this);
+    QLabel *labelPosY = new QLabel("Y :", this);
+    QLabel *labelPosZ = new QLabel("Z :", this);
+    QLabel *labelRotX = new QLabel("X :", this);
+    QLabel *labelRotY = new QLabel("Y :", this);
+    QLabel *labelRotZ = new QLabel("Z :", this);
+    QLabel *labelSclX = new QLabel("X :", this);
+    QLabel *labelSclY = new QLabel("Y :", this);
+    QLabel *labelSclZ = new QLabel("Z :", this);
+    QLineEdit *editPosX = new QLineEdit("0.0");
+    QLineEdit *editPosY = new QLineEdit("0.0");
+    QLineEdit *editPosZ = new QLineEdit("0.0");
+    QLineEdit *editRotX = new QLineEdit("0.0");
+    QLineEdit *editRotY = new QLineEdit("0.0");
+    QLineEdit *editRotZ = new QLineEdit("0.0");
+    QLineEdit *editSclX = new QLineEdit("0.0");
+    QLineEdit *editSclY = new QLineEdit("0.0");
+    QLineEdit *editSclZ = new QLineEdit("0.0");
+    editPosX->setAlignment(Qt::AlignCenter);
+    editPosY->setAlignment(Qt::AlignCenter);
+    editPosZ->setAlignment(Qt::AlignCenter);
+    editRotX->setAlignment(Qt::AlignCenter);
+    editRotY->setAlignment(Qt::AlignCenter);
+    editRotZ->setAlignment(Qt::AlignCenter);
+    editSclX->setAlignment(Qt::AlignCenter);
+    editSclY->setAlignment(Qt::AlignCenter);
+    editSclZ->setAlignment(Qt::AlignCenter);
+
+    labelTransform->addWidget(labelPos, 0, 0);
+    labelTransform->addWidget(labelRot, 1, 0);
+    labelTransform->addWidget(labelScl, 2, 0);
+
+    editTransform->addWidget(labelPosX, 0, 2, 1, 1);
+    editTransform->addWidget(editPosX, 0, 3, 1, 1);
+    editTransform->addWidget(labelPosY, 0, 4, 1, 1);
+    editTransform->addWidget(editPosY, 0, 5, 1, 1);
+    editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
+    editTransform->addWidget(editPosZ, 0, 7, 1, 1);
+
+    editTransform->addWidget(labelRotX, 1, 2, 1, 1);
+    editTransform->addWidget(editRotX, 1, 3, 1, 1);
+    editTransform->addWidget(labelRotY, 1, 4, 1, 1);
+    editTransform->addWidget(editRotY, 1, 5, 1, 1);
+    editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
+    editTransform->addWidget(editRotZ, 1, 7, 1, 1);
+
+    editTransform->addWidget(labelSclX, 2, 2, 1, 1);
+    editTransform->addWidget(editSclX, 2, 3, 1, 1);
+    editTransform->addWidget(labelSclY, 2, 4, 1, 1);
+    editTransform->addWidget(editSclY, 2, 5, 1, 1);
+    editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
+    editTransform->addWidget(editSclZ, 2, 7, 1, 1);
+
+    labelWidget->setLayout(labelTransform);
+    editWidget->setLayout(editTransform);
+
+    combineLayout->addWidget(labelWidget);
+    combineLayout->addWidget(editWidget);
+
+    combineWidget->setLayout(combineLayout);
+
+    QFont boldFont = labelTitle->font();
+    boldFont.setBold(true);
+    labelTitle->setFont(boldFont);
+    labelTitle->setFixedHeight(25);
+
+    resLayout->addWidget(labelTitle);
+    resLayout->addWidget(combineWidget);
+
+    resWidget->setLayout(resLayout);
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(8);
+    shadow->setColor(Qt::gray);
+    shadow->setOffset(2, 2);
+    resWidget->setGraphicsEffect(shadow);
+
+    editWidget->setMaximumHeight(100);
+    labelWidget->setMaximumHeight(100);
+    combineWidget->setMaximumHeight(100);
+    resWidget->setMaximumHeight(150);
+
+    return resWidget;
+}
+QWidget *MainWindow::createRenderComponent()
+{
+    QWidget *resWidget = new QWidget;
+    QWidget *combineWidget = new QWidget;
+    QWidget *labelWidget = new QWidget;
+    QWidget *editWidget = new QWidget;
+
+    QVBoxLayout *resLayout = new QVBoxLayout;
+    QHBoxLayout *combineLayout = new QHBoxLayout;
+    QGridLayout *editTransform = new QGridLayout;
+    QGridLayout *labelTransform = new QGridLayout;
+
+    QLabel *labelTitle = new QLabel(tr("Render:"), this);
+    QLabel *labelPos = new QLabel(tr("Position:"), this);
+    QLabel *labelRot = new QLabel(tr("Rotation:"), this);
+    QLabel *labelScl = new QLabel(tr("Scale:"), this);
+    QLabel *labelPosX = new QLabel("X :", this);
+    QLabel *labelPosY = new QLabel("Y :", this);
+    QLabel *labelPosZ = new QLabel("Z :", this);
+    QLabel *labelRotX = new QLabel("X :", this);
+    QLabel *labelRotY = new QLabel("Y :", this);
+    QLabel *labelRotZ = new QLabel("Z :", this);
+    QLabel *labelSclX = new QLabel("X :", this);
+    QLabel *labelSclY = new QLabel("Y :", this);
+    QLabel *labelSclZ = new QLabel("Z :", this);
+    QLineEdit *editPosX = new QLineEdit("0.0");
+    QLineEdit *editPosY = new QLineEdit("0.0");
+    QLineEdit *editPosZ = new QLineEdit("0.0");
+    QLineEdit *editRotX = new QLineEdit("0.0");
+    QLineEdit *editRotY = new QLineEdit("0.0");
+    QLineEdit *editRotZ = new QLineEdit("0.0");
+    QLineEdit *editSclX = new QLineEdit("0.0");
+    QLineEdit *editSclY = new QLineEdit("0.0");
+    QLineEdit *editSclZ = new QLineEdit("0.0");
+    editPosX->setAlignment(Qt::AlignCenter);
+    editPosY->setAlignment(Qt::AlignCenter);
+    editPosZ->setAlignment(Qt::AlignCenter);
+    editRotX->setAlignment(Qt::AlignCenter);
+    editRotY->setAlignment(Qt::AlignCenter);
+    editRotZ->setAlignment(Qt::AlignCenter);
+    editSclX->setAlignment(Qt::AlignCenter);
+    editSclY->setAlignment(Qt::AlignCenter);
+    editSclZ->setAlignment(Qt::AlignCenter);
+
+    labelTransform->addWidget(labelPos, 0, 0);
+    labelTransform->addWidget(labelRot, 1, 0);
+    labelTransform->addWidget(labelScl, 2, 0);
+
+    editTransform->addWidget(labelPosX, 0, 2, 1, 1);
+    editTransform->addWidget(editPosX, 0, 3, 1, 1);
+    editTransform->addWidget(labelPosY, 0, 4, 1, 1);
+    editTransform->addWidget(editPosY, 0, 5, 1, 1);
+    editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
+    editTransform->addWidget(editPosZ, 0, 7, 1, 1);
+
+    editTransform->addWidget(labelRotX, 1, 2, 1, 1);
+    editTransform->addWidget(editRotX, 1, 3, 1, 1);
+    editTransform->addWidget(labelRotY, 1, 4, 1, 1);
+    editTransform->addWidget(editRotY, 1, 5, 1, 1);
+    editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
+    editTransform->addWidget(editRotZ, 1, 7, 1, 1);
+
+    editTransform->addWidget(labelSclX, 2, 2, 1, 1);
+    editTransform->addWidget(editSclX, 2, 3, 1, 1);
+    editTransform->addWidget(labelSclY, 2, 4, 1, 1);
+    editTransform->addWidget(editSclY, 2, 5, 1, 1);
+    editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
+    editTransform->addWidget(editSclZ, 2, 7, 1, 1);
+
+    labelWidget->setLayout(labelTransform);
+    editWidget->setLayout(editTransform);
+
+    combineLayout->addWidget(labelWidget);
+    combineLayout->addWidget(editWidget);
+
+    combineWidget->setLayout(combineLayout);
+
+    QFont boldFont = labelTitle->font();
+    boldFont.setBold(true);
+    labelTitle->setFont(boldFont);
+    labelTitle->setFixedHeight(25);
+
+    resLayout->addWidget(labelTitle);
+    resLayout->addWidget(combineWidget);
+
+    resWidget->setLayout(resLayout);
+
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(8);
+    shadow->setColor(Qt::gray);
+    shadow->setOffset(2, 2);
+    resWidget->setGraphicsEffect(shadow);
+
+    editWidget->setMaximumHeight(100);
+    labelWidget->setMaximumHeight(100);
+    combineWidget->setMaximumHeight(100);
+    resWidget->setMaximumHeight(150);
+
+    return resWidget;
+}
+void MainWindow::addLine(QVBoxLayout *layoutComponent)
+{
+    QFrame *line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    layoutComponent->addWidget(line);
+}
+
+/*#########################################*/
+/*                 Actions                #*/
+/*#########################################*/
 
 void MainWindow::showCustomMenu()
 {
@@ -145,6 +463,10 @@ void MainWindow::about()
     this->statusBar()->showMessage(tr("Invoked <b>Help|About</b>"));
     this->viewer->help();
 }
+
+/*#########################################*/
+/*                Assemble                #*/
+/*#########################################*/
 
 void MainWindow::createActions()
 {

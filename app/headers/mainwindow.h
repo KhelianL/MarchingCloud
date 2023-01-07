@@ -18,6 +18,11 @@
 #include <QActionGroup>
 #include <QShortcut>
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QGraphicsDropShadowEffect>
+
 /* SRC */
 #include <scene.h>
 #include <viewer.h>
@@ -29,6 +34,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     ~MainWindow();
+    void setProgress(int n);
 
 private slots:
     void showCustomMenu();
@@ -54,6 +60,12 @@ private slots:
 private:
     Scene *const scene = new Scene();
     Viewer *viewer;
+    QProgressBar *progressBar = new QProgressBar();
+
+    QWidget *createTransformComponent();
+    QWidget *createMaterialComponent();
+    QWidget *createRenderComponent();
+    void addLine(QVBoxLayout *layoutComponent);
 
     void createActions();
     void createMenus();
