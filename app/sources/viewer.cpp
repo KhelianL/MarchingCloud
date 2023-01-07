@@ -24,22 +24,25 @@ void Viewer::keyPressEvent(QKeyEvent *event)
         switch (event->key())
         {
         case Qt::Key_R:
-                // rayTraceEvent();
+                rayTraceEvent(0, 0);
                 break;
         default:
                 QGLViewer::keyPressEvent(event);
         }
 }
 
-void Viewer::rayTraceEvent()
+void Viewer::rayTraceEvent(int width, int height)
 {
         // Get Scene informations
         std::vector<PointCloud> scenePointCloud = this->scene->getListPointCloud();
 
         // Get Size
         QSize windowSize = size();
-        int width = windowSize.width();
-        int height = windowSize.height();
+        if (width == 0 || height == 0)
+        {
+                width = windowSize.width();
+                height = windowSize.height();
+        }
 
         // Projection Matrix
         float projectionMatrix[16];
@@ -48,7 +51,7 @@ void Viewer::rayTraceEvent()
         this->camera()->getModelViewMatrix(modelViewMatrix);
         QMatrix4x4 invprojectionMat4 = QMatrix4x4(projectionMatrix).inverted().transposed();
         QMatrix4x4 invmodelViewMat4 = QMatrix4x4(modelViewMatrix).inverted().transposed();
-        
+
         // Get Camera Position
         qglviewer::Vec cameraPos = this->camera()->position();
 

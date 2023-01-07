@@ -30,7 +30,7 @@ protected:
 public:
     Viewer(Scene *const s, QWidget *parent);
     Scene *getScene();
-    void rayTraceEvent();
+    void rayTraceEvent(int width, int height);
 };
 
 #endif

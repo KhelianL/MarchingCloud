@@ -96,6 +96,9 @@ private:
     void createActions();
     void createMenus();
 
+    /* SIGNALS */
+    void marchingCloud();
+
     /* ACTIONS & MENU */
     QShortcut *shortcut;
     QMenu *fileMenu;

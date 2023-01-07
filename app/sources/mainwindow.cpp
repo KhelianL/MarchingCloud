@@ -29,7 +29,7 @@ MainWindow::MainWindow()
     this->createActions();
     this->createMenus();
     this->statusBar()->showMessage(tr("A context menu is available by right-clicking"));
-    this->setWindowTitle(tr("Menus"));
+    this->setWindowTitle(tr("Menu"));
     this->setMinimumSize(1024, 576);
 }
 
@@ -37,6 +37,25 @@ MainWindow::~MainWindow()
 {
     delete this->scene;
     delete this->progressBar;
+    delete this->editPosX;
+    delete this->editPosY;
+    delete this->editPosZ;
+    delete this->editRotX;
+    delete this->editRotY;
+    delete this->editRotZ;
+    delete this->editSclX;
+    delete this->editSclY;
+    delete this->editSclZ;
+    delete this->editAmbR;
+    delete this->editAmbG;
+    delete this->editAmbB;
+    delete this->editDifR;
+    delete this->editDifG;
+    delete this->editDifB;
+    delete this->editSpeR;
+    delete this->editSpeG;
+    delete this->editSpeB;
+    delete this->editSpeExp;
 }
 
 /*#########################################*/
@@ -311,15 +330,18 @@ QWidget *MainWindow::createRenderComponent()
     QLabel *labelTitle = new QLabel(tr("Render:"), this);
     QLabel *labelWidth = new QLabel(tr("Width:"), this);
     QLabel *labelHeight = new QLabel(tr("Height:"), this);
-    this->editWidth = new QLineEdit();
-    this->editHeight = new QLineEdit();
+    this->editWidth = new QLineEdit("200");
+    this->editHeight = new QLineEdit("300");
     editWidth->setAlignment(Qt::AlignCenter);
     editHeight->setAlignment(Qt::AlignCenter);
+    QPushButton *renderButton = new QPushButton(tr("MarchingCloud!"), this);
+    connect(renderButton, &QPushButton::released, this, &MainWindow::marchingCloud);
 
     renderParamLayout->addWidget(labelWidth, 0, 0);
     renderParamLayout->addWidget(labelHeight, 1, 0);
     renderParamLayout->addWidget(editWidth, 0, 1);
     renderParamLayout->addWidget(editHeight, 1, 1);
+    renderParamLayout->addWidget(renderButton, 2, 0, 2, 2);
 
     combineWidget->setLayout(renderParamLayout);
 
@@ -352,6 +374,15 @@ void MainWindow::addLine(QVBoxLayout *layoutComponent)
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
     layoutComponent->addWidget(line);
+}
+
+/*#########################################*/
+/*                 Signals                #*/
+/*#########################################*/
+
+void MainWindow::marchingCloud()
+{
+    this->viewer->rayTraceEvent(this->editWidth->text().toInt(), this->editHeight->text().toInt());
 }
 
 /*#########################################*/
