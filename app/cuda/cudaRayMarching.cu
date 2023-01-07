@@ -141,6 +141,7 @@ struct CudaMaterial
     int SPECULAR_EXPONENT = 32;
     float transparency = 0.0;
     float refractionIndex = 1.0;
+    float reflection = 0.0;
 };
 
 /*#########################################*/
@@ -284,7 +285,6 @@ __device__ inline float square(float f)
 {
     return f * f;
 }
-
 __device__ void initPointQueue(PointQueue *ptc, int nb)
 {
     ptc->size = nb;
@@ -699,6 +699,19 @@ __device__ CudaVec3 computeColor(CudaVec3 positionCamera, CudaVec3 positionPoint
 
     return couleurFinale;
 }
+
+__device__ CudaVec3 computeReflection(const CudaVec3 &ray, const CudaVec3 &normal)
+{
+    // Calculer la composante parallèle et perpendiculaire du rayon par rapport à la normale
+    float dotProduct = dot(ray, normal);
+    CudaVec3 parallel = normal * dotProduct;
+    CudaVec3 perpendicular = ray - parallel;
+
+    // Calculer le vecteur de réflexion
+    CudaVec3 reflection = perpendicular - parallel;
+    reflection.normalize();
+    return reflection;
+}
 __device__ CudaVec3 computeTransmission(const CudaVec3 &ray, const CudaVec3 &normal, const CudaVec3 &intersection, float refractionIndex)
 {
     // Calculer la composante parallèle et perpendiculaire du rayon par rapport à la normale
@@ -726,7 +739,7 @@ __device__ CudaVec3 mix(CudaVec3 color1, CudaVec3 color2, float mixFactor)
     return color1 * (1.0 - mixFactor) + color2 * mixFactor;
 }
 
-__global__ void cuda_ray_trace(float *rayPos, float *rayDir, float *image, int imgSize, PointCloudData pcd, int maxTransparencyIterations)
+__global__ void cuda_ray_trace(float *rayPos, float *rayDir, float *image, int imgSize, PointCloudData pcd, int maxTransparencyIterations = 0, int maxReflectionIterations = 2)
 {
     int index = getGlobalIdx_1D_2D();
 
@@ -740,50 +753,42 @@ __global__ void cuda_ray_trace(float *rayPos, float *rayDir, float *image, int i
         if (it.intersected)
         {
             int nearestPoint = findNearest(pcd.kdTree, it.position);
+            auto material = pcd.materialList[pcd.materialIndex[nearestPoint]];
 
             CudaVec3 norm = normale(it.position, pcd);
+            CudaVec3 color = computeColor(pos, it.position, norm, CudaVec3(0, 4, 0), material);
 
-            CudaVec3 color = computeColor(pos, it.position, norm, CudaVec3(0, 4, 0), pcd.materialList[pcd.materialIndex[nearestPoint]]);
+            // Compute reflection
+            CudaVec3 reflection = computeReflection(dir, norm);
 
-            // Transparence
-            float transparency = pcd.materialList[pcd.materialIndex[nearestPoint]].transparency;
-
-            // Nombre d'itérations de transparence
-            int transparencyIterations = 0;
-
-            while (transparency > 0.0 && transparencyIterations < maxTransparencyIterations)
+            // Recursively trace reflection rays
+            CudaVec3 reflectionColor = CudaVec3(0, 0, 0);
+            for (int i = 0; i < maxReflectionIterations; i++)
             {
-                // Calculer le vecteur de transmission
-                dir = computeTransmission(dir, norm, it.position, pcd.materialList[pcd.materialIndex[nearestPoint]].refractionIndex);
-                // Lancer un nouveau rayon de transmission
-                cIntersection it2 = intersect(it.position + dir * 0.01, dir, pcd);
-                if (it2.intersected)
+                cIntersection refIt = intersect(it.position + reflection * 0.1, reflection, pcd);
+                if (refIt.intersected)
                 {
-                    // Si le nouveau rayon de transmission intersecte un autre objet, combiner les couleurs
-                    int nearestPoint2 = findNearest(pcd.kdTree, it2.position);
-                    norm = normale(it2.position, pcd);
-                    CudaVec3 color2 = computeColor(it.position, it2.position, norm, CudaVec3(1, 1, 1), pcd.materialList[pcd.materialIndex[nearestPoint2]]);
-                    color = mix(color, color2, transparency);
-                    // Mettre à jour la transparence et le nombre d'itérations
-                    transparency = pcd.materialList[pcd.materialIndex[nearestPoint2]].transparency;
-                    transparencyIterations++;
+                    int refNearestPoint = findNearest(pcd.kdTree, refIt.position);
+                    material = pcd.materialList[pcd.materialIndex[refNearestPoint]];
+                    CudaVec3 refNorm = normale(refIt.position, pcd);
+                    reflectionColor = computeColor(it.position, refIt.position, refNorm, reflectionColor, material);
+
+                    // Update reflection direction
+                    reflection = computeReflection(reflection, refNorm);
                 }
                 else
                 {
-                    // Sinon, utiliser la couleur du fond
-                    color = mix(color, CudaVec3(0.1, 0.1, 0.1), transparency);
-                    // Mettre à jour la transparence et le nombre d'itérations
-                    transparency = 0.0;
-                    transparencyIterations++;
+                    // Stop if the ray does not intersect any object
+                    break;
                 }
             }
 
-            image[index * 3 + 0] = color[0] > 1.0 ? 1.0 : color[0] < 0.0 ? 0.0
-                                                                         : color[0];
-            image[index * 3 + 1] = color[1] > 1.0 ? 1.0 : color[1] < 0.0 ? 0.0
-                                                                         : color[1];
-            image[index * 3 + 2] = color[2] > 1.0 ? 1.0 : color[2] < 0.0 ? 0.0
-                                                                         : color[2];
+            // Blend the reflection color with the original color
+            color = mix(color, reflectionColor, material.reflection);
+
+            image[index * 3 + 0] = color[0] > 1.0 ? 1.0 : color[0] < 0.0 ? 0.0 : color[0];
+            image[index * 3 + 1] = color[1] > 1.0 ? 1.0 : color[1] < 0.0 ? 0.0 : color[1];
+            image[index * 3 + 2] = color[2] > 1.0 ? 1.0 : color[2] < 0.0 ? 0.0 : color[2];
         }
         else
         {
@@ -849,7 +854,7 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     dim3 threadsPerBlock(nbth, nbth);
     dim3 numBlocks(nbBlock, 1);
 
-    cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h * w, pcd, 0);
+    cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h * w, pcd, 0, 2);
     cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size() * sizeof(float), cudaMemcpyDeviceToHost);
 
     std::string filename = "./rendu.ppm";
@@ -874,3 +879,40 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     image.resize(w * h * 3);
     fill(image.begin(), image.end(), 0.0f);
 }
+
+
+
+/*
+            // Transparence
+            float transparency = pcd.materialList[pcd.materialIndex[nearestPoint]].transparency;
+
+            // Nombre d'itérations de transparence
+            int transparencyIterations = 0;
+
+            while (transparency > 0.0 && transparencyIterations < maxTransparencyIterations)
+            {
+                // Calculer le vecteur de transmission
+                dir = computeTransmission(dir, norm, it.position, pcd.materialList[pcd.materialIndex[nearestPoint]].refractionIndex);
+                // Lancer un nouveau rayon de transmission
+                cIntersection it2 = intersect(it.position + dir * 0.01, dir, pcd);
+                if (it2.intersected)
+                {
+                    // Si le nouveau rayon de transmission intersecte un autre objet, combiner les couleurs
+                    int nearestPoint2 = findNearest(pcd.kdTree, it2.position);
+                    norm = normale(it2.position, pcd);
+                    CudaVec3 color2 = computeColor(it.position, it2.position, norm, CudaVec3(1, 1, 1), pcd.materialList[pcd.materialIndex[nearestPoint2]]);
+                    color = mix(color, color2, transparency);
+                    // Mettre à jour la transparence et le nombre d'itérations
+                    transparency = pcd.materialList[pcd.materialIndex[nearestPoint2]].transparency;
+                    transparencyIterations++;
+                }
+                else
+                {
+                    // Sinon, utiliser la couleur du fond
+                    color = mix(color, CudaVec3(0.1, 0.1, 0.1), transparency);
+                    // Mettre à jour la transparence et le nombre d'itérations
+                    transparency = 0.0;
+                    transparencyIterations++;
+                }
+            }
+            */

@@ -17,7 +17,8 @@ enum class MaterialType
     Ruby,
     Crystal,
     Water,
-    Glass
+    Glass,
+    Mirror
 };
 
 class Material
@@ -25,7 +26,7 @@ class Material
 private:
     Vec3 ambiant, diffuse, specular;
     int spec_exp;
-    float transparency, refractionIndex;
+    float transparency, refractionIndex, reflection;
 
 public:
     Material();

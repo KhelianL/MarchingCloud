@@ -8,6 +8,9 @@ Material::Material()
     this->spec_exp = 32;
     this->transparency = 0.0;
     this->refractionIndex = 1.0;
+    this->reflection = 0.0;
+
+    
 }
 Material::Material(MaterialType type)
 {
@@ -20,6 +23,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 51.2;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.5;
         break;
     case MaterialType::Silver:
         this->ambiant = Vec3(0.19225, 0.19225, 0.19225);
@@ -28,6 +32,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 51.2;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.7;
         break;
     case MaterialType::Bronze:
         this->ambiant = Vec3(0.2125, 0.1275, 0.054);
@@ -36,6 +41,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 25.6;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.3;
         break;
     case MaterialType::Copper:
         this->ambiant = Vec3(0.19125, 0.0735, 0.0225);
@@ -44,6 +50,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 12.8;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.3;
         break;
     case MaterialType::Wood:
         this->ambiant = Vec3(0.3, 0.1, 0.1);
@@ -52,6 +59,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 10.0;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.0;
         break;
     case MaterialType::RedPlastic:
         this->ambiant = Vec3(0.3, 0.0, 0.0);
@@ -60,6 +68,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 10.0;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.5;
         break;
     case MaterialType::GreenPlastic:
         this->ambiant = Vec3(0.0, 0.3, 0.0);
@@ -68,6 +77,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 10.0;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.5;
         break;
     case MaterialType::BluePlastic:
         this->ambiant = Vec3(0.0, 0.0, 0.3);
@@ -76,6 +86,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 10.0;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.5;
         break;
     case MaterialType::Ruby:
         this->ambiant = Vec3(0.1745, 0.01175, 0.01175);
@@ -84,6 +95,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 76.8;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
+        this->reflection = 0.7;
         break;
     case MaterialType::Crystal:
         this->ambiant = Vec3(0.1, 0.1, 0.1);
@@ -92,6 +104,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 100.0;
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
+        this->reflection = 0.8;
         break;
     case MaterialType::Water:
         this->ambiant = Vec3(0.0, 0.0, 0.2);
@@ -100,6 +113,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 100.0;
         this->transparency = 0.9;
         this->refractionIndex = 1.33;
+        this->reflection = 0.6;
         break;
     case MaterialType::Glass:
         this->ambiant = Vec3(0.0, 0.0, 0.0);
@@ -108,6 +122,16 @@ Material::Material(MaterialType type)
         this->spec_exp = 100.0;
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
+        this->reflection = 0.6;
+        break;
+    case MaterialType::Mirror:
+        this->ambiant = Vec3(0.0, 0.0, 0.0);
+        this->diffuse = Vec3(0.5, 0.5, 0.5);
+        this->specular = Vec3(0.9, 0.9, 0.9);
+        this->spec_exp = 100.0;
+        this->transparency = 0.9;
+        this->refractionIndex = 1.5;
+        this->reflection = 0.99;
         break;
     default:
         this->ambiant = Vec3();
@@ -116,6 +140,7 @@ Material::Material(MaterialType type)
         this->spec_exp = 32;
         this->transparency = 0.0;
         this->refractionIndex = 1.0;
+        this->reflection = 0.0;
         break;
     }
 }
