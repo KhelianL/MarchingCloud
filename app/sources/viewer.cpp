@@ -1,6 +1,6 @@
 #include <viewer.h>
 
-Viewer::Viewer(Scene *const s, qglviewer::Camera *c, QWidget *parent) : scene(s), camera(c), QGLViewer(parent)
+Viewer::Viewer(Scene *const s, QWidget *parent) : scene(s), QGLViewer(parent)
 {
         this->init();
 }
@@ -44,13 +44,13 @@ void Viewer::rayTraceEvent()
         // Projection Matrix
         float projectionMatrix[16];
         float modelViewMatrix[16];
-        this->camera->getProjectionMatrix(projectionMatrix);
-        this->camera->getModelViewMatrix(modelViewMatrix);
+        this->camera()->getProjectionMatrix(projectionMatrix);
+        this->camera()->getModelViewMatrix(modelViewMatrix);
         QMatrix4x4 invprojectionMat4 = QMatrix4x4(projectionMatrix).inverted().transposed();
         QMatrix4x4 invmodelViewMat4 = QMatrix4x4(modelViewMatrix).inverted().transposed();
         
         // Get Camera Position
-        qglviewer::Vec cameraPos = this->camera->position();
+        qglviewer::Vec cameraPos = this->camera()->position();
 
         linkToCuda(scenePointCloud, width, height, invmodelViewMat4.data(), invprojectionMat4.data(), {cameraPos.x, cameraPos.y, cameraPos.z});
 }

@@ -29,7 +29,6 @@
 #include <scene.h>
 #include <viewer.h>
 #include <popupWindow.h>
-#include <standardCamera.h>
 
 class MainWindow : public QMainWindow
 {
@@ -59,40 +58,61 @@ private slots:
     void about();
 
 private:
+    /* CORE */
     Scene *const scene = new Scene();
-    StandardCamera *const camera = new StandardCamera();
     Viewer *viewer;
     QProgressBar *progressBar = new QProgressBar();
 
+    /* EDIT_LINES */
+    QLineEdit *editPosX;
+    QLineEdit *editPosY;
+    QLineEdit *editPosZ;
+    QLineEdit *editRotX;
+    QLineEdit *editRotY;
+    QLineEdit *editRotZ;
+    QLineEdit *editSclX;
+    QLineEdit *editSclY;
+    QLineEdit *editSclZ;
+    QLineEdit *editAmbR;
+    QLineEdit *editAmbG;
+    QLineEdit *editAmbB;
+    QLineEdit *editDifR;
+    QLineEdit *editDifG;
+    QLineEdit *editDifB;
+    QLineEdit *editSpeR;
+    QLineEdit *editSpeG;
+    QLineEdit *editSpeB;
+    QLineEdit *editSpeExp;
+    QLineEdit *editWidth;
+    QLineEdit *editHeight;
+
+    void enableEdit(bool b);
+
+    /* INTERFACE CREATION */
     QWidget *createTransformComponent();
     QWidget *createMaterialComponent();
     QWidget *createRenderComponent();
     void addLine(QVBoxLayout *layoutComponent);
-
     void createActions();
     void createMenus();
 
+    /* ACTIONS & MENU */
     QShortcut *shortcut;
-
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *pointCloudMenu;
     QMenu *helpMenu;
-
     QAction *newSceneAct;
     QAction *openSceneAct;
     QAction *saveSceneAct;
     QAction *exitAct;
-
     QAction *undoAct;
     QAction *redoAct;
-
     QAction *importPointCloudAct;
     QAction *genPlaneAct;
     QAction *genCubeAct;
     QAction *genSphereAct;
     QAction *genTorusAct;
-
     QAction *aboutAct;
 };
 

@@ -9,7 +9,6 @@
 
 /* libQGLViewer */
 #include <qglviewer.h>
-#include <camera.h>
 #include <vec.h>
 
 /* SRC */
@@ -21,7 +20,6 @@ class Viewer : public QGLViewer
 {
 private:
     Scene *const scene;
-    qglviewer::Camera *camera;
 
 protected:
     virtual void init();
@@ -30,7 +28,7 @@ protected:
     virtual QString helpString() const;
 
 public:
-    Viewer(Scene *const s, qglviewer::Camera *c, QWidget *parent);
+    Viewer(Scene *const s, QWidget *parent);
     Scene *getScene();
     void rayTraceEvent();
 };

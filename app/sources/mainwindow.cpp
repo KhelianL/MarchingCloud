@@ -19,9 +19,10 @@ MainWindow::MainWindow()
     this->addLine(layoutComponent);
     layoutComponent->addWidget(createRenderComponent());
     rightSide->setLayout(layoutComponent);
+    enableEdit(false);
 
     // Left/Right side
-    this->viewer = new Viewer(this->scene, this->camera, splitter);
+    this->viewer = new Viewer(this->scene, splitter);
     splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
@@ -35,7 +36,6 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     delete this->scene;
-    delete this->camera;
     delete this->progressBar;
 }
 
@@ -46,6 +46,29 @@ MainWindow::~MainWindow()
 void MainWindow::setProgress(int n)
 {
     this->progressBar->setValue(n);
+}
+
+void MainWindow::enableEdit(bool b)
+{
+    this->editPosX->setEnabled(b);
+    this->editPosY->setEnabled(b);
+    this->editPosZ->setEnabled(b);
+    this->editRotX->setEnabled(b);
+    this->editRotY->setEnabled(b);
+    this->editRotZ->setEnabled(b);
+    this->editSclX->setEnabled(b);
+    this->editSclY->setEnabled(b);
+    this->editSclZ->setEnabled(b);
+    this->editAmbR->setEnabled(b);
+    this->editAmbG->setEnabled(b);
+    this->editAmbB->setEnabled(b);
+    this->editDifR->setEnabled(b);
+    this->editDifG->setEnabled(b);
+    this->editDifB->setEnabled(b);
+    this->editSpeR->setEnabled(b);
+    this->editSpeG->setEnabled(b);
+    this->editSpeB->setEnabled(b);
+    this->editSpeExp->setEnabled(b);
 }
 
 /*#########################################*/
@@ -77,15 +100,15 @@ QWidget *MainWindow::createTransformComponent()
     QLabel *labelSclX = new QLabel("X :", this);
     QLabel *labelSclY = new QLabel("Y :", this);
     QLabel *labelSclZ = new QLabel("Z :", this);
-    QLineEdit *editPosX = new QLineEdit();
-    QLineEdit *editPosY = new QLineEdit();
-    QLineEdit *editPosZ = new QLineEdit();
-    QLineEdit *editRotX = new QLineEdit();
-    QLineEdit *editRotY = new QLineEdit();
-    QLineEdit *editRotZ = new QLineEdit();
-    QLineEdit *editSclX = new QLineEdit();
-    QLineEdit *editSclY = new QLineEdit();
-    QLineEdit *editSclZ = new QLineEdit();
+    this->editPosX = new QLineEdit();
+    this->editPosY = new QLineEdit();
+    this->editPosZ = new QLineEdit();
+    this->editRotX = new QLineEdit();
+    this->editRotY = new QLineEdit();
+    this->editRotZ = new QLineEdit();
+    this->editSclX = new QLineEdit();
+    this->editSclY = new QLineEdit();
+    this->editSclZ = new QLineEdit();
     editPosX->setAlignment(Qt::AlignCenter);
     editPosY->setAlignment(Qt::AlignCenter);
     editPosZ->setAlignment(Qt::AlignCenter);
@@ -165,69 +188,69 @@ QWidget *MainWindow::createMaterialComponent()
     QGridLayout *labelMaterial = new QGridLayout;
 
     QLabel *labelTitle = new QLabel(tr("Material:"), this);
-    QLabel *labelPos = new QLabel(tr("Diffuse:"), this);
-    QLabel *labelRot = new QLabel(tr("Ambiant:"), this);
-    QLabel *labelScl = new QLabel(tr("Specular:"), this);
-    QLabel *labelSpecExp = new QLabel(tr("Specular Exponent:"), this);
+    QLabel *labelAmb = new QLabel(tr("Diffuse:"), this);
+    QLabel *labelDif = new QLabel(tr("Ambiant:"), this);
+    QLabel *labelSpe = new QLabel(tr("Specular:"), this);
+    QLabel *labelSpeExp = new QLabel(tr("Specular Exponent:"), this);
     QLabel *labelMat = new QLabel(tr("Material:"), this);
-    QLabel *labelPosX = new QLabel("R :", this);
-    QLabel *labelPosY = new QLabel("G :", this);
-    QLabel *labelPosZ = new QLabel("B :", this);
-    QLabel *labelRotX = new QLabel("R :", this);
-    QLabel *labelRotY = new QLabel("G :", this);
-    QLabel *labelRotZ = new QLabel("B :", this);
-    QLabel *labelSclX = new QLabel("R :", this);
-    QLabel *labelSclY = new QLabel("G :", this);
-    QLabel *labelSclZ = new QLabel("B :", this);
-    QLineEdit *editPosX = new QLineEdit();
-    QLineEdit *editPosY = new QLineEdit();
-    QLineEdit *editPosZ = new QLineEdit();
-    QLineEdit *editRotX = new QLineEdit();
-    QLineEdit *editRotY = new QLineEdit();
-    QLineEdit *editRotZ = new QLineEdit();
-    QLineEdit *editSclX = new QLineEdit();
-    QLineEdit *editSclY = new QLineEdit();
-    QLineEdit *editSclZ = new QLineEdit();
-    QLineEdit *editSpecExp = new QLineEdit();
-    editPosX->setAlignment(Qt::AlignCenter);
-    editPosY->setAlignment(Qt::AlignCenter);
-    editPosZ->setAlignment(Qt::AlignCenter);
-    editRotX->setAlignment(Qt::AlignCenter);
-    editRotY->setAlignment(Qt::AlignCenter);
-    editRotZ->setAlignment(Qt::AlignCenter);
-    editSclX->setAlignment(Qt::AlignCenter);
-    editSclY->setAlignment(Qt::AlignCenter);
-    editSclZ->setAlignment(Qt::AlignCenter);
-    editSpecExp->setAlignment(Qt::AlignCenter);
+    QLabel *labelAmbR = new QLabel("R :", this);
+    QLabel *labelAmbG = new QLabel("G :", this);
+    QLabel *labelAmbB = new QLabel("B :", this);
+    QLabel *labelDifR = new QLabel("R :", this);
+    QLabel *labelDifG = new QLabel("G :", this);
+    QLabel *labelDifB = new QLabel("B :", this);
+    QLabel *labelSpeR = new QLabel("R :", this);
+    QLabel *labelSpeG = new QLabel("G :", this);
+    QLabel *labelSpeB = new QLabel("B :", this);
+    this->editAmbR = new QLineEdit();
+    this->editAmbG = new QLineEdit();
+    this->editAmbB = new QLineEdit();
+    this->editDifR = new QLineEdit();
+    this->editDifG = new QLineEdit();
+    this->editDifB = new QLineEdit();
+    this->editSpeR = new QLineEdit();
+    this->editSpeG = new QLineEdit();
+    this->editSpeB = new QLineEdit();
+    this->editSpeExp = new QLineEdit();
+    editAmbR->setAlignment(Qt::AlignCenter);
+    editAmbG->setAlignment(Qt::AlignCenter);
+    editAmbB->setAlignment(Qt::AlignCenter);
+    editDifR->setAlignment(Qt::AlignCenter);
+    editDifG->setAlignment(Qt::AlignCenter);
+    editDifB->setAlignment(Qt::AlignCenter);
+    editSpeR->setAlignment(Qt::AlignCenter);
+    editSpeG->setAlignment(Qt::AlignCenter);
+    editSpeB->setAlignment(Qt::AlignCenter);
+    editSpeExp->setAlignment(Qt::AlignCenter);
 
-    labelMaterial->addWidget(labelPos, 0, 0);
-    labelMaterial->addWidget(labelRot, 1, 0);
-    labelMaterial->addWidget(labelScl, 2, 0);
-    labelMaterial->addWidget(labelSpecExp, 3, 0);
+    labelMaterial->addWidget(labelAmb, 0, 0);
+    labelMaterial->addWidget(labelDif, 1, 0);
+    labelMaterial->addWidget(labelSpe, 2, 0);
+    labelMaterial->addWidget(labelSpeExp, 3, 0);
     labelMaterial->addWidget(labelMat, 4, 0);
 
-    editMaterial->addWidget(labelPosX, 0, 2, 1, 1);
-    editMaterial->addWidget(editPosX, 0, 3, 1, 1);
-    editMaterial->addWidget(labelPosY, 0, 4, 1, 1);
-    editMaterial->addWidget(editPosY, 0, 5, 1, 1);
-    editMaterial->addWidget(labelPosZ, 0, 6, 1, 1);
-    editMaterial->addWidget(editPosZ, 0, 7, 1, 1);
+    editMaterial->addWidget(labelAmbR, 0, 2, 1, 1);
+    editMaterial->addWidget(editAmbR, 0, 3, 1, 1);
+    editMaterial->addWidget(labelAmbG, 0, 4, 1, 1);
+    editMaterial->addWidget(editAmbG, 0, 5, 1, 1);
+    editMaterial->addWidget(labelAmbB, 0, 6, 1, 1);
+    editMaterial->addWidget(editAmbB, 0, 7, 1, 1);
 
-    editMaterial->addWidget(labelRotX, 1, 2, 1, 1);
-    editMaterial->addWidget(editRotX, 1, 3, 1, 1);
-    editMaterial->addWidget(labelRotY, 1, 4, 1, 1);
-    editMaterial->addWidget(editRotY, 1, 5, 1, 1);
-    editMaterial->addWidget(labelRotZ, 1, 6, 1, 1);
-    editMaterial->addWidget(editRotZ, 1, 7, 1, 1);
+    editMaterial->addWidget(labelDifR, 1, 2, 1, 1);
+    editMaterial->addWidget(editDifR, 1, 3, 1, 1);
+    editMaterial->addWidget(labelDifG, 1, 4, 1, 1);
+    editMaterial->addWidget(editDifG, 1, 5, 1, 1);
+    editMaterial->addWidget(labelDifB, 1, 6, 1, 1);
+    editMaterial->addWidget(editDifB, 1, 7, 1, 1);
 
-    editMaterial->addWidget(labelSclX, 2, 2, 1, 1);
-    editMaterial->addWidget(editSclX, 2, 3, 1, 1);
-    editMaterial->addWidget(labelSclY, 2, 4, 1, 1);
-    editMaterial->addWidget(editSclY, 2, 5, 1, 1);
-    editMaterial->addWidget(labelSclZ, 2, 6, 1, 1);
-    editMaterial->addWidget(editSclZ, 2, 7, 1, 1);
+    editMaterial->addWidget(labelSpeR, 2, 2, 1, 1);
+    editMaterial->addWidget(editSpeR, 2, 3, 1, 1);
+    editMaterial->addWidget(labelSpeG, 2, 4, 1, 1);
+    editMaterial->addWidget(editSpeG, 2, 5, 1, 1);
+    editMaterial->addWidget(labelSpeB, 2, 6, 1, 1);
+    editMaterial->addWidget(editSpeB, 2, 7, 1, 1);
 
-    editMaterial->addWidget(editSpecExp, 3, 4, 1, 3);
+    editMaterial->addWidget(editSpeExp, 3, 4, 1, 3);
 
     QComboBox *editMat = new QComboBox();
     editMat->addItem(matToString(MaterialType::Gold));
@@ -243,6 +266,7 @@ QWidget *MainWindow::createMaterialComponent()
     editMat->addItem(matToString(MaterialType::Water));
     editMat->addItem(matToString(MaterialType::Glass));
     editMat->addItem(matToString(MaterialType::Mirror));
+    editMat->setEnabled(false);
     editMaterial->addWidget(editMat, 4, 4, 1, 3);
 
     labelWidget->setLayout(labelMaterial);
@@ -280,78 +304,24 @@ QWidget *MainWindow::createRenderComponent()
 {
     QWidget *resWidget = new QWidget;
     QWidget *combineWidget = new QWidget;
-    QWidget *labelWidget = new QWidget;
-    QWidget *editWidget = new QWidget;
 
     QVBoxLayout *resLayout = new QVBoxLayout;
-    QHBoxLayout *combineLayout = new QHBoxLayout;
-    QGridLayout *editTransform = new QGridLayout;
-    QGridLayout *labelTransform = new QGridLayout;
+    QGridLayout *renderParamLayout = new QGridLayout;
 
     QLabel *labelTitle = new QLabel(tr("Render:"), this);
-    QLabel *labelPos = new QLabel(tr("Position:"), this);
-    QLabel *labelRot = new QLabel(tr("Rotation:"), this);
-    QLabel *labelScl = new QLabel(tr("Scale:"), this);
-    QLabel *labelPosX = new QLabel("X :", this);
-    QLabel *labelPosY = new QLabel("Y :", this);
-    QLabel *labelPosZ = new QLabel("Z :", this);
-    QLabel *labelRotX = new QLabel("X :", this);
-    QLabel *labelRotY = new QLabel("Y :", this);
-    QLabel *labelRotZ = new QLabel("Z :", this);
-    QLabel *labelSclX = new QLabel("X :", this);
-    QLabel *labelSclY = new QLabel("Y :", this);
-    QLabel *labelSclZ = new QLabel("Z :", this);
-    QLineEdit *editPosX = new QLineEdit();
-    QLineEdit *editPosY = new QLineEdit();
-    QLineEdit *editPosZ = new QLineEdit();
-    QLineEdit *editRotX = new QLineEdit();
-    QLineEdit *editRotY = new QLineEdit();
-    QLineEdit *editRotZ = new QLineEdit();
-    QLineEdit *editSclX = new QLineEdit();
-    QLineEdit *editSclY = new QLineEdit();
-    QLineEdit *editSclZ = new QLineEdit();
-    editPosX->setAlignment(Qt::AlignCenter);
-    editPosY->setAlignment(Qt::AlignCenter);
-    editPosZ->setAlignment(Qt::AlignCenter);
-    editRotX->setAlignment(Qt::AlignCenter);
-    editRotY->setAlignment(Qt::AlignCenter);
-    editRotZ->setAlignment(Qt::AlignCenter);
-    editSclX->setAlignment(Qt::AlignCenter);
-    editSclY->setAlignment(Qt::AlignCenter);
-    editSclZ->setAlignment(Qt::AlignCenter);
+    QLabel *labelWidth = new QLabel(tr("Width:"), this);
+    QLabel *labelHeight = new QLabel(tr("Height:"), this);
+    this->editWidth = new QLineEdit();
+    this->editHeight = new QLineEdit();
+    editWidth->setAlignment(Qt::AlignCenter);
+    editHeight->setAlignment(Qt::AlignCenter);
 
-    labelTransform->addWidget(labelPos, 0, 0);
-    labelTransform->addWidget(labelRot, 1, 0);
-    labelTransform->addWidget(labelScl, 2, 0);
+    renderParamLayout->addWidget(labelWidth, 0, 0);
+    renderParamLayout->addWidget(labelHeight, 1, 0);
+    renderParamLayout->addWidget(editWidth, 0, 1);
+    renderParamLayout->addWidget(editHeight, 1, 1);
 
-    editTransform->addWidget(labelPosX, 0, 2, 1, 1);
-    editTransform->addWidget(editPosX, 0, 3, 1, 1);
-    editTransform->addWidget(labelPosY, 0, 4, 1, 1);
-    editTransform->addWidget(editPosY, 0, 5, 1, 1);
-    editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
-    editTransform->addWidget(editPosZ, 0, 7, 1, 1);
-
-    editTransform->addWidget(labelRotX, 1, 2, 1, 1);
-    editTransform->addWidget(editRotX, 1, 3, 1, 1);
-    editTransform->addWidget(labelRotY, 1, 4, 1, 1);
-    editTransform->addWidget(editRotY, 1, 5, 1, 1);
-    editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
-    editTransform->addWidget(editRotZ, 1, 7, 1, 1);
-
-    editTransform->addWidget(labelSclX, 2, 2, 1, 1);
-    editTransform->addWidget(editSclX, 2, 3, 1, 1);
-    editTransform->addWidget(labelSclY, 2, 4, 1, 1);
-    editTransform->addWidget(editSclY, 2, 5, 1, 1);
-    editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
-    editTransform->addWidget(editSclZ, 2, 7, 1, 1);
-
-    labelWidget->setLayout(labelTransform);
-    editWidget->setLayout(editTransform);
-
-    combineLayout->addWidget(labelWidget);
-    combineLayout->addWidget(editWidget);
-
-    combineWidget->setLayout(combineLayout);
+    combineWidget->setLayout(renderParamLayout);
 
     QFont boldFont = labelTitle->font();
     boldFont.setBold(true);
@@ -369,8 +339,6 @@ QWidget *MainWindow::createRenderComponent()
     shadow->setOffset(2, 2);
     resWidget->setGraphicsEffect(shadow);
 
-    editWidget->setMaximumHeight(100);
-    labelWidget->setMaximumHeight(100);
     combineWidget->setMaximumHeight(100);
     resWidget->setMaximumHeight(150);
 
