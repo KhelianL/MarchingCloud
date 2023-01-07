@@ -236,7 +236,8 @@ void PointCloud::generateTorus(int resolution)
             const Vec3 normal = {x / norm, y / norm, z / norm};
 
             // Ajout du point et de sa normale au vecteur
-            this->positions.push_back({x, y, z});
+            Vec3 pos = Vec3(x, y, z) / 3;
+            this->positions.push_back(pos);
             this->normals.push_back(normal);
         }
     }
@@ -244,47 +245,41 @@ void PointCloud::generateTorus(int resolution)
     this->isSet = true;
 }
 
-void PointCloud::generateRabbit(int resolution)
+void PointCloud::decimate(const float &keepingPart)
 {
-    int numLevels = 5;
-        this->reset();
-
-    for (int i = 0; i < numLevels; ++i)
+    // On commence par vérifier que la valeur de keepingPart est correcte
+    if (keepingPart <= 0 || keepingPart > 1)
     {
-        const int numHeight = resolution;
-        const int numRadius = 2 * resolution;
+        std::cerr << "Error: keepingPart must be a value between 0 and 1" << std::endl;
+        return;
+    }
 
-        const float height = i / (numLevels - 1.0f);
-        const float radius = 0.1f + 0.9f * height;
+    // On utilise un générateur de nombres aléatoires pour sélectionner les points à conserver
+    std::mt19937 randomGenerator(time(nullptr));
+    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
-        for (int j = 0; j < numHeight; ++j)
+    // On parcours chaque point et on décide s'il doit être conservé ou non
+    std::vector<Vec3> newPositions;
+    std::vector<Vec3> newNormals;
+    for (int i = 0; i < this->positions.size(); i++)
+    {
+        float randomNumber = distribution(randomGenerator);
+        if (randomNumber <= keepingPart)
         {
-            for (int k = 0; k < numRadius; ++k)
-            {
-                // Calcul de l'angle radial
-                const float theta = k * 2 * M_PI / numRadius;
-
-                // Calcul des coordonnées du point sur le cône
-                // const float x = radius * cos(theta);
-                // const float y = radius * sin(theta);
-                // const float z = j / (numHeight - 1.0f) + i;
-
-                const float x = cos(radius) * (height - j) / height;
-                const float y = sin(radius) * (height - j) / height;
-                const float z = j / (height - 1.0f) + i;
-
-                // Calcul et normalisation de la normale
-                const float norm = sqrtf(x * x + y * y + z * z);
-                const Vec3 normal = {x / norm, y / norm, z / norm};
-
-                // Ajout du point et de sa normale au vecteur
-                this->positions.push_back({x, y, z});
-                this->normals.push_back(normal);
-            }
+            // On conserve le point et les informations associées
+            newPositions.push_back(this->positions[i]);
+            newNormals.push_back(this->normals[i]);
         }
     }
 
-    this->isSet = true;
+    this->positions.resize(newPositions.size());
+    this->normals.resize(newNormals.size());
+
+    for (int i = 0; i < newPositions.size(); i++)
+    {
+        this->positions[i] = newPositions[i];
+        this->normals[i] = newNormals[i];
+    }
 }
 
 void PointCloud::draw()

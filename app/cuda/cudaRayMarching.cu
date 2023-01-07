@@ -6,8 +6,6 @@
 #include <algorithm>  // Sort
 #include <functional> // Bind
 #include <float.h>    // FLT_MAX
-#include <random>     // mt19937
-#include <ctime>      // time(nullptr)
 #include <fstream>    // save render
 #include <string>     // name render
 
@@ -425,47 +423,6 @@ struct cIntersection
     CudaVec3 position;
     float convTime;
 };
-
-void decimate(std::vector<Vec3> &positions, std::vector<Vec3> &normals, std::vector<char> &materialIndex, float keepingPart)
-{
-    // On commence par vérifier que la valeur de keepingPart est correcte
-    if (keepingPart <= 0 || keepingPart > 1)
-    {
-        std::cerr << "Error: keepingPart must be a value between 0 and 1" << std::endl;
-        return;
-    }
-
-    // On utilise un générateur de nombres aléatoires pour sélectionner les points à conserver
-    std::mt19937 randomGenerator(time(nullptr));
-    std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-
-    // On parcours chaque point et on décide s'il doit être conservé ou non
-    std::vector<Vec3> newPositions;
-    std::vector<Vec3> newNormals;
-    std::vector<char> newMaterialIndex;
-    for (int i = 0; i < positions.size(); i++)
-    {
-        float randomNumber = distribution(randomGenerator);
-        if (randomNumber <= keepingPart)
-        {
-            // On conserve le point et les informations associées
-            newPositions.push_back(positions[i]);
-            newNormals.push_back(normals[i]);
-            newMaterialIndex.push_back(materialIndex[i]);
-        }
-    }
-
-    positions.resize(newPositions.size());
-    normals.resize(newNormals.size());
-    materialIndex.resize(newMaterialIndex.size());
-
-    for (int i = 0; i < newPositions.size(); i++)
-    {
-        positions[i] = newPositions[i];
-        normals[i] = newNormals[i];
-        materialIndex[i] = newMaterialIndex[i];
-    }
-}
 
 __device__ PointQueue *knearest(KdTreeNode *kd_tree, float pointX, float pointY, float pointZ, int nbNeighbors)
 {

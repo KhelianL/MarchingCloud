@@ -405,24 +405,44 @@ void MainWindow::importPointCloud()
     PopupWindow popup(PopupType::IMPORT);
     popup.exec();
 
-    this->scene->generateImport(fileName.toStdString());
+    this->scene->generateImport(fileName.toStdString(), (double)popup.getValue());
 }
 
 void MainWindow::createPlane()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE PLANE>"));
+
+    PopupWindow popup(PopupType::PLANE);
+    popup.exec();
+
+    scene->generatePrimitive(PopupType::PLANE, (int)popup.getValue());
 }
 void MainWindow::createCube()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE CUBE>"));
+
+    PopupWindow popup(PopupType::CUBE);
+    popup.exec();
+
+    scene->generatePrimitive(PopupType::CUBE, (int)popup.getValue());
 }
 void MainWindow::createSphere()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE SPHERE>"));
+
+    PopupWindow popup(PopupType::SPHERE);
+    popup.exec();
+
+    scene->generatePrimitive(PopupType::SPHERE, (int)popup.getValue());
 }
 void MainWindow::createTorus()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE TORUS>"));
+
+    PopupWindow popup(PopupType::TORUS);
+    popup.exec();
+
+    scene->generatePrimitive(PopupType::TORUS, (int)popup.getValue());
 }
 
 void MainWindow::about()

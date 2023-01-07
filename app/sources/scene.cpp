@@ -21,35 +21,38 @@ void Scene::init()
     dino3.setMaterial(Material(MaterialType::Gold));
     this->listPointCloud.push_back(dino3);
     */
-    
-    PointCloud testSphere;
-    testSphere.generateSphere(50);
-    this->listPointCloud.push_back(testSphere);
-
-    PointCloud testPlane;
-    testPlane.generatePlane(50);
-    this->listPointCloud.push_back(testPlane);
-
-    PointCloud testCube;
-    testCube.generateCube(50);
-    this->listPointCloud.push_back(testCube);
-
-    PointCloud testTorus;
-    testTorus.generateTorus(50);
-    this->listPointCloud.push_back(testTorus);
-
-    // PointCloud testRabbit;
-    // testRabbit.generateRabbit(50);
-    // this->listPointCloud.push_back(testRabbit);
-
-    
 }
 
-void Scene::generateImport(const std::string &filename)
+void Scene::generateImport(const std::string &filename, const float &keepingPart)
 {
-    PointCloud p;
-    p.loadPointCloud(filename);
-    this->listPointCloud.push_back(p);
+    PointCloud res;
+    res.loadPointCloud(filename);
+
+    res.decimate(keepingPart);
+
+    this->listPointCloud.push_back(res);
+}
+void Scene::generatePrimitive(const PopupType &type, const double &resolution)
+{
+    PointCloud res;
+    switch (type)
+    {
+    case PopupType::PLANE:
+        res.generatePlane(resolution);
+        break;
+    case PopupType::CUBE:
+        res.generateCube(resolution);
+        break;
+    case PopupType::SPHERE:
+        res.generateSphere(resolution);
+        break;
+    case PopupType::TORUS:
+        res.generateTorus(resolution);
+        break;
+    default:
+        break;
+    }
+    this->listPointCloud.push_back(res);
 }
 
 std::vector<PointCloud> &Scene::getListPointCloud()

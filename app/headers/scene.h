@@ -6,6 +6,7 @@
 
 /* SRC CUDA */
 #include <pointCloud.h>
+#include <popupWindow.h>
 
 class Scene
 {
@@ -20,7 +21,8 @@ public:
 
     std::vector<PointCloud> &getListPointCloud();
 
-    void generateImport(const std::string &filename);
+    void generateImport(const std::string &filename, const float &decimate);
+    void generatePrimitive(const PopupType &type, const double &resolution);
 };
 
 #endif

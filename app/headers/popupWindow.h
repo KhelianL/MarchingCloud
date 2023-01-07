@@ -15,7 +15,7 @@ enum class PopupType
     IMPORT,
     PLANE,
     CUBE,
-    SHPERE,
+    SPHERE,
     TORUS
 };
 
@@ -25,15 +25,18 @@ class PopupWindow : public QDialog
 
 public:
     PopupWindow(PopupType type, QWidget *parent = nullptr);
+    double getValue();
 
 private slots:
     void handleButtonClick();
 
 private:
+    PopupType t;
+
     QLineEdit *m_lineEdit;
     QPushButton *m_button;
 
-
+    double value;
 };
 
 #endif

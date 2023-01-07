@@ -6,6 +6,8 @@
 
 /* C++ */
 #include <vector>
+#include <random> // mt19937
+#include <ctime>  // time(nullptr)
 
 /* GLUT */
 #include <GL/glut.h>
@@ -42,6 +44,8 @@ public:
     void generateTorus(int resolution);
     void generateRabbit(int resolution);
 
+    // Decimate
+    void decimate(const float &keepingPart);
 
     // Getters
     std::vector<Vec3> &getPositions();

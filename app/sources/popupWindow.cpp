@@ -4,32 +4,33 @@
 
 PopupWindow::PopupWindow(PopupType type, QWidget *parent) : QDialog(parent)
 {
+    // Type
+    this->t = type;
+
     // Création du layout
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     // Création d'un validateur
-    QDoubleValidator *validator = new QDoubleValidator(0.0, 1.0, 2, this);
-    validator->setNotation(QDoubleValidator::StandardNotation);
+    QIntValidator *validatorInt = new QIntValidator(0, 100, this);
+    QDoubleValidator *validatorDouble = new QDoubleValidator(0.0, 1.0, 2, this);
+    validatorDouble->setNotation(QDoubleValidator::StandardNotation);
 
     // Création des champs de saisie selon le type
-    switch (type)
+    if (type == PopupType::IMPORT)
     {
-    case PopupType::IMPORT:
+        // Param = decimation
         layout->addWidget(new QLabel("Entrez une valeur de décimation [0.0 ; 1.0] :", this));
         m_lineEdit = new QLineEdit(this);
-        m_lineEdit->setValidator(validator);
+        m_lineEdit->setValidator(validatorDouble);
         layout->addWidget(m_lineEdit);
-        break;
-    case PopupType::PLANE:
-        break;
-    case PopupType::CUBE:
-        break;
-    case PopupType::SHPERE:
-        break;
-    case PopupType::TORUS:
-        break;
-    default:
-        break;
+    }
+    else // PopupType::PLANE + PopupType::CUBE + PopupType::SHPERE + PopupType::TORUS
+    {
+        // Param = resolution
+        layout->addWidget(new QLabel("Entrez une valeur de résolution :", this));
+        m_lineEdit = new QLineEdit(this);
+        m_lineEdit->setValidator(validatorInt);
+        layout->addWidget(m_lineEdit);
     }
 
     // Ajout d'un bouton d'envoi
@@ -42,7 +43,12 @@ PopupWindow::PopupWindow(PopupType type, QWidget *parent) : QDialog(parent)
 
 void PopupWindow::handleButtonClick()
 {
-    // Récupère la valeur du champ de saisie et affiche un message
-    QString value = m_lineEdit->text();
-    std::cout << (value.toDouble() > 1.0 ? 1.0 : value.toDouble()) << std::endl;
+    double v = this->m_lineEdit->text().toDouble();
+    this->value = (this->t == PopupType::IMPORT ? (v > 1.0 ? 1.0 : v) : v);
+    this->accept();
+}
+
+double PopupWindow::getValue()
+{
+    return this->value;
 }
