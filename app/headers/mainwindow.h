@@ -17,13 +17,13 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QShortcut>
-
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QGraphicsDropShadowEffect>
 #include <QFileDialog>
 #include <QString>
+#include <QComboBox>
 
 /* SRC */
 #include <scene.h>

@@ -77,15 +77,15 @@ QWidget *MainWindow::createTransformComponent()
     QLabel *labelSclX = new QLabel("X :", this);
     QLabel *labelSclY = new QLabel("Y :", this);
     QLabel *labelSclZ = new QLabel("Z :", this);
-    QLineEdit *editPosX = new QLineEdit("0.0");
-    QLineEdit *editPosY = new QLineEdit("0.0");
-    QLineEdit *editPosZ = new QLineEdit("0.0");
-    QLineEdit *editRotX = new QLineEdit("0.0");
-    QLineEdit *editRotY = new QLineEdit("0.0");
-    QLineEdit *editRotZ = new QLineEdit("0.0");
-    QLineEdit *editSclX = new QLineEdit("0.0");
-    QLineEdit *editSclY = new QLineEdit("0.0");
-    QLineEdit *editSclZ = new QLineEdit("0.0");
+    QLineEdit *editPosX = new QLineEdit();
+    QLineEdit *editPosY = new QLineEdit();
+    QLineEdit *editPosZ = new QLineEdit();
+    QLineEdit *editRotX = new QLineEdit();
+    QLineEdit *editRotY = new QLineEdit();
+    QLineEdit *editRotZ = new QLineEdit();
+    QLineEdit *editSclX = new QLineEdit();
+    QLineEdit *editSclY = new QLineEdit();
+    QLineEdit *editSclZ = new QLineEdit();
     editPosX->setAlignment(Qt::AlignCenter);
     editPosY->setAlignment(Qt::AlignCenter);
     editPosZ->setAlignment(Qt::AlignCenter);
@@ -161,31 +161,34 @@ QWidget *MainWindow::createMaterialComponent()
 
     QVBoxLayout *resLayout = new QVBoxLayout;
     QHBoxLayout *combineLayout = new QHBoxLayout;
-    QGridLayout *editTransform = new QGridLayout;
-    QGridLayout *labelTransform = new QGridLayout;
+    QGridLayout *editMaterial = new QGridLayout;
+    QGridLayout *labelMaterial = new QGridLayout;
 
     QLabel *labelTitle = new QLabel(tr("Material:"), this);
-    QLabel *labelPos = new QLabel(tr("Position:"), this);
-    QLabel *labelRot = new QLabel(tr("Rotation:"), this);
-    QLabel *labelScl = new QLabel(tr("Scale:"), this);
-    QLabel *labelPosX = new QLabel("X :", this);
-    QLabel *labelPosY = new QLabel("Y :", this);
-    QLabel *labelPosZ = new QLabel("Z :", this);
-    QLabel *labelRotX = new QLabel("X :", this);
-    QLabel *labelRotY = new QLabel("Y :", this);
-    QLabel *labelRotZ = new QLabel("Z :", this);
-    QLabel *labelSclX = new QLabel("X :", this);
-    QLabel *labelSclY = new QLabel("Y :", this);
-    QLabel *labelSclZ = new QLabel("Z :", this);
-    QLineEdit *editPosX = new QLineEdit("0.0");
-    QLineEdit *editPosY = new QLineEdit("0.0");
-    QLineEdit *editPosZ = new QLineEdit("0.0");
-    QLineEdit *editRotX = new QLineEdit("0.0");
-    QLineEdit *editRotY = new QLineEdit("0.0");
-    QLineEdit *editRotZ = new QLineEdit("0.0");
-    QLineEdit *editSclX = new QLineEdit("0.0");
-    QLineEdit *editSclY = new QLineEdit("0.0");
-    QLineEdit *editSclZ = new QLineEdit("0.0");
+    QLabel *labelPos = new QLabel(tr("Diffuse:"), this);
+    QLabel *labelRot = new QLabel(tr("Ambiant:"), this);
+    QLabel *labelScl = new QLabel(tr("Specular:"), this);
+    QLabel *labelSpecExp = new QLabel(tr("Specular Exponent:"), this);
+    QLabel *labelMat = new QLabel(tr("Material:"), this);
+    QLabel *labelPosX = new QLabel("R :", this);
+    QLabel *labelPosY = new QLabel("G :", this);
+    QLabel *labelPosZ = new QLabel("B :", this);
+    QLabel *labelRotX = new QLabel("R :", this);
+    QLabel *labelRotY = new QLabel("G :", this);
+    QLabel *labelRotZ = new QLabel("B :", this);
+    QLabel *labelSclX = new QLabel("R :", this);
+    QLabel *labelSclY = new QLabel("G :", this);
+    QLabel *labelSclZ = new QLabel("B :", this);
+    QLineEdit *editPosX = new QLineEdit();
+    QLineEdit *editPosY = new QLineEdit();
+    QLineEdit *editPosZ = new QLineEdit();
+    QLineEdit *editRotX = new QLineEdit();
+    QLineEdit *editRotY = new QLineEdit();
+    QLineEdit *editRotZ = new QLineEdit();
+    QLineEdit *editSclX = new QLineEdit();
+    QLineEdit *editSclY = new QLineEdit();
+    QLineEdit *editSclZ = new QLineEdit();
+    QLineEdit *editSpecExp = new QLineEdit();
     editPosX->setAlignment(Qt::AlignCenter);
     editPosY->setAlignment(Qt::AlignCenter);
     editPosZ->setAlignment(Qt::AlignCenter);
@@ -195,34 +198,55 @@ QWidget *MainWindow::createMaterialComponent()
     editSclX->setAlignment(Qt::AlignCenter);
     editSclY->setAlignment(Qt::AlignCenter);
     editSclZ->setAlignment(Qt::AlignCenter);
+    editSpecExp->setAlignment(Qt::AlignCenter);
 
-    labelTransform->addWidget(labelPos, 0, 0);
-    labelTransform->addWidget(labelRot, 1, 0);
-    labelTransform->addWidget(labelScl, 2, 0);
+    labelMaterial->addWidget(labelPos, 0, 0);
+    labelMaterial->addWidget(labelRot, 1, 0);
+    labelMaterial->addWidget(labelScl, 2, 0);
+    labelMaterial->addWidget(labelSpecExp, 3, 0);
+    labelMaterial->addWidget(labelMat, 4, 0);
 
-    editTransform->addWidget(labelPosX, 0, 2, 1, 1);
-    editTransform->addWidget(editPosX, 0, 3, 1, 1);
-    editTransform->addWidget(labelPosY, 0, 4, 1, 1);
-    editTransform->addWidget(editPosY, 0, 5, 1, 1);
-    editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
-    editTransform->addWidget(editPosZ, 0, 7, 1, 1);
+    editMaterial->addWidget(labelPosX, 0, 2, 1, 1);
+    editMaterial->addWidget(editPosX, 0, 3, 1, 1);
+    editMaterial->addWidget(labelPosY, 0, 4, 1, 1);
+    editMaterial->addWidget(editPosY, 0, 5, 1, 1);
+    editMaterial->addWidget(labelPosZ, 0, 6, 1, 1);
+    editMaterial->addWidget(editPosZ, 0, 7, 1, 1);
 
-    editTransform->addWidget(labelRotX, 1, 2, 1, 1);
-    editTransform->addWidget(editRotX, 1, 3, 1, 1);
-    editTransform->addWidget(labelRotY, 1, 4, 1, 1);
-    editTransform->addWidget(editRotY, 1, 5, 1, 1);
-    editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
-    editTransform->addWidget(editRotZ, 1, 7, 1, 1);
+    editMaterial->addWidget(labelRotX, 1, 2, 1, 1);
+    editMaterial->addWidget(editRotX, 1, 3, 1, 1);
+    editMaterial->addWidget(labelRotY, 1, 4, 1, 1);
+    editMaterial->addWidget(editRotY, 1, 5, 1, 1);
+    editMaterial->addWidget(labelRotZ, 1, 6, 1, 1);
+    editMaterial->addWidget(editRotZ, 1, 7, 1, 1);
 
-    editTransform->addWidget(labelSclX, 2, 2, 1, 1);
-    editTransform->addWidget(editSclX, 2, 3, 1, 1);
-    editTransform->addWidget(labelSclY, 2, 4, 1, 1);
-    editTransform->addWidget(editSclY, 2, 5, 1, 1);
-    editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
-    editTransform->addWidget(editSclZ, 2, 7, 1, 1);
+    editMaterial->addWidget(labelSclX, 2, 2, 1, 1);
+    editMaterial->addWidget(editSclX, 2, 3, 1, 1);
+    editMaterial->addWidget(labelSclY, 2, 4, 1, 1);
+    editMaterial->addWidget(editSclY, 2, 5, 1, 1);
+    editMaterial->addWidget(labelSclZ, 2, 6, 1, 1);
+    editMaterial->addWidget(editSclZ, 2, 7, 1, 1);
 
-    labelWidget->setLayout(labelTransform);
-    editWidget->setLayout(editTransform);
+    editMaterial->addWidget(editSpecExp, 3, 4, 1, 3);
+
+    QComboBox *editMat = new QComboBox();
+    editMat->addItem(matToString(MaterialType::Gold));
+    editMat->addItem(matToString(MaterialType::Silver));
+    editMat->addItem(matToString(MaterialType::Bronze));
+    editMat->addItem(matToString(MaterialType::Copper));
+    editMat->addItem(matToString(MaterialType::Wood));
+    editMat->addItem(matToString(MaterialType::RedPlastic));
+    editMat->addItem(matToString(MaterialType::GreenPlastic));
+    editMat->addItem(matToString(MaterialType::BluePlastic));
+    editMat->addItem(matToString(MaterialType::Ruby));
+    editMat->addItem(matToString(MaterialType::Crystal));
+    editMat->addItem(matToString(MaterialType::Water));
+    editMat->addItem(matToString(MaterialType::Glass));
+    editMat->addItem(matToString(MaterialType::Mirror));
+    editMaterial->addWidget(editMat, 4, 4, 1, 3);
+
+    labelWidget->setLayout(labelMaterial);
+    editWidget->setLayout(editMaterial);
 
     combineLayout->addWidget(labelWidget);
     combineLayout->addWidget(editWidget);
@@ -245,10 +269,10 @@ QWidget *MainWindow::createMaterialComponent()
     shadow->setOffset(2, 2);
     resWidget->setGraphicsEffect(shadow);
 
-    editWidget->setMaximumHeight(100);
-    labelWidget->setMaximumHeight(100);
-    combineWidget->setMaximumHeight(100);
-    resWidget->setMaximumHeight(150);
+    editWidget->setMaximumHeight(150);
+    labelWidget->setMaximumHeight(150);
+    combineWidget->setMaximumHeight(150);
+    resWidget->setMaximumHeight(200);
 
     return resWidget;
 }
@@ -277,15 +301,15 @@ QWidget *MainWindow::createRenderComponent()
     QLabel *labelSclX = new QLabel("X :", this);
     QLabel *labelSclY = new QLabel("Y :", this);
     QLabel *labelSclZ = new QLabel("Z :", this);
-    QLineEdit *editPosX = new QLineEdit("0.0");
-    QLineEdit *editPosY = new QLineEdit("0.0");
-    QLineEdit *editPosZ = new QLineEdit("0.0");
-    QLineEdit *editRotX = new QLineEdit("0.0");
-    QLineEdit *editRotY = new QLineEdit("0.0");
-    QLineEdit *editRotZ = new QLineEdit("0.0");
-    QLineEdit *editSclX = new QLineEdit("0.0");
-    QLineEdit *editSclY = new QLineEdit("0.0");
-    QLineEdit *editSclZ = new QLineEdit("0.0");
+    QLineEdit *editPosX = new QLineEdit();
+    QLineEdit *editPosY = new QLineEdit();
+    QLineEdit *editPosZ = new QLineEdit();
+    QLineEdit *editRotX = new QLineEdit();
+    QLineEdit *editRotY = new QLineEdit();
+    QLineEdit *editRotZ = new QLineEdit();
+    QLineEdit *editSclX = new QLineEdit();
+    QLineEdit *editSclY = new QLineEdit();
+    QLineEdit *editSclZ = new QLineEdit();
     editPosX->setAlignment(Qt::AlignCenter);
     editPosY->setAlignment(Qt::AlignCenter);
     editPosZ->setAlignment(Qt::AlignCenter);
@@ -349,6 +373,8 @@ QWidget *MainWindow::createRenderComponent()
     labelWidget->setMaximumHeight(100);
     combineWidget->setMaximumHeight(100);
     resWidget->setMaximumHeight(150);
+
+    // resWidget->setStyleSheet("border : 1px solid red");
 
     return resWidget;
 }

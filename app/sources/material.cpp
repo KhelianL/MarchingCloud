@@ -8,8 +8,6 @@ Material::Material()
     this->spec_exp = 32;
     this->transparency = 0.0;
     this->refractionIndex = 1.0;
-
-    
 }
 Material::Material(MaterialType type)
 {
@@ -137,3 +135,55 @@ void Material::setSpecular(Vec3 &specular) { this->specular = specular; }
 void Material::setSpecExp(int spec_exp) { this->spec_exp = spec_exp; }
 void Material::setTransparency(float transparency) { this->transparency = transparency; }
 void Material::setRefractionIndex(float refractionIndex) { this->refractionIndex = refractionIndex; }
+
+QString matToString(MaterialType type)
+{
+    QString res;
+    switch (type)
+    {
+    case MaterialType::Gold:
+        res = "Gold";
+        break;
+    case MaterialType::Silver:
+        res = "Silver";
+        break;
+    case MaterialType::Bronze:
+        res = "Bronze";
+        break;
+    case MaterialType::Copper:
+        res = "Copper";
+        break;
+    case MaterialType::Wood:
+        res = "Wood";
+        break;
+    case MaterialType::RedPlastic:
+        res = "RedPlastic";
+        break;
+    case MaterialType::GreenPlastic:
+        res = "GreenPlastic";
+        break;
+    case MaterialType::BluePlastic:
+        res = "BluePlastic";
+        break;
+    case MaterialType::Ruby:
+        res = "Ruby";
+        break;
+    case MaterialType::Crystal:
+        res = "Crystal";
+        break;
+    case MaterialType::Water:
+        res = "Water";
+        break;
+    case MaterialType::Glass:
+        res = "Glass";
+        break;
+    case MaterialType::Mirror:
+        res = "Mirror";
+        break;
+    default:
+        res = "";
+        break;
+    }
+
+    return res;
+}

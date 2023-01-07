@@ -21,6 +21,7 @@ PopupWindow::PopupWindow(PopupType type, QWidget *parent) : QDialog(parent)
         // Param = decimation
         layout->addWidget(new QLabel("Entrez une valeur de décimation [0.0 ; 1.0] :", this));
         m_lineEdit = new QLineEdit(this);
+        m_lineEdit->setText("1.0");
         m_lineEdit->setValidator(validatorDouble);
         layout->addWidget(m_lineEdit);
     }
@@ -29,6 +30,7 @@ PopupWindow::PopupWindow(PopupType type, QWidget *parent) : QDialog(parent)
         // Param = resolution
         layout->addWidget(new QLabel("Entrez une valeur de résolution :", this));
         m_lineEdit = new QLineEdit(this);
+        m_lineEdit->setText("50");
         m_lineEdit->setValidator(validatorInt);
         layout->addWidget(m_lineEdit);
     }

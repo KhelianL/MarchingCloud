@@ -1,8 +1,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+/* QT */
+#include <QString>
+
 /* SRC */
 #include <vec3.h>
+
+
 
 enum class MaterialType
 {
@@ -20,6 +25,7 @@ enum class MaterialType
     Glass,
     Mirror
 };
+QString matToString(MaterialType type);
 
 class Material
 {
