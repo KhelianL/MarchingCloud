@@ -695,9 +695,9 @@ __device__ CudaVec3 mix(CudaVec3 color1, CudaVec3 color2, float mixFactor)
     return color1 * (1.0 - mixFactor) + color2 * mixFactor;
 }
 
-__global__ void cuda_ray_trace(float *rayPos, float *rayDir, float *image, int imgSize, PointCloudData pcd, int maxTransparencyIterations = 0)
+__global__ void cuda_ray_trace(int startIndex, float *rayPos, float *rayDir, float *image, int imgSize, PointCloudData pcd, int maxTransparencyIterations = 0)
 {
-    int index = getGlobalIdx_1D_2D();
+    int index = getGlobalIdx_1D_2D()+startIndex;
 
     if (index < imgSize)
     {
@@ -816,10 +816,29 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     std::cout << "Nb block : " << nbBlock << std::endl;
 
     dim3 threadsPerBlock(nbth, nbth);
-    dim3 numBlocks(nbBlock, 1);
 
-    cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h * w, pcd);
+    
+    // dim3 numBlocks(nbBlock, 1);
+    // cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(cudaPos, cudaDirTab, cudaImage, h * w, pcd);
+    // cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size() * sizeof(float), cudaMemcpyDeviceToHost);
+    
+
+    int nbsteps = 10;   
+    int blockPerSteps = nbBlock/nbsteps;
+    dim3 numBlocks(blockPerSteps, 1);
+
+    int nextInd = 0;
+    int i = 0;
+    while(nextInd < nbBlock * (nbth * nbth)){
+        cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(nextInd, cudaPos, cudaDirTab, cudaImage, h * w, pcd);
+        cudaDeviceSynchronize();
+        i += 100/nbsteps;
+        std::cout<<i<<"%"<<std::endl;
+        nextInd += blockPerSteps * (nbth * nbth);
+    }
+
     cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size() * sizeof(float), cudaMemcpyDeviceToHost);
+
 
     std::string filename = "./rendu.ppm";
 

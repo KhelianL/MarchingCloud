@@ -23,7 +23,10 @@ enum class MaterialType
     Crystal,
     Water,
     Glass,
-    Mirror
+    WitchHair,
+    Mirror,
+    Donut,
+    Fire
 };
 QString matToString(MaterialType type);
 

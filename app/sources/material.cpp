@@ -109,6 +109,31 @@ Material::Material(MaterialType type)
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
         break;
+    case MaterialType::Donut:
+        this->ambiant = Vec3(0.8, 0.5, 0.2);
+        this->diffuse = Vec3(0.9, 0.7, 0.3);
+        this->specular = Vec3(0.1, 0.1, 0.1);
+        this->spec_exp = 10.0;
+        this->transparency = 0.0;
+        this->refractionIndex = 0.0;
+        break;
+    case MaterialType::WitchHair:
+        this->ambiant = Vec3(0.2, 0.2, 0.2);
+        this->diffuse = Vec3(0.9, 0.9, 0.8);
+        this->specular = Vec3(0.9, 0.9, 0.9);
+        this->spec_exp = 10.0;
+        this->transparency = 0.0;
+        this->refractionIndex = 0.0;
+        break;
+    case MaterialType::Fire:
+         this->ambiant = Vec3(0.5, 0.3, 0.1);
+            this->diffuse = Vec3(1.0, 0.1, 0.05);
+            this->specular = Vec3(0.9, 0.9, 0.9);
+            this->spec_exp = 10.0;
+            this->transparency = 0.0;
+            this->refractionIndex = 0.0;
+            break;
+        break;
     default:
         this->ambiant = Vec3();
         this->diffuse = Vec3(0.5, 0.5, 0.5);

@@ -52,6 +52,7 @@ void Scene::generatePrimitive(const PopupType &type, const double &resolution)
     default:
         break;
     }
+    res.setMaterial(Material(MaterialType::Fire));
     this->listPointCloud.push_back(res);
 }
 
