@@ -1,8 +1,14 @@
 #include <viewer.h>
 
-Viewer::Viewer(Scene *const s, QLineEdit *w, QLineEdit *h, QWidget *parent) : scene(s), editWidth(w), editHeight(h), QGLViewer(parent)
+Viewer::Viewer(Scene *const s, InterfaceQT *i, QWidget *parent) : scene(s), everyButton(i), QGLViewer(parent)
 {
 	this->init();
+}
+
+Viewer::~Viewer()
+{
+	delete this->scene;
+	delete this->everyButton;
 }
 
 void Viewer::draw()
@@ -50,7 +56,8 @@ float Viewer::isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewe
 void Viewer::rayCastClick(const QPoint &point)
 {
 	// Compute origine and direction, used to draw a representation of the intersecting line
-	camera()->convertClickToLine(point, this->origine, this->direction);
+	qglviewer::Vec origine, direction;
+	camera()->convertClickToLine(point, origine, direction);
 
 	float minDist = std::numeric_limits<float>::max();
 	int indexPointCloud = -1;
@@ -58,7 +65,7 @@ void Viewer::rayCastClick(const QPoint &point)
 	for (int i = 0, maxSize = this->scene->getListPointCloud().size(); i < maxSize; i++)
 	{
 		this->scene->getListPointCloud()[i].setIsSelected(false);
-		float distAtm = this->isAABBHit(this->scene->getListPointCloud()[i].getMinAABB(), this->scene->getListPointCloud()[i].getMaxAABB(), this->origine, this->direction);
+		float distAtm = this->isAABBHit(this->scene->getListPointCloud()[i].getMinAABB(), this->scene->getListPointCloud()[i].getMaxAABB(), origine, direction);
 		if (distAtm > 0 && distAtm < minDist)
 		{
 			minDist = distAtm;
@@ -76,7 +83,7 @@ void Viewer::keyPressEvent(QKeyEvent *event)
 	switch (event->key())
 	{
 	case Qt::Key_R:
-		rayTraceEvent(this->editWidth->text().toInt(), this->editHeight->text().toInt());
+		rayTraceEvent(this->everyButton->editWidth->text().toInt(), this->everyButton->editHeight->text().toInt());
 		break;
 	default:
 		QGLViewer::keyPressEvent(event);

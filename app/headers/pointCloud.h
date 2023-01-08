@@ -47,7 +47,6 @@ public:
     void generateSphere(int resolution);
     void generateCube(int resolution);
     void generateTorus(int resolution);
-    void generateRabbit(int resolution);
 
     // AABB
     void computeAABB();

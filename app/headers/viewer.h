@@ -17,18 +17,13 @@
 #include <scene.h>
 #include <tools.h>
 #include <vec3.h>
+#include <qtEditLink.h>
 
 class Viewer : public QGLViewer
 {
 private:
     Scene *const scene;
-
-    qglviewer::Vec origine;
-    qglviewer::Vec direction;
-    qglviewer::Vec selectedPoint;
-
-    QLineEdit *editWidth;
-    QLineEdit *editHeight;
+    InterfaceQT *everyButton;
 
 protected:
     virtual void init();
@@ -38,8 +33,11 @@ protected:
     virtual QString helpString() const;
 
 public:
-    Viewer(Scene *const s, QLineEdit *w, QLineEdit *h, QWidget *parent);
+    Viewer(Scene *const s, InterfaceQT *i, QWidget *parent);
+    ~Viewer();
+
     Scene *getScene();
+
     void rayTraceEvent(int width, int height);
 
     void rayCastClick(const QPoint &point);

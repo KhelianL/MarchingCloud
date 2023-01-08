@@ -29,6 +29,7 @@
 #include <scene.h>
 #include <viewer.h>
 #include <popupWindow.h>
+#include <qtEditLink.h>
 
 class MainWindow : public QMainWindow
 {
@@ -37,7 +38,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     ~MainWindow();
-    void setProgress(int n);
 
 private slots:
     void showCustomMenu();
@@ -61,32 +61,7 @@ private:
     /* CORE */
     Scene *const scene = new Scene();
     Viewer *viewer;
-    QProgressBar *progressBar = new QProgressBar();
-
-    /* EDIT_LINES */
-    QLineEdit *editPosX;
-    QLineEdit *editPosY;
-    QLineEdit *editPosZ;
-    QLineEdit *editRotX;
-    QLineEdit *editRotY;
-    QLineEdit *editRotZ;
-    QLineEdit *editSclX;
-    QLineEdit *editSclY;
-    QLineEdit *editSclZ;
-    QLineEdit *editAmbR;
-    QLineEdit *editAmbG;
-    QLineEdit *editAmbB;
-    QLineEdit *editDifR;
-    QLineEdit *editDifG;
-    QLineEdit *editDifB;
-    QLineEdit *editSpeR;
-    QLineEdit *editSpeG;
-    QLineEdit *editSpeB;
-    QLineEdit *editSpeExp;
-    QLineEdit *editWidth;
-    QLineEdit *editHeight;
-
-    void enableEdit(bool b);
+    InterfaceQT *everyButton;
 
     /* INTERFACE CREATION */
     QWidget *createTransformComponent();
