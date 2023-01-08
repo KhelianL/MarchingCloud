@@ -33,7 +33,7 @@ private:
 protected:
     virtual void init();
     virtual void keyPressEvent(QKeyEvent *event);
-    virtual void rayCastClick(const QPoint &point);
+    virtual void mousePressEvent(QMouseEvent *e);
     virtual void draw();
     virtual QString helpString() const;
 
@@ -41,6 +41,9 @@ public:
     Viewer(Scene *const s, QLineEdit *w, QLineEdit *h, QWidget *parent);
     Scene *getScene();
     void rayTraceEvent(int width, int height);
+
+    void rayCastClick(const QPoint &point);
+    float isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection);
 };
 
 #endif

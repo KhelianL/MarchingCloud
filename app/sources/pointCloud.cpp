@@ -39,6 +39,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     }
     else
     {
+        this->computeAABB();
         this->isSet = true;
     }
 }
@@ -57,6 +58,8 @@ void PointCloud::move(const Vec3 v)
         {
             this->positions[i] += v;
         }
+        this->minAABB += v;
+        this->maxAABB += v;
     }
 }
 void PointCloud::rotate(const float d, const Vec3 v)
@@ -92,6 +95,7 @@ void PointCloud::rotate(const float d, const Vec3 v)
             }
             this->positions[i] = rotatedVector;
         }
+        this->computeAABB();
     }
 }
 void PointCloud::scale(const Vec3 v)
@@ -105,6 +109,7 @@ void PointCloud::scale(const Vec3 v)
                 this->positions[i][j] = this->positions[i][j] * v[j];
             }
         }
+        this->computeAABB();
     }
 }
 
@@ -124,6 +129,10 @@ Material &PointCloud::getMaterial()
 void PointCloud::setMaterial(Material m)
 {
     this->material = m;
+}
+void PointCloud::setIsSelected(bool b)
+{
+    this->isSelected = b;
 }
 
 void PointCloud::generatePlane(int resolution)
@@ -150,6 +159,7 @@ void PointCloud::generatePlane(int resolution)
         }
     }
 
+    this->computeAABB();
     this->isSet = true;
 }
 void PointCloud::generateSphere(int resolution)
@@ -182,6 +192,7 @@ void PointCloud::generateSphere(int resolution)
         }
     }
 
+    this->computeAABB();
     this->isSet = true;
 }
 void PointCloud::generateCube(int resolution)
@@ -209,6 +220,7 @@ void PointCloud::generateCube(int resolution)
         }
     }
 
+    this->computeAABB();
     this->isSet = true;
 }
 void PointCloud::generateTorus(int resolution)
@@ -242,6 +254,7 @@ void PointCloud::generateTorus(int resolution)
         }
     }
 
+    this->computeAABB();
     this->isSet = true;
 }
 
@@ -282,6 +295,37 @@ void PointCloud::decimate(const float &keepingPart)
     }
 }
 
+void PointCloud::computeAABB()
+{
+    float minX = std::numeric_limits<float>::max();
+    float minY = std::numeric_limits<float>::max();
+    float minZ = std::numeric_limits<float>::max();
+    float maxX = -std::numeric_limits<float>::max();
+    float maxY = -std::numeric_limits<float>::max();
+    float maxZ = -std::numeric_limits<float>::max();
+
+    for (int i = 0, maxSize = this->positions.size(); i < maxSize; i++)
+    {
+        minX = std::min(minX, this->positions[i].getX());
+        minY = std::min(minY, this->positions[i].getY());
+        minZ = std::min(minZ, this->positions[i].getZ());
+        maxX = std::max(maxX, this->positions[i].getX());
+        maxY = std::max(maxY, this->positions[i].getY());
+        maxZ = std::max(maxZ, this->positions[i].getZ());
+    }
+
+    this->minAABB = Vec3(minX, minY, minZ);
+    this->maxAABB = Vec3(maxX, maxY, maxZ);
+}
+Vec3 PointCloud::getMinAABB()
+{
+    return this->minAABB;
+}
+Vec3 PointCloud::getMaxAABB()
+{
+    return this->maxAABB;
+}
+
 void PointCloud::draw()
 {
     if (this->isSet)
@@ -291,7 +335,14 @@ void PointCloud::draw()
         {
             glVertex3f(this->positions[i][0], this->positions[i][1], this->positions[i][2]);
             glNormal3f(this->normals[i][0], this->normals[i][1], this->normals[i][2]);
-            glColor3f(1.0, 1.0, 1.0);
+            if (this->isSelected)
+            {
+                glColor3f(1.0, 0.0, 0.0);
+            }
+            else
+            {
+                glColor3f(1.0, 1.0, 1.0);
+            }
         }
         glEnd();
     }

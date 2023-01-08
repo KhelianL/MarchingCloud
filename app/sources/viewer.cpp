@@ -19,20 +19,56 @@ void Viewer::init()
 	glPointSize(1.0);
 }
 
+float Viewer::isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection)
+{
+	// Calcul des paramètres t0 et t1 de l'intersection du rayon avec l'AABB
+	float t0 = std::numeric_limits<float>::min();
+	float t1 = std::numeric_limits<float>::max();
+	for (int i = 0; i < 3; ++i)
+	{
+		// Calcul de t0 et t1
+		float invRayDirection = 1.0f / rayDirection[i];
+		float tNear = (MinAABB[i] - rayOrigin[i]) * invRayDirection;
+		float tFar = (MaxAABB[i] - rayOrigin[i]) * invRayDirection;
+		if (tNear > tFar)
+		{
+			std::swap(tNear, tFar);
+		}
+		t0 = std::max(t0, tNear);
+		t1 = std::min(t1, tFar);
+
+		// Si t0 > t1, pas d'intersection
+		if (t0 > t1)
+		{
+			return -1.0f;
+		}
+	}
+	// Si t0 <= t1, le rayon et l'AABB s'intersectent
+	return t0;
+}
+
 void Viewer::rayCastClick(const QPoint &point)
 {
 	// Compute origine and direction, used to draw a representation of the intersecting line
 	camera()->convertClickToLine(point, this->origine, this->direction);
 
-	// Find the selectedPoint coordinates, using camera()->pointUnderPixel().
-	bool found;
-	this->selectedPoint = camera()->pointUnderPixel(point, found);
-	this->selectedPoint -= 0.02f * this->direction; // Small offset to make point clearly visible.
+	float minDist = std::numeric_limits<float>::max();
+	int indexPointCloud = -1;
 
-	if (selectedName() == -1)
-		QMessageBox::information(this, "No selection", "No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
-	else
-		QMessageBox::information(this, "Selection", "Spiral number " + QString::number(selectedName()) + " selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
+	for (int i = 0, maxSize = this->scene->getListPointCloud().size(); i < maxSize; i++)
+	{
+		this->scene->getListPointCloud()[i].setIsSelected(false);
+		float distAtm = this->isAABBHit(this->scene->getListPointCloud()[i].getMinAABB(), this->scene->getListPointCloud()[i].getMaxAABB(), this->origine, this->direction);
+		if (distAtm > 0 && distAtm < minDist)
+		{
+			minDist = distAtm;
+			indexPointCloud = i;
+		}
+	}
+	if (indexPointCloud >= 0)
+	{
+		this->scene->getListPointCloud()[indexPointCloud].setIsSelected(true);
+	}
 }
 
 void Viewer::keyPressEvent(QKeyEvent *event)
@@ -45,6 +81,17 @@ void Viewer::keyPressEvent(QKeyEvent *event)
 	default:
 		QGLViewer::keyPressEvent(event);
 	}
+}
+
+void Viewer::mousePressEvent(QMouseEvent *e)
+{
+	if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::NoButton))
+	{
+		QPoint cursorPos = QCursor::pos();
+		QPoint windowPos = this->mapFromGlobal(cursorPos);
+		rayCastClick(windowPos);
+	}
+	QGLViewer::mousePressEvent(e);
 }
 
 void Viewer::rayTraceEvent(int width, int height)

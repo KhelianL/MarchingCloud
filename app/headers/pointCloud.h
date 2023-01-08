@@ -25,6 +25,11 @@ private:
     std::vector<Vec3> normals;
     Material material;
 
+    Vec3 minAABB;
+    Vec3 maxAABB;
+
+    bool isSelected = false;
+
     bool isSet = false;
 
 public:
@@ -44,6 +49,11 @@ public:
     void generateTorus(int resolution);
     void generateRabbit(int resolution);
 
+    // AABB
+    void computeAABB();
+    Vec3 getMinAABB();
+    Vec3 getMaxAABB();
+
     // Decimate
     void decimate(const float &keepingPart);
 
@@ -54,6 +64,7 @@ public:
 
     // Setters
     void setMaterial(Material m);
+    void setIsSelected(bool b);
 
     // Draw OpenGL
     void draw();
