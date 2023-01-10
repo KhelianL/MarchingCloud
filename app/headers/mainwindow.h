@@ -29,7 +29,7 @@
 #include <scene.h>
 #include <viewer.h>
 #include <popupWindow.h>
-#include <qtEditLink.h>
+#include <interfaceQT.h>
 
 class MainWindow : public QMainWindow
 {
@@ -61,7 +61,7 @@ private:
     /* CORE */
     Scene *const scene = new Scene();
     Viewer *viewer;
-    InterfaceQT *everyButton;
+    InterfaceQT *interfaceQT;
 
     /* INTERFACE CREATION */
     QWidget *createTransformComponent();

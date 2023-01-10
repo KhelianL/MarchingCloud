@@ -1,7 +1,8 @@
 #include <viewer.h>
 
-Viewer::Viewer(Scene *const s, InterfaceQT *i, QWidget *parent) : scene(s), everyButton(i), QGLViewer(parent)
+Viewer::Viewer(Scene *const s, InterfaceQT *i, QWidget *parent) : scene(s), interfaceQt(i), QGLViewer(parent)
 {
+	this->interfaceQt->init();
 	this->init();
 }
 
@@ -17,7 +18,7 @@ void Viewer::init()
 Viewer::~Viewer()
 {
 	delete this->scene;
-	delete this->everyButton;
+	delete this->interfaceQt;
 }
 
 void Viewer::draw()
@@ -74,16 +75,16 @@ void Viewer::rayCastClick(const QPoint &point)
 	}
 	if (indexPointCloud >= 0)
 	{
-		this->everyButton->enableEdit(true);
+		this->interfaceQt->enableEdit(true);
 
 		PointCloud &p = this->scene->getPointCloudAtIndex(indexPointCloud);
 		p.setIsSelected(true);
-		this->everyButton->updateViewerTarget(p);
+		this->interfaceQt->updateViewerTarget(p);
 	}
 	else
 	{
-		this->everyButton->enableEdit(false);
-		this->everyButton->resetViewerTarget();
+		this->interfaceQt->enableEdit(false);
+		this->interfaceQt->resetViewerTarget();
 	}
 }
 
@@ -92,7 +93,7 @@ void Viewer::keyPressEvent(QKeyEvent *event)
 	switch (event->key())
 	{
 	case Qt::Key_R:
-		rayTraceEvent(this->everyButton->editWidth->text().toInt(), this->everyButton->editHeight->text().toInt());
+		rayTraceEvent(this->interfaceQt->editWidth->text().toInt(), this->interfaceQt->editHeight->text().toInt());
 		break;
 	default:
 		QGLViewer::keyPressEvent(event);

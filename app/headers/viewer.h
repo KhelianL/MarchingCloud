@@ -15,13 +15,13 @@
 #include <scene.h>
 #include <tools.h>
 #include <vec3.h>
-#include <qtEditLink.h>
+#include <interfaceQT.h>
 
 class Viewer : public QGLViewer
 {
 private:
     Scene *const scene;
-    InterfaceQT *everyButton;
+    InterfaceQT *interfaceQt;
 
 protected:
     virtual void init();

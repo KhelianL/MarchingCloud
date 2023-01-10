@@ -1,12 +1,16 @@
 #include <mainwindow.h>
 
+/*#########################################*/
+/*           Construct/Destruct           #*/
+/*#########################################*/
+
 MainWindow::MainWindow()
 {
     // Configuration de la barre d'état et ajout de la barre de progression
-    this->everyButton->progressBar = new QProgressBar();
-    this->everyButton->progressBar->setRange(0, 100);
-    this->everyButton->progressBar->setValue(0);
-    this->statusBar()->addPermanentWidget(this->everyButton->progressBar);
+    this->interfaceQT->progressBar = new QProgressBar();
+    this->interfaceQT->progressBar->setRange(0, 100);
+    this->interfaceQT->progressBar->setValue(0);
+    this->statusBar()->addPermanentWidget(this->interfaceQT->progressBar);
 
     // Création des widget main
     QSplitter *splitter = new QSplitter;
@@ -25,10 +29,8 @@ MainWindow::MainWindow()
     layoutComponent->addWidget(renderButton);
     rightSide->setLayout(layoutComponent);
 
-    this->everyButton->enableEdit(false);
-
     // Left/Right side
-    this->viewer = new Viewer(this->scene, this->everyButton, splitter);
+    this->viewer = new Viewer(this->scene, this->interfaceQT, splitter);
     splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
@@ -38,11 +40,32 @@ MainWindow::MainWindow()
     this->setWindowTitle(tr("MarchingCloud"));
     this->setMinimumSize(1024, 576);
 }
-
 MainWindow::~MainWindow()
 {
     delete this->scene;
-    delete this->everyButton;
+    delete this->interfaceQT->editPosX;
+    delete this->interfaceQT->editPosY;
+    delete this->interfaceQT->editPosZ;
+    delete this->interfaceQT->editRotX;
+    delete this->interfaceQT->editRotY;
+    delete this->interfaceQT->editRotZ;
+    delete this->interfaceQT->editSclX;
+    delete this->interfaceQT->editSclY;
+    delete this->interfaceQT->editSclZ;
+    delete this->interfaceQT->editAmbR;
+    delete this->interfaceQT->editAmbG;
+    delete this->interfaceQT->editAmbB;
+    delete this->interfaceQT->editDifR;
+    delete this->interfaceQT->editDifG;
+    delete this->interfaceQT->editDifB;
+    delete this->interfaceQT->editSpeR;
+    delete this->interfaceQT->editSpeG;
+    delete this->interfaceQT->editSpeB;
+    delete this->interfaceQT->editSpeExp;
+    delete this->interfaceQT->editWidth;
+    delete this->interfaceQT->editHeight;
+    delete this->interfaceQT->editMat;
+    delete this->interfaceQT->progressBar;
 }
 
 /*#########################################*/
@@ -74,40 +97,40 @@ QWidget *MainWindow::createTransformComponent()
     QLabel *labelSclX = new QLabel("X :", this);
     QLabel *labelSclY = new QLabel("Y :", this);
     QLabel *labelSclZ = new QLabel("Z :", this);
-    this->everyButton->editPosX = new QLineEdit();
-    this->everyButton->editPosY = new QLineEdit();
-    this->everyButton->editPosZ = new QLineEdit();
-    this->everyButton->editRotX = new QLineEdit();
-    this->everyButton->editRotY = new QLineEdit();
-    this->everyButton->editRotZ = new QLineEdit();
-    this->everyButton->editSclX = new QLineEdit();
-    this->everyButton->editSclY = new QLineEdit();
-    this->everyButton->editSclZ = new QLineEdit();
+    this->interfaceQT->editPosX = new QLineEdit();
+    this->interfaceQT->editPosY = new QLineEdit();
+    this->interfaceQT->editPosZ = new QLineEdit();
+    this->interfaceQT->editRotX = new QLineEdit();
+    this->interfaceQT->editRotY = new QLineEdit();
+    this->interfaceQT->editRotZ = new QLineEdit();
+    this->interfaceQT->editSclX = new QLineEdit();
+    this->interfaceQT->editSclY = new QLineEdit();
+    this->interfaceQT->editSclZ = new QLineEdit();
 
     labelTransform->addWidget(labelPos, 0, 0);
     labelTransform->addWidget(labelRot, 1, 0);
     labelTransform->addWidget(labelScl, 2, 0);
 
     editTransform->addWidget(labelPosX, 0, 2, 1, 1);
-    editTransform->addWidget(this->everyButton->editPosX, 0, 3, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editPosX, 0, 3, 1, 1);
     editTransform->addWidget(labelPosY, 0, 4, 1, 1);
-    editTransform->addWidget(this->everyButton->editPosY, 0, 5, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editPosY, 0, 5, 1, 1);
     editTransform->addWidget(labelPosZ, 0, 6, 1, 1);
-    editTransform->addWidget(this->everyButton->editPosZ, 0, 7, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editPosZ, 0, 7, 1, 1);
 
     editTransform->addWidget(labelRotX, 1, 2, 1, 1);
-    editTransform->addWidget(this->everyButton->editRotX, 1, 3, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editRotX, 1, 3, 1, 1);
     editTransform->addWidget(labelRotY, 1, 4, 1, 1);
-    editTransform->addWidget(this->everyButton->editRotY, 1, 5, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editRotY, 1, 5, 1, 1);
     editTransform->addWidget(labelRotZ, 1, 6, 1, 1);
-    editTransform->addWidget(this->everyButton->editRotZ, 1, 7, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editRotZ, 1, 7, 1, 1);
 
     editTransform->addWidget(labelSclX, 2, 2, 1, 1);
-    editTransform->addWidget(this->everyButton->editSclX, 2, 3, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editSclX, 2, 3, 1, 1);
     editTransform->addWidget(labelSclY, 2, 4, 1, 1);
-    editTransform->addWidget(this->everyButton->editSclY, 2, 5, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editSclY, 2, 5, 1, 1);
     editTransform->addWidget(labelSclZ, 2, 6, 1, 1);
-    editTransform->addWidget(this->everyButton->editSclZ, 2, 7, 1, 1);
+    editTransform->addWidget(this->interfaceQT->editSclZ, 2, 7, 1, 1);
 
     labelWidget->setLayout(labelTransform);
     editWidget->setLayout(editTransform);
@@ -167,16 +190,16 @@ QWidget *MainWindow::createMaterialComponent()
     QLabel *labelSpeR = new QLabel("R :", this);
     QLabel *labelSpeG = new QLabel("G :", this);
     QLabel *labelSpeB = new QLabel("B :", this);
-    this->everyButton->editAmbR = new QLineEdit();
-    this->everyButton->editAmbG = new QLineEdit();
-    this->everyButton->editAmbB = new QLineEdit();
-    this->everyButton->editDifR = new QLineEdit();
-    this->everyButton->editDifG = new QLineEdit();
-    this->everyButton->editDifB = new QLineEdit();
-    this->everyButton->editSpeR = new QLineEdit();
-    this->everyButton->editSpeG = new QLineEdit();
-    this->everyButton->editSpeB = new QLineEdit();
-    this->everyButton->editSpeExp = new QLineEdit();
+    this->interfaceQT->editAmbR = new QLineEdit();
+    this->interfaceQT->editAmbG = new QLineEdit();
+    this->interfaceQT->editAmbB = new QLineEdit();
+    this->interfaceQT->editDifR = new QLineEdit();
+    this->interfaceQT->editDifG = new QLineEdit();
+    this->interfaceQT->editDifB = new QLineEdit();
+    this->interfaceQT->editSpeR = new QLineEdit();
+    this->interfaceQT->editSpeG = new QLineEdit();
+    this->interfaceQT->editSpeB = new QLineEdit();
+    this->interfaceQT->editSpeExp = new QLineEdit();
 
     labelMaterial->addWidget(labelAmb, 0, 0);
     labelMaterial->addWidget(labelDif, 1, 0);
@@ -185,44 +208,43 @@ QWidget *MainWindow::createMaterialComponent()
     labelMaterial->addWidget(labelMat, 4, 0);
 
     editMaterial->addWidget(labelAmbR, 0, 2, 1, 1);
-    editMaterial->addWidget(this->everyButton->editAmbR, 0, 3, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editAmbR, 0, 3, 1, 1);
     editMaterial->addWidget(labelAmbG, 0, 4, 1, 1);
-    editMaterial->addWidget(this->everyButton->editAmbG, 0, 5, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editAmbG, 0, 5, 1, 1);
     editMaterial->addWidget(labelAmbB, 0, 6, 1, 1);
-    editMaterial->addWidget(this->everyButton->editAmbB, 0, 7, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editAmbB, 0, 7, 1, 1);
 
     editMaterial->addWidget(labelDifR, 1, 2, 1, 1);
-    editMaterial->addWidget(this->everyButton->editDifR, 1, 3, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editDifR, 1, 3, 1, 1);
     editMaterial->addWidget(labelDifG, 1, 4, 1, 1);
-    editMaterial->addWidget(this->everyButton->editDifG, 1, 5, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editDifG, 1, 5, 1, 1);
     editMaterial->addWidget(labelDifB, 1, 6, 1, 1);
-    editMaterial->addWidget(this->everyButton->editDifB, 1, 7, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editDifB, 1, 7, 1, 1);
 
     editMaterial->addWidget(labelSpeR, 2, 2, 1, 1);
-    editMaterial->addWidget(this->everyButton->editSpeR, 2, 3, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editSpeR, 2, 3, 1, 1);
     editMaterial->addWidget(labelSpeG, 2, 4, 1, 1);
-    editMaterial->addWidget(this->everyButton->editSpeG, 2, 5, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editSpeG, 2, 5, 1, 1);
     editMaterial->addWidget(labelSpeB, 2, 6, 1, 1);
-    editMaterial->addWidget(this->everyButton->editSpeB, 2, 7, 1, 1);
+    editMaterial->addWidget(this->interfaceQT->editSpeB, 2, 7, 1, 1);
 
-    editMaterial->addWidget(this->everyButton->editSpeExp, 3, 4, 1, 3);
+    editMaterial->addWidget(this->interfaceQT->editSpeExp, 3, 4, 1, 3);
 
-    this->everyButton->editMat = new QComboBox();
-    this->everyButton->editMat->addItem(matToString(MaterialType::Gold));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Silver));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Bronze));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Copper));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Wood));
-    this->everyButton->editMat->addItem(matToString(MaterialType::RedPlastic));
-    this->everyButton->editMat->addItem(matToString(MaterialType::GreenPlastic));
-    this->everyButton->editMat->addItem(matToString(MaterialType::BluePlastic));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Ruby));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Crystal));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Water));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Glass));
-    this->everyButton->editMat->addItem(matToString(MaterialType::Mirror));
-    this->everyButton->editMat->setEnabled(false);
-    editMaterial->addWidget(this->everyButton->editMat, 4, 4, 1, 3);
+    this->interfaceQT->editMat = new QComboBox();
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Gold));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Silver));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Bronze));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Copper));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Wood));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::RedPlastic));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::GreenPlastic));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::BluePlastic));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Ruby));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Crystal));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Water));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Glass));
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Mirror));
+    editMaterial->addWidget(this->interfaceQT->editMat, 4, 4, 1, 3);
 
     labelWidget->setLayout(labelMaterial);
     editWidget->setLayout(editMaterial);
@@ -266,13 +288,13 @@ QWidget *MainWindow::createRenderComponent()
     QLabel *labelTitle = new QLabel(tr("Render:"), this);
     QLabel *labelWidth = new QLabel(tr("Width:"), this);
     QLabel *labelHeight = new QLabel(tr("Height:"), this);
-    this->everyButton->editWidth = new QLineEdit("200");
-    this->everyButton->editHeight = new QLineEdit("300");
+    this->interfaceQT->editWidth = new QLineEdit("200");
+    this->interfaceQT->editHeight = new QLineEdit("300");
 
     renderParamLayout->addWidget(labelWidth, 0, 0);
     renderParamLayout->addWidget(labelHeight, 1, 0);
-    renderParamLayout->addWidget(this->everyButton->editWidth, 0, 1);
-    renderParamLayout->addWidget(this->everyButton->editHeight, 1, 1);
+    renderParamLayout->addWidget(this->interfaceQT->editWidth, 0, 1);
+    renderParamLayout->addWidget(this->interfaceQT->editHeight, 1, 1);
     combineWidget->setLayout(renderParamLayout);
 
     QFont boldFont = labelTitle->font();
@@ -310,7 +332,7 @@ void MainWindow::addLine(QVBoxLayout *layoutComponent)
 
 void MainWindow::marchingCloud()
 {
-    this->viewer->rayTraceEvent(this->everyButton->editWidth->text().toInt(), this->everyButton->editHeight->text().toInt());
+    this->viewer->rayTraceEvent(this->interfaceQT->editWidth->text().toInt(), this->interfaceQT->editHeight->text().toInt());
 }
 
 /*#########################################*/

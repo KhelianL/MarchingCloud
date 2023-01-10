@@ -1,5 +1,5 @@
-#ifndef QT_EDIT_LINK
-#define QT_EDIT_LINK
+#ifndef INTERFACE_QT_H
+#define INTERFACE_QT_H
 
 /* QT */
 #include <QLineEdit>
@@ -25,9 +25,7 @@ struct InterfaceQT
     QComboBox *editMat;
     QProgressBar *progressBar;
 
-    ~InterfaceQT();
-
-    void setAlignCenter();
+    void init();
 
     void enableEdit(const bool &b);
     void updateViewerTarget(PointCloud &p);

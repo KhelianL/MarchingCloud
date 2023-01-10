@@ -1,31 +1,8 @@
-#include <qtEditLink.h>
+#include <interfaceQT.h>
 
-InterfaceQT::~InterfaceQT()
+void InterfaceQT::init()
 {
-    delete this->editPosX;
-    delete this->editPosY;
-    delete this->editPosZ;
-    delete this->editRotX;
-    delete this->editRotY;
-    delete this->editRotZ;
-    delete this->editSclX;
-    delete this->editSclY;
-    delete this->editSclZ;
-    delete this->editAmbR;
-    delete this->editAmbG;
-    delete this->editAmbB;
-    delete this->editDifR;
-    delete this->editDifG;
-    delete this->editDifB;
-    delete this->editSpeR;
-    delete this->editSpeG;
-    delete this->editSpeB;
-    delete this->editSpeExp;
-    delete this->progressBar;
-}
-
-void InterfaceQT::setAlignCenter()
-{
+    // Align
     this->editPosX->setAlignment(Qt::AlignCenter);
     this->editPosY->setAlignment(Qt::AlignCenter);
     this->editPosZ->setAlignment(Qt::AlignCenter);
@@ -45,6 +22,7 @@ void InterfaceQT::setAlignCenter()
     this->editSpeG->setAlignment(Qt::AlignCenter);
     this->editSpeB->setAlignment(Qt::AlignCenter);
     this->editSpeExp->setAlignment(Qt::AlignCenter);
+    this->enableEdit(false);
 }
 
 void InterfaceQT::enableEdit(const bool &b)
