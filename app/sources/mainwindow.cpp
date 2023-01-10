@@ -29,6 +29,8 @@ MainWindow::MainWindow()
     layoutComponent->addWidget(renderButton);
     rightSide->setLayout(layoutComponent);
 
+    this->initSignals();
+
     // Left/Right side
     this->viewer = new Viewer(this->scene, this->interfaceQT, splitter);
     splitter->addWidget(rightSide);
@@ -335,6 +337,16 @@ void MainWindow::marchingCloud()
     this->viewer->rayTraceEvent(this->interfaceQT->editWidth->text().toInt(), this->interfaceQT->editHeight->text().toInt());
 }
 
+void MainWindow::initSignals()
+{
+    connect(this->interfaceQT->editMat, SIGNAL(currentIndexChanged(int)), this, SLOT(handleEditMat()));
+}
+
+void MainWindow::handleEditMat()
+{
+    this->interfaceQT->updateEditMat(this->interfaceQT->editMat->currentText());
+}
+
 /*#########################################*/
 /*                 Actions                #*/
 /*#########################################*/
@@ -490,7 +502,6 @@ void MainWindow::createActions()
     aboutAct->setStatusTip(tr("Show the application's About box"));
     this->connect(aboutAct, &QAction::triggered, this, &MainWindow::about);
 }
-
 void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("&File"));

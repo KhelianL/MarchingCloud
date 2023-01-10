@@ -21,7 +21,7 @@ class Viewer : public QGLViewer
 {
 private:
     Scene *const scene;
-    InterfaceQT *interfaceQt;
+    InterfaceQT *const interfaceQt;
 
 protected:
     virtual void init();
@@ -31,7 +31,7 @@ protected:
     virtual QString helpString() const;
 
 public:
-    Viewer(Scene *const s, InterfaceQT *i, QWidget *parent);
+    Viewer(Scene *const s, InterfaceQT *const i, QWidget *parent);
     ~Viewer();
 
     Scene *getScene();

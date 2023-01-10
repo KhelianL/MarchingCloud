@@ -88,3 +88,13 @@ void InterfaceQT::resetViewerTarget()
     this->editSpeB->setText("");
     this->editSpeExp->setText("");
 }
+
+/*#########################################*/
+/*                 Signals                #*/
+/*#########################################*/
+
+#include <QDebug>
+void InterfaceQT::updateEditMat(const QString &selected)
+{
+    qDebug() << selected;
+}

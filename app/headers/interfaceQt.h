@@ -30,6 +30,9 @@ struct InterfaceQT
     void enableEdit(const bool &b);
     void updateViewerTarget(PointCloud &p);
     void resetViewerTarget();
+
+    /* SIGNALS */
+    void updateEditMat(const QString &selected);
 };
 
 #endif

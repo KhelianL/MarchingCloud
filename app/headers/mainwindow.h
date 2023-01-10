@@ -35,28 +35,6 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    MainWindow();
-    ~MainWindow();
-
-private slots:
-    void showCustomMenu();
-
-    void newScene();
-    void openScene();
-    void saveScene();
-
-    void undo();
-    void redo();
-
-    void importPointCloud();
-    void createPlane();
-    void createCube();
-    void createSphere();
-    void createTorus();
-
-    void about();
-
 private:
     /* CORE */
     Scene *const scene = new Scene();
@@ -73,6 +51,7 @@ private:
 
     /* SIGNALS */
     void marchingCloud();
+    void initSignals();
 
     /* ACTIONS & MENU */
     QShortcut *shortcut;
@@ -92,6 +71,28 @@ private:
     QAction *genSphereAct;
     QAction *genTorusAct;
     QAction *aboutAct;
+
+private slots:
+    /* SIGNALS */
+    void handleEditMat();
+
+    /* ACTIONS & MENU */
+    void showCustomMenu();
+    void newScene();
+    void openScene();
+    void saveScene();
+    void undo();
+    void redo();
+    void importPointCloud();
+    void createPlane();
+    void createCube();
+    void createSphere();
+    void createTorus();
+    void about();
+
+public:
+    MainWindow();
+    ~MainWindow();
 };
 
 #endif
