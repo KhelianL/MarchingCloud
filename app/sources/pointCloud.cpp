@@ -149,31 +149,24 @@ void PointCloud::generatePlane(const int &resolution)
 }
 void PointCloud::generateSphere(const int &resolution)
 {
-    // TODO : REVOIR LA GEN D'UNE SPHERE!
-    const int numTheta = resolution;
-    const int numPhi = 2 * resolution;
+    const int M = resolution + 1;
+    const int N = resolution + 1;
 
-    for (int i = 0; i < numTheta; ++i)
+    // Vertices
+    for (int i = 0; i <= N; i++)
     {
-        for (int j = 0; j < numPhi; ++j)
+        float PHI = M_PI * double(i) / double(N);
+        for (int j = 0; j <= M; j++)
         {
-            // Calcul des angles de la sphère
-            const float theta = i * M_PI / numTheta;
-            const float phi = j * 2 * M_PI / numPhi;
-
-            // Calcul des coordonnées du point sur la sphère
-            const float x = sinf(theta) * cosf(phi);
-            const float y = sinf(theta) * sinf(phi);
-            const float z = cosf(theta);
-
-            // Calcul et normalisation de la normale
-            const float norm = sqrtf(x * x + y * y + z * z);
-            const Vec3 normal = {x / norm, y / norm, z / norm};
-
-            // Ajout du point et de sa normale au vecteur
-            this->positions.push_back({x, y, z});
-            this->normals.push_back(normal);
+            float THETA = 2 * M_PI * double(j) / double(M);
+            this->positions.push_back(Vec3(sin(PHI) * cos(THETA), cos(PHI), sin(PHI) * sin(THETA)));
         }
+    }
+
+    // Normals
+    for (int i = 0; i < (int)this->positions.size(); i++)
+    {
+        this->normals.push_back(Vec3(this->positions[i][0], this->positions[i][1], this->positions[i][2]));
     }
 
     this->computeAABB();
