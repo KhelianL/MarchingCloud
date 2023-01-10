@@ -52,11 +52,16 @@ void Scene::generatePrimitive(const PopupType &type, const double &resolution)
     default:
         break;
     }
-    res.setMaterial(Material(MaterialType::Fire));
+    res.setMaterial(Material(MaterialType::Custom));
     this->listPointCloud.push_back(res);
 }
 
 std::vector<PointCloud> &Scene::getListPointCloud()
 {
     return this->listPointCloud;
+}
+
+PointCloud &Scene::getPointCloudAtIndex(const int &index)
+{
+    return this->listPointCloud[index];
 }

@@ -5,6 +5,15 @@ Viewer::Viewer(Scene *const s, InterfaceQT *i, QWidget *parent) : scene(s), ever
 	this->init();
 }
 
+void Viewer::init()
+{
+	restoreStateFromFile();
+	setMouseTracking(true);
+	setAxisIsDrawn();
+	glDisable(GL_LIGHTING);
+	glPointSize(1.0);
+}
+
 Viewer::~Viewer()
 {
 	delete this->scene;
@@ -14,15 +23,6 @@ Viewer::~Viewer()
 void Viewer::draw()
 {
 	this->scene->draw();
-}
-
-void Viewer::init()
-{
-	restoreStateFromFile();
-	setMouseTracking(true);
-	setAxisIsDrawn();
-	glDisable(GL_LIGHTING);
-	glPointSize(1.0);
 }
 
 float Viewer::isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection)
@@ -64,8 +64,8 @@ void Viewer::rayCastClick(const QPoint &point)
 
 	for (int i = 0, maxSize = this->scene->getListPointCloud().size(); i < maxSize; i++)
 	{
-		this->scene->getListPointCloud()[i].setIsSelected(false);
-		float distAtm = this->isAABBHit(this->scene->getListPointCloud()[i].getMinAABB(), this->scene->getListPointCloud()[i].getMaxAABB(), origine, direction);
+		this->scene->getPointCloudAtIndex(i).setIsSelected(false);
+		float distAtm = this->isAABBHit(this->scene->getPointCloudAtIndex(i).getMinAABB(), this->scene->getPointCloudAtIndex(i).getMaxAABB(), origine, direction);
 		if (distAtm > 0 && distAtm < minDist)
 		{
 			minDist = distAtm;
@@ -74,7 +74,16 @@ void Viewer::rayCastClick(const QPoint &point)
 	}
 	if (indexPointCloud >= 0)
 	{
-		this->scene->getListPointCloud()[indexPointCloud].setIsSelected(true);
+		this->everyButton->enableEdit(true);
+
+		PointCloud &p = this->scene->getPointCloudAtIndex(indexPointCloud);
+		p.setIsSelected(true);
+		this->everyButton->updateViewerTarget(p);
+	}
+	else
+	{
+		this->everyButton->enableEdit(false);
+		this->everyButton->resetViewerTarget();
 	}
 }
 

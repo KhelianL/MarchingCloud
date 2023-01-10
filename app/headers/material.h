@@ -7,10 +7,9 @@
 /* SRC */
 #include <vec3.h>
 
-
-
 enum class MaterialType
 {
+    Custom,
     Gold,
     Silver,
     Bronze,
@@ -28,18 +27,19 @@ enum class MaterialType
     Donut,
     Fire
 };
-QString matToString(MaterialType type);
+QString matToString(const MaterialType &type);
 
 class Material
 {
 private:
+    MaterialType type;
     Vec3 ambiant, diffuse, specular;
     int spec_exp;
     float transparency, refractionIndex;
 
 public:
     Material();
-    Material(MaterialType type);
+    Material(const MaterialType &type);
 
     // Getters
     Vec3 &getAmbiant();
@@ -48,13 +48,14 @@ public:
     int &getSpecExp();
     float &getTransparency();
     float &getRefractionIndex();
+    MaterialType &getType();
 
     // Setters
-    void setAmbiant(Vec3 &ambiant);
-    void setDiffuse(Vec3 &diffuse);
-    void setSpecular(Vec3 &specular);
-    void setSpecExp(int spec_exp);
-    void setTransparency(float transparency);
-    void setRefractionIndex(float refractionIndex);
+    void setAmbiant(const Vec3 &ambiant);
+    void setDiffuse(const Vec3 &diffuse);
+    void setSpecular(const Vec3 &specular);
+    void setSpecExp(const int &spec_exp);
+    void setTransparency(const float &transparency);
+    void setRefractionIndex(const float &refractionIndex);
 };
 #endif

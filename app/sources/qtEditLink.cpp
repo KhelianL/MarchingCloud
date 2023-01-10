@@ -1,29 +1,5 @@
 #include <qtEditLink.h>
 
-InterfaceQT::InterfaceQT(QLineEdit *editPosX, QLineEdit *editPosY, QLineEdit *editPosZ, QLineEdit *editRotX, QLineEdit *editRotY, QLineEdit *editRotZ, QLineEdit *editSclX, QLineEdit *editSclY, QLineEdit *editSclZ, QLineEdit *editAmbR, QLineEdit *editAmbG, QLineEdit *editAmbB, QLineEdit *editDifR, QLineEdit *editDifG, QLineEdit *editDifB, QLineEdit *editSpeR, QLineEdit *editSpeG, QLineEdit *editSpeB, QLineEdit *editSpeExp, QProgressBar *progressBar)
-{
-    this->editPosX = editPosX;
-    this->editPosY = editPosY;
-    this->editPosZ = editPosZ;
-    this->editRotX = editRotX;
-    this->editRotY = editRotY;
-    this->editRotZ = editRotZ;
-    this->editSclX = editSclX;
-    this->editSclY = editSclY;
-    this->editSclZ = editSclZ;
-    this->editAmbR = editAmbR;
-    this->editAmbG = editAmbG;
-    this->editAmbB = editAmbB;
-    this->editDifR = editDifR;
-    this->editDifG = editDifG;
-    this->editDifB = editDifB;
-    this->editSpeR = editSpeR;
-    this->editSpeG = editSpeG;
-    this->editSpeB = editSpeB;
-    this->editSpeExp = editSpeExp;
-    this->progressBar = progressBar;
-}
-
 InterfaceQT::~InterfaceQT()
 {
     delete this->editPosX;
@@ -71,7 +47,7 @@ void InterfaceQT::setAlignCenter()
     this->editSpeExp->setAlignment(Qt::AlignCenter);
 }
 
-void InterfaceQT::enableEdit(bool b)
+void InterfaceQT::enableEdit(const bool &b)
 {
     this->editPosX->setEnabled(b);
     this->editPosY->setEnabled(b);
@@ -91,18 +67,46 @@ void InterfaceQT::enableEdit(bool b)
     this->editSpeR->setEnabled(b);
     this->editSpeG->setEnabled(b);
     this->editSpeB->setEnabled(b);
+    this->editMat->setEnabled(b);
     this->editSpeExp->setEnabled(b);
 }
-
-void InterfaceQT::setProgress(int n)
+void InterfaceQT::updateViewerTarget(PointCloud &p)
 {
-    this->progressBar->setValue(n);
+    Material &m = p.getMaterial();
+    Vec3 &vecAmbiant = m.getAmbiant();
+    Vec3 &vecDiffuse = m.getDiffuse();
+    Vec3 &vecSpecular = m.getSpecular();
+
+    this->editAmbR->setText(QString::number(vecAmbiant.getX()));
+    this->editAmbG->setText(QString::number(vecAmbiant.getY()));
+    this->editAmbB->setText(QString::number(vecAmbiant.getZ()));
+    this->editDifR->setText(QString::number(vecDiffuse.getX()));
+    this->editDifG->setText(QString::number(vecDiffuse.getY()));
+    this->editDifB->setText(QString::number(vecDiffuse.getZ()));
+    this->editSpeR->setText(QString::number(vecSpecular.getX()));
+    this->editSpeG->setText(QString::number(vecSpecular.getY()));
+    this->editSpeB->setText(QString::number(vecSpecular.getZ()));
+    this->editSpeExp->setText(QString::number(m.getSpecExp()));
 }
-
-void InterfaceQT::updateViewerTarget(PointCloud *pc)
+void InterfaceQT::resetViewerTarget()
 {
-    if (pc != nullptr)
-    {
-        
-    }
+    this->editPosX->setText("");
+    this->editPosY->setText("");
+    this->editPosZ->setText("");
+    this->editRotX->setText("");
+    this->editRotY->setText("");
+    this->editRotZ->setText("");
+    this->editSclX->setText("");
+    this->editSclY->setText("");
+    this->editSclZ->setText("");
+    this->editAmbR->setText("");
+    this->editAmbG->setText("");
+    this->editAmbB->setText("");
+    this->editDifR->setText("");
+    this->editDifG->setText("");
+    this->editDifB->setText("");
+    this->editSpeR->setText("");
+    this->editSpeG->setText("");
+    this->editSpeB->setText("");
+    this->editSpeExp->setText("");
 }

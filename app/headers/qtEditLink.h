@@ -4,23 +4,34 @@
 /* QT */
 #include <QLineEdit>
 #include <QProgressBar>
+#include <QComboBox>
 
 /* SRC */
 #include <pointCloud.h>
 
 struct InterfaceQT
 {
-    QLineEdit *editPosX, *editPosY, *editPosZ, *editRotX, *editRotY, *editRotZ, *editSclX, *editSclY, *editSclZ, *editAmbR, *editAmbG, *editAmbB, *editDifR, *editDifG, *editDifB, *editSpeR, *editSpeG, *editSpeB, *editSpeExp, *editWidth, *editHeight;
+    QLineEdit *editPosX, *editPosY, *editPosZ;
+    QLineEdit *editRotX, *editRotY, *editRotZ;
+    QLineEdit *editSclX, *editSclY, *editSclZ;
+    QLineEdit *editAmbR, *editAmbG, *editAmbB;
+    QLineEdit *editDifR, *editDifG, *editDifB;
+    QLineEdit *editSpeR, *editSpeG, *editSpeB;
+    QLineEdit *editSpeExp;
+
+    QLineEdit *editWidth;
+    QLineEdit *editHeight;
+
+    QComboBox *editMat;
     QProgressBar *progressBar;
 
-    InterfaceQT(QLineEdit *editPosX, QLineEdit *editPosY, QLineEdit *editPosZ, QLineEdit *editRotX, QLineEdit *editRotY, QLineEdit *editRotZ, QLineEdit *editSclX, QLineEdit *editSclY, QLineEdit *editSclZ, QLineEdit *editAmbR, QLineEdit *editAmbG, QLineEdit *editAmbB, QLineEdit *editDifR, QLineEdit *editDifG, QLineEdit *editDifB, QLineEdit *editSpeR, QLineEdit *editSpeG, QLineEdit *editSpeB, QLineEdit *editSpeExp, QProgressBar *progressBar);
     ~InterfaceQT();
 
     void setAlignCenter();
-    void enableEdit(bool b);
-    void setProgress(int n);
 
-    void updateViewerTarget(PointCloud *pc);
+    void enableEdit(const bool &b);
+    void updateViewerTarget(PointCloud &p);
+    void resetViewerTarget();
 };
 
 #endif

@@ -35,23 +35,22 @@ private:
 public:
     // Load-Reset
     void loadPointCloud(const std::string &filename);
-    void reset();
 
     // Transform
-    void move(const Vec3 v);
-    void rotate(const float d, const Vec3 v);
-    void scale(const Vec3 v);
+    void move(const Vec3 &v);
+    void rotate(const float &d, const Vec3 &v);
+    void scale(const Vec3 &v);
 
     // Generate
-    void generatePlane(int resolution);
-    void generateSphere(int resolution);
-    void generateCube(int resolution);
-    void generateTorus(int resolution);
+    void generatePlane(const int &resolution);
+    void generateSphere(const int &resolution);
+    void generateCube(const int &resolution);
+    void generateTorus(const int &resolution);
 
     // AABB
     void computeAABB();
-    Vec3 getMinAABB();
-    Vec3 getMaxAABB();
+    Vec3 &getMinAABB();
+    Vec3 &getMaxAABB();
 
     // Decimate
     void decimate(const float &keepingPart);
@@ -62,8 +61,8 @@ public:
     Material &getMaterial();
 
     // Setters
-    void setMaterial(Material m);
-    void setIsSelected(bool b);
+    void setMaterial(const Material &m);
+    void setIsSelected(const bool &b);
 
     // Draw OpenGL
     void draw();

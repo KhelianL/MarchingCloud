@@ -24,7 +24,7 @@ class PopupWindow : public QDialog
     Q_OBJECT
 
 public:
-    PopupWindow(PopupType type, QWidget *parent = nullptr);
+    PopupWindow(const PopupType &type, QWidget *parent = nullptr);
     double getValue();
 
 private slots:

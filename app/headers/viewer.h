@@ -7,8 +7,6 @@
 #include <QWidget>
 #include <QMatrix4x4>
 
-#include <QMessageBox>
-
 /* libQGLViewer */
 #include <qglviewer.h>
 #include <vec.h>

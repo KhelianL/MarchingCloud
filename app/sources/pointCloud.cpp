@@ -40,17 +40,12 @@ void PointCloud::loadPointCloud(const std::string &filename)
     else
     {
         this->computeAABB();
+        this->setMaterial(MaterialType::Custom);
         this->isSet = true;
     }
 }
 
-void PointCloud::reset()
-{
-    this->positions.clear();
-    this->normals.clear();
-}
-
-void PointCloud::move(const Vec3 v)
+void PointCloud::move(const Vec3 &v)
 {
     if (this->isSet)
     {
@@ -62,7 +57,7 @@ void PointCloud::move(const Vec3 v)
         this->maxAABB += v;
     }
 }
-void PointCloud::rotate(const float d, const Vec3 v)
+void PointCloud::rotate(const float &d, const Vec3 &v)
 {
     if (this->isSet)
     {
@@ -98,7 +93,7 @@ void PointCloud::rotate(const float d, const Vec3 v)
         this->computeAABB();
     }
 }
-void PointCloud::scale(const Vec3 v)
+void PointCloud::scale(const Vec3 &v)
 {
     if (this->isSet)
     {
@@ -126,19 +121,17 @@ Material &PointCloud::getMaterial()
     return this->material;
 }
 
-void PointCloud::setMaterial(Material m)
+void PointCloud::setMaterial(const Material &m)
 {
     this->material = m;
 }
-void PointCloud::setIsSelected(bool b)
+void PointCloud::setIsSelected(const bool &b)
 {
     this->isSelected = b;
 }
 
-void PointCloud::generatePlane(int resolution)
+void PointCloud::generatePlane(const int &resolution)
 {
-    this->reset();
-
     // Calcule le nombre de sommets nécessaires pour le plan
     const int numVertices = (resolution + 1) * (resolution + 1);
     this->positions.resize(numVertices);
@@ -162,10 +155,8 @@ void PointCloud::generatePlane(int resolution)
     this->computeAABB();
     this->isSet = true;
 }
-void PointCloud::generateSphere(int resolution)
+void PointCloud::generateSphere(const int &resolution)
 {
-    this->reset();
-
     const int numTheta = resolution;
     const int numPhi = 2 * resolution;
 
@@ -195,10 +186,8 @@ void PointCloud::generateSphere(int resolution)
     this->computeAABB();
     this->isSet = true;
 }
-void PointCloud::generateCube(int resolution)
+void PointCloud::generateCube(const int &resolution)
 {
-    this->reset();
-
     // Création du cube
     for (int i = 0; i < resolution; ++i)
     {
@@ -223,10 +212,8 @@ void PointCloud::generateCube(int resolution)
     this->computeAABB();
     this->isSet = true;
 }
-void PointCloud::generateTorus(int resolution)
+void PointCloud::generateTorus(const int &resolution)
 {
-    this->reset();
-
     const int numTheta = resolution;
     const int numPhi = 2 * resolution;
 
@@ -317,11 +304,11 @@ void PointCloud::computeAABB()
     this->minAABB = Vec3(minX, minY, minZ);
     this->maxAABB = Vec3(maxX, maxY, maxZ);
 }
-Vec3 PointCloud::getMinAABB()
+Vec3 &PointCloud::getMinAABB()
 {
     return this->minAABB;
 }
-Vec3 PointCloud::getMaxAABB()
+Vec3 &PointCloud::getMaxAABB()
 {
     return this->maxAABB;
 }

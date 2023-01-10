@@ -52,7 +52,7 @@ Vec3 Vec3::cross(Vec3 const &a, Vec3 const &b)
                 a[2] * b[0] - a[0] * b[2],
                 a[0] * b[1] - a[1] * b[0]);
 }
-Vec3 Vec3::project(Vec3 point, Vec3 normalePlan, Vec3 pointPlan)
+Vec3 Vec3::project(Vec3 const &point, Vec3 const &normalePlan, Vec3 const &pointPlan)
 {
     return (point - Vec3::dot(point - pointPlan, normalePlan) * normalePlan);
 }
@@ -126,7 +126,7 @@ std::istream &operator>>(std::istream &in, Vec3 &v)
     in >> v.mVals[0] >> v.mVals[1] >> v.mVals[2];
     return in;
 }
-std::ostream &operator<<(std::ostream &out, const Vec3 &v)
+std::ostream &operator<<(std::ostream &out, Vec3 const &v)
 {
     out << v.mVals[0] << " " << v.mVals[1] << " " << v.mVals[2];
     return out;

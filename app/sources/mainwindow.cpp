@@ -207,22 +207,22 @@ QWidget *MainWindow::createMaterialComponent()
 
     editMaterial->addWidget(this->everyButton->editSpeExp, 3, 4, 1, 3);
 
-    QComboBox *editMat = new QComboBox();
-    editMat->addItem(matToString(MaterialType::Gold));
-    editMat->addItem(matToString(MaterialType::Silver));
-    editMat->addItem(matToString(MaterialType::Bronze));
-    editMat->addItem(matToString(MaterialType::Copper));
-    editMat->addItem(matToString(MaterialType::Wood));
-    editMat->addItem(matToString(MaterialType::RedPlastic));
-    editMat->addItem(matToString(MaterialType::GreenPlastic));
-    editMat->addItem(matToString(MaterialType::BluePlastic));
-    editMat->addItem(matToString(MaterialType::Ruby));
-    editMat->addItem(matToString(MaterialType::Crystal));
-    editMat->addItem(matToString(MaterialType::Water));
-    editMat->addItem(matToString(MaterialType::Glass));
-    editMat->addItem(matToString(MaterialType::Mirror));
-    editMat->setEnabled(false);
-    editMaterial->addWidget(editMat, 4, 4, 1, 3);
+    this->everyButton->editMat = new QComboBox();
+    this->everyButton->editMat->addItem(matToString(MaterialType::Gold));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Silver));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Bronze));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Copper));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Wood));
+    this->everyButton->editMat->addItem(matToString(MaterialType::RedPlastic));
+    this->everyButton->editMat->addItem(matToString(MaterialType::GreenPlastic));
+    this->everyButton->editMat->addItem(matToString(MaterialType::BluePlastic));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Ruby));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Crystal));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Water));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Glass));
+    this->everyButton->editMat->addItem(matToString(MaterialType::Mirror));
+    this->everyButton->editMat->setEnabled(false);
+    editMaterial->addWidget(this->everyButton->editMat, 4, 4, 1, 3);
 
     labelWidget->setLayout(labelMaterial);
     editWidget->setLayout(editMaterial);

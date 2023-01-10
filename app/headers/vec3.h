@@ -24,7 +24,7 @@ public:
 
     static float dot(Vec3 const &a, Vec3 const &b);
     static Vec3 cross(Vec3 const &a, Vec3 const &b);
-    static Vec3 project(Vec3 point, Vec3 normalePlan, Vec3 pointPlan);
+    static Vec3 project(Vec3 const &point, Vec3 const &normalePlan, Vec3 const &pointPlan);
 
     float &operator[](unsigned int c);
     float operator[](unsigned int c) const;
@@ -52,6 +52,6 @@ Vec3 operator*(Vec3 const &a, Vec3 const &b);
 Vec3 operator/(Vec3 const &a, float b);
 
 std::istream &operator>>(std::istream &in, Vec3 &v);
-std::ostream &operator<<(std::ostream &out, const Vec3 &v);
+std::ostream &operator<<(std::ostream &out, Vec3 const &v);
 
 #endif

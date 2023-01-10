@@ -1,16 +1,18 @@
 #include <material.h>
 
+// Constructors
 Material::Material()
 {
-    this->ambiant = Vec3();
-    this->diffuse = Vec3(0.5, 0.5, 0.5);
-    this->specular = Vec3(0.5, 0.5, 0.5);
+    this->ambiant = Vec3(0.0f, 0.0f, 0.0f);
+    this->diffuse = Vec3(0.5f, 0.5f, 0.5f);
+    this->specular = Vec3(0.5f, 0.5f, 0.5f);
     this->spec_exp = 32;
     this->transparency = 0.0;
     this->refractionIndex = 1.0;
 }
-Material::Material(MaterialType type)
+Material::Material(const MaterialType &type)
 {
+    this->type = type;
     switch (type)
     {
     case MaterialType::Gold:
@@ -126,15 +128,15 @@ Material::Material(MaterialType type)
         this->refractionIndex = 0.0;
         break;
     case MaterialType::Fire:
-         this->ambiant = Vec3(0.5, 0.3, 0.1);
-            this->diffuse = Vec3(1.0, 0.1, 0.05);
-            this->specular = Vec3(0.9, 0.9, 0.9);
-            this->spec_exp = 10.0;
-            this->transparency = 0.0;
-            this->refractionIndex = 0.0;
-            break;
+        this->ambiant = Vec3(0.5, 0.3, 0.1);
+        this->diffuse = Vec3(1.0, 0.1, 0.05);
+        this->specular = Vec3(0.9, 0.9, 0.9);
+        this->spec_exp = 10.0;
+        this->transparency = 0.0;
+        this->refractionIndex = 0.0;
         break;
     default:
+        this->type = MaterialType::Custom;
         this->ambiant = Vec3();
         this->diffuse = Vec3(0.5, 0.5, 0.5);
         this->specular = Vec3(0.5, 0.5, 0.5);
@@ -146,26 +148,31 @@ Material::Material(MaterialType type)
 }
 
 // Getters
-Vec3 &Material::getAmbiant() { return ambiant; }
-Vec3 &Material::getDiffuse() { return diffuse; }
-Vec3 &Material::getSpecular() { return specular; }
-int &Material::getSpecExp() { return spec_exp; }
-float &Material::getTransparency() { return transparency; }
-float &Material::getRefractionIndex() { return refractionIndex; }
+Vec3 &Material::getAmbiant() { return this->ambiant; }
+Vec3 &Material::getDiffuse() { return this->diffuse; }
+Vec3 &Material::getSpecular() { return this->specular; }
+int &Material::getSpecExp() { return this->spec_exp; }
+float &Material::getTransparency() { return this->transparency; }
+float &Material::getRefractionIndex() { return this->refractionIndex; }
+MaterialType &Material::getType() { return this->type; }
 
 // Setters
-void Material::setAmbiant(Vec3 &ambiant) { this->ambiant = ambiant; }
-void Material::setDiffuse(Vec3 &diffuse) { this->diffuse = diffuse; }
-void Material::setSpecular(Vec3 &specular) { this->specular = specular; }
-void Material::setSpecExp(int spec_exp) { this->spec_exp = spec_exp; }
-void Material::setTransparency(float transparency) { this->transparency = transparency; }
-void Material::setRefractionIndex(float refractionIndex) { this->refractionIndex = refractionIndex; }
+void Material::setAmbiant(const Vec3 &ambiant) { this->ambiant = ambiant; }
+void Material::setDiffuse(const Vec3 &diffuse) { this->diffuse = diffuse; }
+void Material::setSpecular(const Vec3 &specular) { this->specular = specular; }
+void Material::setSpecExp(const int &spec_exp) { this->spec_exp = spec_exp; }
+void Material::setTransparency(const float &transparency) { this->transparency = transparency; }
+void Material::setRefractionIndex(const float &refractionIndex) { this->refractionIndex = refractionIndex; }
 
-QString matToString(MaterialType type)
+// Enum to String
+QString matToString(const MaterialType &type)
 {
     QString res;
     switch (type)
     {
+    case MaterialType::Custom:
+        res = "Custom";
+        break;
     case MaterialType::Gold:
         res = "Gold";
         break;
