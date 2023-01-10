@@ -1,30 +1,5 @@
 #include <interfaceQT.h>
 
-void InterfaceQT::init()
-{
-    // Align
-    this->editPosX->setAlignment(Qt::AlignCenter);
-    this->editPosY->setAlignment(Qt::AlignCenter);
-    this->editPosZ->setAlignment(Qt::AlignCenter);
-    this->editRotX->setAlignment(Qt::AlignCenter);
-    this->editRotY->setAlignment(Qt::AlignCenter);
-    this->editRotZ->setAlignment(Qt::AlignCenter);
-    this->editSclX->setAlignment(Qt::AlignCenter);
-    this->editSclY->setAlignment(Qt::AlignCenter);
-    this->editSclZ->setAlignment(Qt::AlignCenter);
-    this->editAmbR->setAlignment(Qt::AlignCenter);
-    this->editAmbG->setAlignment(Qt::AlignCenter);
-    this->editAmbB->setAlignment(Qt::AlignCenter);
-    this->editDifR->setAlignment(Qt::AlignCenter);
-    this->editDifG->setAlignment(Qt::AlignCenter);
-    this->editDifB->setAlignment(Qt::AlignCenter);
-    this->editSpeR->setAlignment(Qt::AlignCenter);
-    this->editSpeG->setAlignment(Qt::AlignCenter);
-    this->editSpeB->setAlignment(Qt::AlignCenter);
-    this->editSpeExp->setAlignment(Qt::AlignCenter);
-    this->enableEdit(false);
-}
-
 void InterfaceQT::enableEdit(const bool &b)
 {
     this->editPosX->setEnabled(b);
@@ -50,8 +25,20 @@ void InterfaceQT::enableEdit(const bool &b)
 }
 void InterfaceQT::updateViewerTarget(PointCloud &p)
 {
-    // TODO : UPDATE LES POSITIONS ?
-    // TODO : SAVE LE POINTCLOUD TARGET
+    Vec3 &vecPosition = p.getRelativePosition();
+    this->editPosX->setText(QString::number(vecPosition.getX()));
+    this->editPosY->setText(QString::number(vecPosition.getY()));
+    this->editPosZ->setText(QString::number(vecPosition.getZ()));
+
+    Vec3 &vecRotation = p.getRelativeRotation();
+    this->editRotX->setText(QString::number(vecRotation.getX()));
+    this->editRotY->setText(QString::number(vecRotation.getY()));
+    this->editRotZ->setText(QString::number(vecRotation.getZ()));
+
+    Vec3 &vecScale = p.getRelativeScale();
+    this->editSclX->setText(QString::number(vecScale.getX()));
+    this->editSclY->setText(QString::number(vecScale.getY()));
+    this->editSclZ->setText(QString::number(vecScale.getZ()));
 
     Material &m = p.getMaterial();
     Vec3 &vecAmbiant = m.getAmbiant();
@@ -97,7 +84,10 @@ void InterfaceQT::resetViewerTarget()
 /*                 Signals                #*/
 /*#########################################*/
 
-void InterfaceQT::updateEditPosX(const QString &text) { qDebug() << "Modification : updateEditPosX"; }
+void InterfaceQT::updateEditPosX(const QString &text)
+{
+    // this->targetP.move(Vec3(text.toDouble(), 0.0f, 0.0f));
+}
 void InterfaceQT::updateEditPosY(const QString &text) { qDebug() << "Modification : updateEditPosY"; }
 void InterfaceQT::updateEditPosZ(const QString &text) { qDebug() << "Modification : updateEditPosZ"; }
 void InterfaceQT::updateEditRotX(const QString &text) { qDebug() << "Modification : updateEditRotX"; }

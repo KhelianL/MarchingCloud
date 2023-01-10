@@ -25,10 +25,7 @@ struct InterfaceQT
     QComboBox *editMat;
     QProgressBar *progressBar;
 
-    // TODO :
-    // PointCloud target {!} // elem a modif saved
-
-    void init();
+    // PointCloud targetP;
 
     void enableEdit(const bool &b);
     void updateViewerTarget(PointCloud &p);

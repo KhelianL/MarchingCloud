@@ -32,28 +32,31 @@ void Scene::generateImport(const std::string &filename, const float &keepingPart
     this->listPointCloud.push_back(res);
 }
 
-void Scene::generatePrimitive(const PopupType &type, const double &resolution)
+void Scene::generatePrimitive(const PopupType &type, const int &resolution)
 {
-    PointCloud res;
-    switch (type)
+    if (resolution > 0)
     {
-    case PopupType::PLANE:
-        res.generatePlane(resolution);
-        break;
-    case PopupType::CUBE:
-        res.generateCube(resolution);
-        break;
-    case PopupType::SPHERE:
-        res.generateSphere(resolution);
-        break;
-    case PopupType::TORUS:
-        res.generateTorus(resolution);
-        break;
-    default:
-        break;
+        PointCloud res;
+        switch (type)
+        {
+        case PopupType::PLANE:
+            res.generatePlane(resolution);
+            break;
+        case PopupType::CUBE:
+            res.generateCube(resolution);
+            break;
+        case PopupType::SPHERE:
+            res.generateSphere(resolution);
+            break;
+        case PopupType::TORUS:
+            res.generateTorus(resolution);
+            break;
+        default:
+            break;
+        }
+        res.setMaterial(Material(MaterialType::Custom));
+        this->listPointCloud.push_back(res);
     }
-    res.setMaterial(Material(MaterialType::Custom));
-    this->listPointCloud.push_back(res);
 }
 
 std::vector<PointCloud> &Scene::getListPointCloud()

@@ -1,60 +1,29 @@
 #include <pointCloud.h>
 
-void PointCloud::loadPointCloud(const std::string &filename)
-{
-    FILE *in = fopen(filename.c_str(), "rb");
-    if (in == NULL)
-    {
-        std::cout << filename << " is not a valid PN file." << std::endl;
-        return;
-    }
+// Getters
+std::vector<Vec3> &PointCloud::getPositions() { return this->positions; }
+std::vector<Vec3> &PointCloud::getNormals() { return this->normals; }
+Material &PointCloud::getMaterial() { return this->material; }
+Vec3 &PointCloud::getRelativePosition() { return this->relativePosition; }
+Vec3 &PointCloud::getRelativeRotation() { return this->relativeRotation; }
+Vec3 &PointCloud::getRelativeScale() { return this->relativeScale; }
 
-    unsigned int surfelSize = 6;
-    size_t READ_BUFFER_SIZE = 1000;
-    float *pn = new float[surfelSize * READ_BUFFER_SIZE];
+// Setters
+void PointCloud::setMaterial(const Material &m) { this->material = m; }
+void PointCloud::setIsSelected(const bool &b) { this->isSelected = b; }
 
-    while (!feof(in))
-    {
-        unsigned numOfPoints = fread(pn, 4, surfelSize * READ_BUFFER_SIZE, in);
-        for (unsigned int i = 0; i < numOfPoints; i += surfelSize)
-        {
-            this->positions.push_back(Vec3(pn[i], pn[i + 1], pn[i + 2]));
-            this->normals.push_back(Vec3(pn[i + 3], pn[i + 4], pn[i + 5]));
-        }
-
-        if (numOfPoints < surfelSize * READ_BUFFER_SIZE)
-            break;
-    }
-
-    fclose(in);
-    delete[] pn;
-
-    // Verification
-    if (this->positions.size() != this->normals.size())
-    {
-        std::cout << "The pointset does not contain the same number of points and normals." << std::endl;
-        this->positions.clear();
-        this->normals.clear();
-        return;
-    }
-    else
-    {
-        this->computeAABB();
-        this->setMaterial(MaterialType::Custom);
-        this->isSet = true;
-    }
-}
-
+// Transform
 void PointCloud::move(const Vec3 &v)
 {
     if (this->isSet)
     {
+        this->relativePosition += v;
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
-            this->positions[i] += v;
+            this->positions[i] += this->relativePosition;
         }
-        this->minAABB += v;
-        this->maxAABB += v;
+        this->minAABB += this->relativePosition;
+        this->maxAABB += this->relativePosition;
     }
 }
 void PointCloud::rotate(const float &d, const Vec3 &v)
@@ -108,28 +77,51 @@ void PointCloud::scale(const Vec3 &v)
     }
 }
 
-std::vector<Vec3> &PointCloud::getPositions()
+// Generation
+void PointCloud::loadPointCloud(const std::string &filename)
 {
-    return this->positions;
-}
-std::vector<Vec3> &PointCloud::getNormals()
-{
-    return this->normals;
-}
-Material &PointCloud::getMaterial()
-{
-    return this->material;
-}
+    FILE *in = fopen(filename.c_str(), "rb");
+    if (in == NULL)
+    {
+        std::cout << filename << " is not a valid PN file." << std::endl;
+        return;
+    }
 
-void PointCloud::setMaterial(const Material &m)
-{
-    this->material = m;
-}
-void PointCloud::setIsSelected(const bool &b)
-{
-    this->isSelected = b;
-}
+    unsigned int surfelSize = 6;
+    size_t READ_BUFFER_SIZE = 1000;
+    float *pn = new float[surfelSize * READ_BUFFER_SIZE];
 
+    while (!feof(in))
+    {
+        unsigned numOfPoints = fread(pn, 4, surfelSize * READ_BUFFER_SIZE, in);
+        for (unsigned int i = 0; i < numOfPoints; i += surfelSize)
+        {
+            this->positions.push_back(Vec3(pn[i], pn[i + 1], pn[i + 2]));
+            this->normals.push_back(Vec3(pn[i + 3], pn[i + 4], pn[i + 5]));
+        }
+
+        if (numOfPoints < surfelSize * READ_BUFFER_SIZE)
+            break;
+    }
+
+    fclose(in);
+    delete[] pn;
+
+    // Verification
+    if (this->positions.size() != this->normals.size())
+    {
+        std::cout << "The pointset does not contain the same number of points and normals." << std::endl;
+        this->positions.clear();
+        this->normals.clear();
+        return;
+    }
+    else
+    {
+        this->computeAABB();
+        this->setMaterial(MaterialType::Custom);
+        this->isSet = true;
+    }
+}
 void PointCloud::generatePlane(const int &resolution)
 {
     // Calcule le nombre de sommets nécessaires pour le plan
@@ -157,6 +149,7 @@ void PointCloud::generatePlane(const int &resolution)
 }
 void PointCloud::generateSphere(const int &resolution)
 {
+    // TODO : REVOIR LA GEN D'UNE SPHERE!
     const int numTheta = resolution;
     const int numPhi = 2 * resolution;
 
@@ -188,20 +181,21 @@ void PointCloud::generateSphere(const int &resolution)
 }
 void PointCloud::generateCube(const int &resolution)
 {
+    const int numLoop = resolution + 1;
     // Création du cube
-    for (int i = 0; i < resolution; ++i)
+    for (int i = 0; i < numLoop; ++i)
     {
-        for (int j = 0; j < resolution; ++j)
+        for (int j = 0; j < numLoop; ++j)
         {
-            for (int k = 0; k < resolution; ++k)
+            for (int k = 0; k < numLoop; ++k)
             {
-                if (i == 0 || i == resolution - 1 || j == 0 || j == resolution - 1 || k == 0 || k == resolution - 1)
+                if (i == 0 || i == numLoop - 1 || j == 0 || j == numLoop - 1 || k == 0 || k == numLoop - 1)
                 {
-                    Vec3 position = Vec3(i / (float)(resolution - 1) - 0.5, j / (float)(resolution - 1) - 0.5, k / (float)(resolution - 1) - 0.5);
+                    Vec3 position = Vec3(i / (float)(numLoop - 1) - 0.5, j / (float)(numLoop - 1) - 0.5, k / (float)(numLoop - 1) - 0.5);
                     position *= 2;
                     this->positions.push_back(position);
 
-                    Vec3 normal = Vec3(i - resolution / 2, j - resolution / 2, k - resolution / 2);
+                    Vec3 normal = Vec3(i - numLoop / 2, j - numLoop / 2, k - numLoop / 2);
                     normal.normalize();
                     this->normals.push_back(normal);
                 }
@@ -245,6 +239,7 @@ void PointCloud::generateTorus(const int &resolution)
     this->isSet = true;
 }
 
+// Decimate
 void PointCloud::decimate(const float &keepingPart)
 {
     // On commence par vérifier que la valeur de keepingPart est correcte
@@ -282,6 +277,7 @@ void PointCloud::decimate(const float &keepingPart)
     }
 }
 
+// AABB
 void PointCloud::computeAABB()
 {
     float minX = std::numeric_limits<float>::max();
@@ -313,6 +309,7 @@ Vec3 &PointCloud::getMaxAABB()
     return this->maxAABB;
 }
 
+// Draw
 void PointCloud::draw()
 {
     if (this->isSet)

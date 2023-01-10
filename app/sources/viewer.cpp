@@ -2,7 +2,7 @@
 
 Viewer::Viewer(Scene *const s, InterfaceQT *const i, QWidget *parent) : scene(s), interfaceQt(i), QGLViewer(parent)
 {
-	this->interfaceQt->init();
+	this->interfaceQt->enableEdit(false);
 	this->init();
 }
 

@@ -30,6 +30,7 @@ MainWindow::MainWindow()
     rightSide->setLayout(layoutComponent);
 
     this->initSignals();
+    this->initInterfaceQT();
 
     // Left/Right side
     this->viewer = new Viewer(this->scene, this->interfaceQT, splitter);
@@ -336,19 +337,67 @@ void MainWindow::marchingCloud()
 {
     this->viewer->rayTraceEvent(this->interfaceQT->editWidth->text().toInt(), this->interfaceQT->editHeight->text().toInt());
 }
+void MainWindow::initInterfaceQT()
+{
+    // Align
+    this->interfaceQT->editPosX->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editPosY->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editPosZ->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editRotX->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editRotY->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editRotZ->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSclX->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSclY->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSclZ->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editAmbR->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editAmbG->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editAmbB->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editDifR->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editDifG->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editDifB->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSpeR->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSpeG->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSpeB->setAlignment(Qt::AlignCenter);
+    this->interfaceQT->editSpeExp->setAlignment(Qt::AlignCenter);
 
+    // Validation
+    QRegExp rvd("[-]?[0-9]+.[0-9]+");
+    QRegExp rvi("[0-9]+");
+    QRegExpValidator *vDouble = new QRegExpValidator(rvd, this);
+    QRegExpValidator *vInt = new QRegExpValidator(rvi, this);
+
+    this->interfaceQT->editPosX->setValidator(vDouble);
+    this->interfaceQT->editPosY->setValidator(vDouble);
+    this->interfaceQT->editPosZ->setValidator(vDouble);
+    this->interfaceQT->editRotX->setValidator(vDouble);
+    this->interfaceQT->editRotY->setValidator(vDouble);
+    this->interfaceQT->editRotZ->setValidator(vDouble);
+    this->interfaceQT->editSclX->setValidator(vDouble);
+    this->interfaceQT->editSclY->setValidator(vDouble);
+    this->interfaceQT->editSclZ->setValidator(vDouble);
+    this->interfaceQT->editAmbR->setValidator(vDouble);
+    this->interfaceQT->editAmbG->setValidator(vDouble);
+    this->interfaceQT->editAmbB->setValidator(vDouble);
+    this->interfaceQT->editDifR->setValidator(vDouble);
+    this->interfaceQT->editDifG->setValidator(vDouble);
+    this->interfaceQT->editDifB->setValidator(vDouble);
+    this->interfaceQT->editSpeR->setValidator(vDouble);
+    this->interfaceQT->editSpeG->setValidator(vDouble);
+    this->interfaceQT->editSpeB->setValidator(vDouble);
+    this->interfaceQT->editSpeExp->setValidator(vInt);
+}
 void MainWindow::initSignals()
 {
     /* TRANSFORM COMPONENT */
-    connect(this->interfaceQT->editPosX, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosX(QString)));
-    connect(this->interfaceQT->editPosY, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosY(QString)));
-    connect(this->interfaceQT->editPosZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosZ(QString)));
-    connect(this->interfaceQT->editRotX, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotX(QString)));
-    connect(this->interfaceQT->editRotY, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotY(QString)));
-    connect(this->interfaceQT->editRotZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotZ(QString)));
-    connect(this->interfaceQT->editSclX, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclX(QString)));
-    connect(this->interfaceQT->editSclY, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclY(QString)));
-    connect(this->interfaceQT->editSclZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclZ(QString)));
+    connect(this->interfaceQT->editPosX, SIGNAL(textEdited(QString)), this, SLOT(handleEditPosX(QString)));
+    connect(this->interfaceQT->editPosY, SIGNAL(textEdited(QString)), this, SLOT(handleEditPosY(QString)));
+    connect(this->interfaceQT->editPosZ, SIGNAL(textEdited(QString)), this, SLOT(handleEditPosZ(QString)));
+    connect(this->interfaceQT->editRotX, SIGNAL(textEdited(QString)), this, SLOT(handleEditRotX(QString)));
+    connect(this->interfaceQT->editRotY, SIGNAL(textEdited(QString)), this, SLOT(handleEditRotY(QString)));
+    connect(this->interfaceQT->editRotZ, SIGNAL(textEdited(QString)), this, SLOT(handleEditRotZ(QString)));
+    connect(this->interfaceQT->editSclX, SIGNAL(textEdited(QString)), this, SLOT(handleEditSclX(QString)));
+    connect(this->interfaceQT->editSclY, SIGNAL(textEdited(QString)), this, SLOT(handleEditSclY(QString)));
+    connect(this->interfaceQT->editSclZ, SIGNAL(textEdited(QString)), this, SLOT(handleEditSclZ(QString)));
 
     /* MATERIAL COMPONENT */
     connect(this->interfaceQT->editAmbR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbR()));

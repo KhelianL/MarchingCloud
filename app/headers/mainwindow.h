@@ -24,6 +24,7 @@
 #include <QFileDialog>
 #include <QString>
 #include <QComboBox>
+#include <QRegExpValidator>
 
 /* SRC */
 #include <scene.h>
@@ -51,6 +52,7 @@ private:
 
     /* SIGNALS */
     void marchingCloud();
+    void initInterfaceQT();
     void initSignals();
 
     /* ACTIONS & MENU */
@@ -83,7 +85,6 @@ private slots:
     void handleEditSclX(const QString &text);
     void handleEditSclY(const QString &text);
     void handleEditSclZ(const QString &text);
-
     void handleEditingEditAmbR();
     void handleEditingEditAmbG();
     void handleEditingEditAmbB();
@@ -94,7 +95,6 @@ private slots:
     void handleEditingEditSpeG();
     void handleEditingEditSpeB();
     void handleEditingEditSpeExp();
-    
     void handleEditMat();
 
     /* ACTIONS & MENU */

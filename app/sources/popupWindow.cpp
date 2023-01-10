@@ -8,10 +8,11 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
     // Création du layout
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    // Création d'un validateur
-    QIntValidator *validatorInt = new QIntValidator(0, 100, this);
-    QDoubleValidator *validatorDouble = new QDoubleValidator(0.0, 1.0, 2, this);
-    validatorDouble->setNotation(QDoubleValidator::StandardNotation);
+    // Création validateurs
+    QRegExp rvp("^1|^0[.][0-9]+$");
+    QRegExp rvi("[0-9]{3}");
+    QRegExpValidator *vPercent = new QRegExpValidator(rvp, this);
+    QRegExpValidator *vInt = new QRegExpValidator(rvi, this);
 
     // Création des champs de saisie selon le type
     if (type == PopupType::IMPORT)
@@ -19,8 +20,8 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
         // Param = decimation
         layout->addWidget(new QLabel("Entrez une valeur de décimation [0.0 ; 1.0] :", this));
         m_lineEdit = new QLineEdit(this);
-        m_lineEdit->setText("1.0");
-        m_lineEdit->setValidator(validatorDouble);
+        m_lineEdit->setText("0.5");
+        m_lineEdit->setValidator(vPercent);
         layout->addWidget(m_lineEdit);
     }
     else // PopupType::PLANE + PopupType::CUBE + PopupType::SHPERE + PopupType::TORUS
@@ -29,7 +30,7 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
         layout->addWidget(new QLabel("Entrez une valeur de résolution :", this));
         m_lineEdit = new QLineEdit(this);
         m_lineEdit->setText("50");
-        m_lineEdit->setValidator(validatorInt);
+        m_lineEdit->setValidator(vInt);
         layout->addWidget(m_lineEdit);
     }
 
