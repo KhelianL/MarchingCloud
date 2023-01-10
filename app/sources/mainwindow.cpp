@@ -339,9 +339,113 @@ void MainWindow::marchingCloud()
 
 void MainWindow::initSignals()
 {
+    /* TRANSFORM COMPONENT */
+    connect(this->interfaceQT->editPosX, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosX(QString)));
+    connect(this->interfaceQT->editPosY, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosY(QString)));
+    connect(this->interfaceQT->editPosZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditPosZ(QString)));
+    connect(this->interfaceQT->editRotX, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotX(QString)));
+    connect(this->interfaceQT->editRotY, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotY(QString)));
+    connect(this->interfaceQT->editRotZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditRotZ(QString)));
+    connect(this->interfaceQT->editSclX, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclX(QString)));
+    connect(this->interfaceQT->editSclY, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclY(QString)));
+    connect(this->interfaceQT->editSclZ, SIGNAL(textChanged(QString)), this, SLOT(handleEditSclZ(QString)));
+
+    /* MATERIAL COMPONENT */
+    connect(this->interfaceQT->editAmbR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbR()));
+    connect(this->interfaceQT->editAmbG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbG()));
+    connect(this->interfaceQT->editAmbB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbB()));
+    connect(this->interfaceQT->editDifR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifR()));
+    connect(this->interfaceQT->editDifG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifG()));
+    connect(this->interfaceQT->editDifB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifB()));
+    connect(this->interfaceQT->editSpeR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeR()));
+    connect(this->interfaceQT->editSpeG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeG()));
+    connect(this->interfaceQT->editSpeB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeB()));
+    connect(this->interfaceQT->editSpeExp, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeExp()));
+
     connect(this->interfaceQT->editMat, SIGNAL(currentIndexChanged(int)), this, SLOT(handleEditMat()));
 }
 
+/* TRANSFORM COMPONENT */
+void MainWindow::handleEditPosX(const QString &text)
+{
+    this->interfaceQT->updateEditPosX(text);
+}
+void MainWindow::handleEditPosY(const QString &text)
+{
+    this->interfaceQT->updateEditPosY(text);
+}
+void MainWindow::handleEditPosZ(const QString &text)
+{
+    this->interfaceQT->updateEditPosZ(text);
+}
+void MainWindow::handleEditRotX(const QString &text)
+{
+    this->interfaceQT->updateEditRotX(text);
+}
+void MainWindow::handleEditRotY(const QString &text)
+{
+    this->interfaceQT->updateEditRotY(text);
+}
+void MainWindow::handleEditRotZ(const QString &text)
+{
+    this->interfaceQT->updateEditRotZ(text);
+}
+void MainWindow::handleEditSclX(const QString &text)
+{
+    this->interfaceQT->updateEditSclX(text);
+}
+void MainWindow::handleEditSclY(const QString &text)
+{
+    this->interfaceQT->updateEditSclY(text);
+}
+void MainWindow::handleEditSclZ(const QString &text)
+{
+    this->interfaceQT->updateEditSclZ(text);
+}
+
+/* MATERIAL COMPONENT */
+void MainWindow::handleEditingEditAmbR()
+{
+    this->interfaceQT->updateEditAmbR();
+}
+void MainWindow::handleEditingEditAmbG()
+{
+    this->interfaceQT->updateEditAmbG();
+}
+void MainWindow::handleEditingEditAmbB()
+{
+    this->interfaceQT->updateEditAmbB();
+}
+void MainWindow::handleEditingEditDifR()
+{
+    this->interfaceQT->updateEditDifR();
+}
+void MainWindow::handleEditingEditDifG()
+{
+    this->interfaceQT->updateEditDifG();
+}
+void MainWindow::handleEditingEditDifB()
+{
+    this->interfaceQT->updateEditDifB();
+}
+void MainWindow::handleEditingEditSpeR()
+{
+    this->interfaceQT->updateEditSpeR();
+}
+void MainWindow::handleEditingEditSpeG()
+{
+    this->interfaceQT->updateEditSpeG();
+}
+void MainWindow::handleEditingEditSpeB()
+{
+    this->interfaceQT->updateEditSpeB();
+}
+void MainWindow::handleEditingEditSpeExp()
+{
+    this->interfaceQT->updateEditSpeExp();
+}
+
+/* QComboBox */
 void MainWindow::handleEditMat()
 {
     this->interfaceQT->updateEditMat(this->interfaceQT->editMat->currentText());

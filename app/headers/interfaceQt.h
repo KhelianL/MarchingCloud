@@ -25,6 +25,9 @@ struct InterfaceQT
     QComboBox *editMat;
     QProgressBar *progressBar;
 
+    // TODO :
+    // PointCloud target {!} // elem a modif saved
+
     void init();
 
     void enableEdit(const bool &b);
@@ -32,6 +35,27 @@ struct InterfaceQT
     void resetViewerTarget();
 
     /* SIGNALS */
+    void updateEditPosX(const QString &text);
+    void updateEditPosY(const QString &text);
+    void updateEditPosZ(const QString &text);
+    void updateEditRotX(const QString &text);
+    void updateEditRotY(const QString &text);
+    void updateEditRotZ(const QString &text);
+    void updateEditSclX(const QString &text);
+    void updateEditSclY(const QString &text);
+    void updateEditSclZ(const QString &text);
+
+    void updateEditAmbR();
+    void updateEditAmbG();
+    void updateEditAmbB();
+    void updateEditDifR();
+    void updateEditDifG();
+    void updateEditDifB();
+    void updateEditSpeR();
+    void updateEditSpeG();
+    void updateEditSpeB();
+    void updateEditSpeExp();
+
     void updateEditMat(const QString &selected);
 };
 

@@ -50,6 +50,9 @@ void InterfaceQT::enableEdit(const bool &b)
 }
 void InterfaceQT::updateViewerTarget(PointCloud &p)
 {
+    // TODO : UPDATE LES POSITIONS ?
+    // TODO : SAVE LE POINTCLOUD TARGET
+
     Material &m = p.getMaterial();
     Vec3 &vecAmbiant = m.getAmbiant();
     Vec3 &vecDiffuse = m.getDiffuse();
@@ -89,12 +92,35 @@ void InterfaceQT::resetViewerTarget()
     this->editSpeExp->setText("");
 }
 
+#include <QDebug>
 /*#########################################*/
 /*                 Signals                #*/
 /*#########################################*/
 
-#include <QDebug>
+void InterfaceQT::updateEditPosX(const QString &text) { qDebug() << "Modification : updateEditPosX"; }
+void InterfaceQT::updateEditPosY(const QString &text) { qDebug() << "Modification : updateEditPosY"; }
+void InterfaceQT::updateEditPosZ(const QString &text) { qDebug() << "Modification : updateEditPosZ"; }
+void InterfaceQT::updateEditRotX(const QString &text) { qDebug() << "Modification : updateEditRotX"; }
+void InterfaceQT::updateEditRotY(const QString &text) { qDebug() << "Modification : updateEditRotY"; }
+void InterfaceQT::updateEditRotZ(const QString &text) { qDebug() << "Modification : updateEditRotZ"; }
+void InterfaceQT::updateEditSclX(const QString &text) { qDebug() << "Modification : updateEditSclX"; }
+void InterfaceQT::updateEditSclY(const QString &text) { qDebug() << "Modification : updateEditSclY"; }
+void InterfaceQT::updateEditSclZ(const QString &text) { qDebug() << "Modification : updateEditSclZ"; }
+
+// TODO : NE PAS OUBLIER DE METTRE EDITMAT A CUSTOM SI CHANGEMENT!
+void InterfaceQT::updateEditAmbR() { qDebug() << "Modification : updateEditAmbR"; }
+void InterfaceQT::updateEditAmbG() { qDebug() << "Modification : updateEditAmbG"; }
+void InterfaceQT::updateEditAmbB() { qDebug() << "Modification : updateEditAmbB"; }
+void InterfaceQT::updateEditDifR() { qDebug() << "Modification : updateEditDifR"; }
+void InterfaceQT::updateEditDifG() { qDebug() << "Modification : updateEditDifG"; }
+void InterfaceQT::updateEditDifB() { qDebug() << "Modification : updateEditDifB"; }
+void InterfaceQT::updateEditSpeR() { qDebug() << "Modification : updateEditSpeR"; }
+void InterfaceQT::updateEditSpeG() { qDebug() << "Modification : updateEditSpeG"; }
+void InterfaceQT::updateEditSpeB() { qDebug() << "Modification : updateEditSpeB"; }
+void InterfaceQT::updateEditSpeExp() { qDebug() << "Modification : updateEditSpeExp"; }
+
 void InterfaceQT::updateEditMat(const QString &selected)
 {
     qDebug() << selected;
+    // TODO : SWITCH CASE SUR SELECTED ET UPDATE LES MATERIAL.
 }

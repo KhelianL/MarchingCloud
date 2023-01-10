@@ -74,6 +74,27 @@ private:
 
 private slots:
     /* SIGNALS */
+    void handleEditPosX(const QString &text);
+    void handleEditPosY(const QString &text);
+    void handleEditPosZ(const QString &text);
+    void handleEditRotX(const QString &text);
+    void handleEditRotY(const QString &text);
+    void handleEditRotZ(const QString &text);
+    void handleEditSclX(const QString &text);
+    void handleEditSclY(const QString &text);
+    void handleEditSclZ(const QString &text);
+
+    void handleEditingEditAmbR();
+    void handleEditingEditAmbG();
+    void handleEditingEditAmbB();
+    void handleEditingEditDifR();
+    void handleEditingEditDifG();
+    void handleEditingEditDifB();
+    void handleEditingEditSpeR();
+    void handleEditingEditSpeG();
+    void handleEditingEditSpeB();
+    void handleEditingEditSpeExp();
+    
     void handleEditMat();
 
     /* ACTIONS & MENU */
