@@ -1,5 +1,7 @@
 #include <interface.h>
 
+#include <QDebug>
+
 void InterfaceQT::enableEdit(const bool &b)
 {
     this->editPosX->setEnabled(b);
@@ -53,9 +55,18 @@ void InterfaceQT::updateViewerTarget()
     this->editSpeB->setText(QString::number(vecSpecular.getZ()));
     this->editSpeExp->setText(QString::number(m.getSpecExp()));
 
-    QString value = matToString(m.getType());
-    int index = this->editMat->findData(value);
-    if (index != -1)
+    QString value = getMaterialTypeToString(m.getType());
+    int index = -1;
+    bool find = false;
+    for (int i = 0, maxSize = this->editMat->count(); i < maxSize && !find; ++i)
+    {
+        if (this->editMat->itemText(i) == value)
+        {
+            index = i;
+            find = true;
+        }
+    }
+    if (find)
     {
         this->editMat->setCurrentIndex(index);
     }
@@ -152,11 +163,31 @@ void InterfaceQT::updateEditSpeExp(const QString &text)
     this->editMat->setCurrentIndex(0);
 }
 
-// TODO
 void InterfaceQT::updateEditMat(const QString &selected)
 {
-    this->targetP->getMaterial().setAmbiant({1.0, 2.0, 3.0});
-    this->editAmbR->setText("1.0");
-    this->editAmbG->setText("2.0");
-    this->editAmbB->setText("3.0");
+    int idx = 0;
+    bool find = false;
+    for (int i = 0, maxSize = sizeof(MaterialTable) / sizeof(MaterialTable[0]); i < maxSize && !find; i++)
+    {
+        if (selected == QString(MaterialTable[i]))
+        {
+            find = true;
+            idx = i;
+        }
+    }
+    this->targetP->setMaterial(Material(static_cast<MaterialType>(idx)));
+    Material &m = this->targetP->getMaterial();
+    Vec3 &vecAmbiant = m.getAmbiant();
+    Vec3 &vecDiffuse = m.getDiffuse();
+    Vec3 &vecSpecular = m.getSpecular();
+    this->editAmbR->setText(QString::number(vecAmbiant.getX()));
+    this->editAmbG->setText(QString::number(vecAmbiant.getY()));
+    this->editAmbB->setText(QString::number(vecAmbiant.getZ()));
+    this->editDifR->setText(QString::number(vecDiffuse.getX()));
+    this->editDifG->setText(QString::number(vecDiffuse.getY()));
+    this->editDifB->setText(QString::number(vecDiffuse.getZ()));
+    this->editSpeR->setText(QString::number(vecSpecular.getX()));
+    this->editSpeG->setText(QString::number(vecSpecular.getY()));
+    this->editSpeB->setText(QString::number(vecSpecular.getZ()));
+    this->editSpeExp->setText(QString::number(m.getSpecExp()));
 }

@@ -111,18 +111,18 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
         break;
-    case MaterialType::Donut:
-        this->ambiant = Vec3(0.8, 0.5, 0.2);
-        this->diffuse = Vec3(0.9, 0.7, 0.3);
-        this->specular = Vec3(0.1, 0.1, 0.1);
-        this->spec_exp = 10.0;
-        this->transparency = 0.0;
-        this->refractionIndex = 0.0;
-        break;
     case MaterialType::WitchHair:
         this->ambiant = Vec3(0.2, 0.2, 0.2);
         this->diffuse = Vec3(0.9, 0.9, 0.8);
         this->specular = Vec3(0.9, 0.9, 0.9);
+        this->spec_exp = 10.0;
+        this->transparency = 0.0;
+        this->refractionIndex = 0.0;
+        break;
+    case MaterialType::Donut:
+        this->ambiant = Vec3(0.8, 0.5, 0.2);
+        this->diffuse = Vec3(0.9, 0.7, 0.3);
+        this->specular = Vec3(0.1, 0.1, 0.1);
         this->spec_exp = 10.0;
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
@@ -161,7 +161,6 @@ void Material::setAmbiant(const Vec3 &ambiant) { this->ambiant = ambiant; }
 void Material::setDiffuse(const Vec3 &diffuse) { this->diffuse = diffuse; }
 void Material::setSpecular(const Vec3 &specular) { this->specular = specular; }
 void Material::setSpecExp(const int &spec_exp) { this->spec_exp = spec_exp; }
-
 void Material::setAmbiantR(const float &v) { this->ambiant.setX(v); }
 void Material::setAmbiantG(const float &v) { this->ambiant.setY(v); }
 void Material::setAmbiantB(const float &v) { this->ambiant.setZ(v); }
@@ -171,66 +170,7 @@ void Material::setDiffuseB(const float &v) { this->diffuse.setZ(v); }
 void Material::setSpecularR(const float &v) { this->specular.setX(v); }
 void Material::setSpecularG(const float &v) { this->specular.setY(v); }
 void Material::setSpecularB(const float &v) { this->specular.setZ(v); }
-
 void Material::setTransparency(const float &transparency) { this->transparency = transparency; }
 void Material::setRefractionIndex(const float &refractionIndex) { this->refractionIndex = refractionIndex; }
 
-// Enum to String
-QString matToString(const MaterialType &type)
-{
-    QString res;
-    switch (type)
-    {
-    case MaterialType::Custom:
-        res = "Custom";
-        break;
-    case MaterialType::Gold:
-        res = "Gold";
-        break;
-    case MaterialType::Silver:
-        res = "Silver";
-        break;
-    case MaterialType::Bronze:
-        res = "Bronze";
-        break;
-    case MaterialType::Copper:
-        res = "Copper";
-        break;
-    case MaterialType::Wood:
-        res = "Wood";
-        break;
-    case MaterialType::RedPlastic:
-        res = "RedPlastic";
-        break;
-    case MaterialType::GreenPlastic:
-        res = "GreenPlastic";
-        break;
-    case MaterialType::BluePlastic:
-        res = "BluePlastic";
-        break;
-    case MaterialType::Ruby:
-        res = "Ruby";
-        break;
-    case MaterialType::Crystal:
-        res = "Crystal";
-        break;
-    case MaterialType::Water:
-        res = "Water";
-        break;
-    case MaterialType::Glass:
-        res = "Glass";
-        break;
-    case MaterialType::Mirror:
-        res = "Mirror";
-        break;
-    default:
-        res = "";
-        break;
-    }
-
-    return res;
-}
-MaterialType stringToMat(const QString &type)
-{
-
-}
+QString getMaterialTypeToString(const MaterialType &type) { return QString(MaterialTable[static_cast<uint32_t>(type)]); }

@@ -164,7 +164,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     else
     {
         this->computeAABB();
-        this->setMaterial(MaterialType::Custom);
+        this->setMaterial(Material(MaterialType::Custom));
         this->isSet = true;
     }
 }

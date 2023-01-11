@@ -7,7 +7,7 @@
 /* SRC */
 #include <vec3.h>
 
-enum class MaterialType
+enum class MaterialType : uint32_t
 {
     Custom,
     Gold,
@@ -23,14 +23,28 @@ enum class MaterialType
     Water,
     Glass,
     WitchHair,
-    Mirror,
     Donut,
     Fire
 };
-// make struct 
-// std::map<std::string, struct> m = {.... TOUT LE BORDEL ....}
+constexpr static const char *MaterialTable[] = {
+    "Custom",
+    "Gold",
+    "Silver",
+    "Bronze",
+    "Copper",
+    "Wood",
+    "RedPlastic",
+    "GreenPlastic",
+    "BluePlastic",
+    "Ruby",
+    "Crystal",
+    "Water",
+    "Glass",
+    "WitchHair",
+    "Donut",
+    "Fire"};
 
-QString matToString(const MaterialType &type);
+QString getMaterialTypeToString(const MaterialType &type);
 
 class Material
 {

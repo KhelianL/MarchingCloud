@@ -234,20 +234,10 @@ QWidget *MainWindow::createMaterialComponent()
     editMaterial->addWidget(this->interfaceQT->editSpeExp, 3, 4, 1, 3);
 
     this->interfaceQT->editMat = new QComboBox();
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Custom));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Gold));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Silver));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Bronze));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Copper));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Wood));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::RedPlastic));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::GreenPlastic));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::BluePlastic));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Ruby));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Crystal));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Water));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Glass));
-    this->interfaceQT->editMat->addItem(matToString(MaterialType::Mirror));
+    for (int i = 0, maxSize = sizeof(MaterialTable) / sizeof(MaterialTable[0]); i < maxSize; i++)
+    {
+        this->interfaceQT->editMat->addItem(MaterialTable[i]);
+    }
     editMaterial->addWidget(this->interfaceQT->editMat, 4, 4, 1, 3);
 
     labelWidget->setLayout(labelMaterial);
