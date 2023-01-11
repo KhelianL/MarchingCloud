@@ -358,6 +358,7 @@ void PointCloud::draw()
 {
     if (this->isSet)
     {
+        // DrawPoints
         glBegin(GL_POINTS);
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
@@ -371,6 +372,16 @@ void PointCloud::draw()
             {
                 glColor3f(1.0, 1.0, 1.0);
             }
+        }
+        glEnd();
+        
+        // DrawNormals
+        glBegin(GL_LINES);
+        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
+        {
+            glVertex3f(this->positions[i][0], this->positions[i][1], this->positions[i][2]);
+            glVertex3f(this->positions[i][0] + this->normals[i][0] * 0.1f, this->positions[i][1] + this->normals[i][1] * 0.1f, this->positions[i][2] + this->normals[i][2] * 0.1f);
+            glColor3f(1.0, 0.0, 0.0);
         }
         glEnd();
     }
