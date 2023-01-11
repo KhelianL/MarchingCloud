@@ -459,7 +459,6 @@ void MainWindow::handleEditSclZ(const QString &text)
 }
 
 /* MATERIAL COMPONENT */
-/*
 void MainWindow::handleEditAmbR(const QString &text)
 {
     this->interfaceQT->updateEditAmbR(text);
@@ -500,15 +499,12 @@ void MainWindow::handleEditSpeExp(const QString &text)
 {
     this->interfaceQT->updateEditSpeExp(text);
 }
-*/
 
 /* QComboBox */
-/*
 void MainWindow::handleEditMat()
 {
     this->interfaceQT->updateEditMat(this->interfaceQT->editMat->currentText());
 }
-*/
 
 /*#########################################*/
 /*                 Actions                #*/
