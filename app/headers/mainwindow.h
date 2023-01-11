@@ -30,7 +30,7 @@
 #include <scene.h>
 #include <viewer.h>
 #include <popupWindow.h>
-#include <interfaceQT.h>
+#include <interface.h>
 
 class MainWindow : public QMainWindow
 {

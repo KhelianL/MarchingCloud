@@ -15,7 +15,7 @@
 #include <vec3.h>
 #include <pointCloud.h>
 #include <scene.h>
-#include <interfaceQT.h>
+#include <interface.h>
 #include <tools.h>
 
 class Viewer : public QGLViewer

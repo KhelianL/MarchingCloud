@@ -1,4 +1,4 @@
-#include <interfaceQT.h>
+#include <interface.h>
 
 void InterfaceQT::enableEdit(const bool &b)
 {
