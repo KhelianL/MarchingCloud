@@ -87,6 +87,7 @@ private slots:
     void handleEditSclX(const QString &text);
     void handleEditSclY(const QString &text);
     void handleEditSclZ(const QString &text);
+    /*
     void handleEditAmbR(const QString &text);
     void handleEditAmbG(const QString &text);
     void handleEditAmbB(const QString &text);
@@ -98,6 +99,7 @@ private slots:
     void handleEditSpeB(const QString &text);
     void handleEditSpeExp(const QString &text);
     void handleEditMat();
+    */
 
     /* ACTIONS & MENU */
     void delTarget();

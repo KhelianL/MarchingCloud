@@ -43,6 +43,7 @@ struct InterfaceQT
     void updateEditSclY(const QString &text);
     void updateEditSclZ(const QString &text);
 
+    /*
     void updateEditAmbR(const QString &text);
     void updateEditAmbG(const QString &text);
     void updateEditAmbB(const QString &text);
@@ -55,6 +56,7 @@ struct InterfaceQT
     void updateEditSpeExp(const QString &text);
 
     void updateEditMat(const QString &selected);
+    */
 };
 
 #endif

@@ -40,40 +40,42 @@ void InterfaceQT::updateViewerTarget()
     this->editSclY->setText(QString::number(vecScale.getY()));
     this->editSclZ->setText(QString::number(vecScale.getZ()));
 
-    Material &m = this->targetP->getMaterial();
-    Vec3 &vecAmbiant = m.getAmbiant();
-    Vec3 &vecDiffuse = m.getDiffuse();
-    Vec3 &vecSpecular = m.getSpecular();
-    this->editAmbR->setText(QString::number(vecAmbiant.getX()));
-    this->editAmbG->setText(QString::number(vecAmbiant.getY()));
-    this->editAmbB->setText(QString::number(vecAmbiant.getZ()));
-    this->editDifR->setText(QString::number(vecDiffuse.getX()));
-    this->editDifG->setText(QString::number(vecDiffuse.getY()));
-    this->editDifB->setText(QString::number(vecDiffuse.getZ()));
-    this->editSpeR->setText(QString::number(vecSpecular.getX()));
-    this->editSpeG->setText(QString::number(vecSpecular.getY()));
-    this->editSpeB->setText(QString::number(vecSpecular.getZ()));
-    this->editSpeExp->setText(QString::number(m.getSpecExp()));
+    /*
+        Material &m = this->targetP->getMaterial();
+        Vec3 &vecAmbiant = m.getAmbiant();
+        Vec3 &vecDiffuse = m.getDiffuse();
+        Vec3 &vecSpecular = m.getSpecular();
+        this->editAmbR->setText(QString::number(vecAmbiant.getX()));
+        this->editAmbG->setText(QString::number(vecAmbiant.getY()));
+        this->editAmbB->setText(QString::number(vecAmbiant.getZ()));
+        this->editDifR->setText(QString::number(vecDiffuse.getX()));
+        this->editDifG->setText(QString::number(vecDiffuse.getY()));
+        this->editDifB->setText(QString::number(vecDiffuse.getZ()));
+        this->editSpeR->setText(QString::number(vecSpecular.getX()));
+        this->editSpeG->setText(QString::number(vecSpecular.getY()));
+        this->editSpeB->setText(QString::number(vecSpecular.getZ()));
+        this->editSpeExp->setText(QString::number(m.getSpecExp()));
 
-    QString value = getMaterialTypeToString(m.getType());
-    int index = -1;
-    bool find = false;
-    for (int i = 0, maxSize = this->editMat->count(); i < maxSize && !find; ++i)
-    {
-        if (this->editMat->itemText(i) == value)
+        QString value = getMaterialTypeToString(m.getType());
+        int index = -1;
+        bool find = false;
+        for (int i = 0, maxSize = this->editMat->count(); i < maxSize && !find; ++i)
         {
-            index = i;
-            find = true;
+            if (this->editMat->itemText(i) == value)
+            {
+                index = i;
+                find = true;
+            }
         }
-    }
-    if (find)
-    {
-        this->editMat->setCurrentIndex(index);
-    }
-    else
-    {
-        this->editMat->setCurrentIndex(0);
-    }
+        if (find)
+        {
+            this->editMat->setCurrentIndex(index);
+        }
+        else
+        {
+            this->editMat->setCurrentIndex(0);
+        }
+    */
 }
 void InterfaceQT::resetViewerTarget()
 {
@@ -112,6 +114,7 @@ void InterfaceQT::updateEditSclX(const QString &text) { this->targetP->relativeS
 void InterfaceQT::updateEditSclY(const QString &text) { this->targetP->relativeScaleY(text.toDouble()); }
 void InterfaceQT::updateEditSclZ(const QString &text) { this->targetP->relativeScaleZ(text.toDouble()); }
 
+/*
 void InterfaceQT::updateEditAmbR(const QString &text)
 {
     this->targetP->getMaterial().setAmbiantR(this->editAmbR->text().toDouble());
@@ -191,3 +194,4 @@ void InterfaceQT::updateEditMat(const QString &selected)
     this->editSpeB->setText(QString::number(vecSpecular.getZ()));
     this->editSpeExp->setText(QString::number(m.getSpecExp()));
 }
+*/
