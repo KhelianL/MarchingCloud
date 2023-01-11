@@ -391,7 +391,6 @@ void MainWindow::initSignals()
     connect(this->interfaceQT->editSclZ, SIGNAL(textEdited(QString)), this, SLOT(handleEditSclZ(QString)));
 
     /* MATERIAL COMPONENT */
-    /*
     connect(this->interfaceQT->editAmbR, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbR(QString)));
     connect(this->interfaceQT->editAmbG, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbG(QString)));
     connect(this->interfaceQT->editAmbB, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbB(QString)));
@@ -404,7 +403,6 @@ void MainWindow::initSignals()
     connect(this->interfaceQT->editSpeExp, SIGNAL(textEdited(QString)), this, SLOT(handleEditSpeExp(QString)));
 
     connect(this->interfaceQT->editMat, SIGNAL(currentIndexChanged(int)), this, SLOT(handleEditMat()));
-    */
 }
 void MainWindow::updateViewer()
 {
