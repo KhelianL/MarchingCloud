@@ -263,9 +263,14 @@ void PointCloud::generateTorus(const int &resolution)
             const float y = (2 + cos(theta)) * sin(phi);
             const float z = sin(theta);
 
-            // Calcul et normalisation de la normale
-            const float norm = sqrtf(x * x + y * y + z * z);
-            const Vec3 normal = {x / norm, y / norm, z / norm};
+            // Calcul de la normale
+            const float nx = x * cos(theta) - y * sin(theta);
+            const float ny = x * sin(theta) + y * cos(theta);
+            const float nz = z;
+
+            // Normalisation de la normale
+            const float norm = sqrtf(nx * nx + ny * ny + nz * nz);
+            const Vec3 normal = {nx / norm, ny / norm, nz / norm};
 
             // Ajout du point et de sa normale au vecteur
             Vec3 pos = Vec3(x, y, z) / 3;

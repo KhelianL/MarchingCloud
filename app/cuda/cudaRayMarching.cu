@@ -504,7 +504,7 @@ __device__ int findNearest(KdTreeNode *tree, CudaVec3 point)
 }
 __device__ float HPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
 {
-    int kerneltype = 0;
+    int kerneltype = 1;
     float h = 100;
     unsigned int nbIterations = 4;
     const unsigned int knn = 10;
@@ -532,12 +532,12 @@ __device__ float HPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
             float r = sqrt(square_distances_to_neighbors[i]) / h;
             switch (kerneltype)
             {
-            case 0:
-
+            case 0: // gaussien
                 weight = exp((-(r * r)) / (h * h));
                 break;
             case 1:
                 weight = 0;
+                weight = pow(1-r, 6) * pow(1 + (3+1)*r, 6);
                 break;
             case 2:
                 weight = 0;
@@ -557,10 +557,77 @@ __device__ float HPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
 
     return (dot(inputPoint - nextPoint, nextNormal));
 }
+__device__ float MLS(CudaVec3 inputPoint, PointCloudData pcd)
+{
+    int kerneltype = 1;
+    float h = 100;
+    unsigned int nbIterations = 4;
+    const unsigned int knn = 10;
+
+    int *id_nearest_neighbors = (int *)malloc(knn * sizeof(int));
+    float *square_distances_to_neighbors = (float *)malloc(knn * sizeof(float));
+
+    CudaVec3 precPoint = inputPoint;
+    CudaVec3 nextPoint;
+    CudaVec3 nextNormal;
+
+    for (int itt = 0; itt < nbIterations; itt++)
+    {
+        computeKnn(id_nearest_neighbors, (float *)square_distances_to_neighbors, pcd.kdTree, knn, precPoint[0], precPoint[1], precPoint[2]);
+
+        CudaVec3 avgPoint = CudaVec3();
+        CudaVec3 avgNormal = CudaVec3();
+
+        float totWeight = 0.0;
+
+        for (int i = 0; i < knn; i++)
+        {
+            
+            float weight = 0.0;
+            float r = sqrt(square_distances_to_neighbors[i]) / h;
+            switch (kerneltype)
+            {
+            case 0: // gaussien
+                weight = exp((-(r * r)) / (h * h));
+                break;
+            case 1:
+                weight = 0;
+                weight = pow(1-r, 6) * pow(1 + (3+1)*r, 6);
+                break;
+            case 2:
+                weight = 0;
+                break;
+            }
+            totWeight += weight;
+            avgPoint  += weight * pcd.positions[id_nearest_neighbors[i]];
+            avgNormal += weight * pcd.normals[id_nearest_neighbors[i]];
+        }
+
+        avgPoint = avgPoint / totWeight;
+        avgNormal.normalize();
+
+        nextPoint = project(precPoint, avgNormal, avgPoint);
+        nextNormal = avgNormal;
+
+        precPoint = nextPoint;
+    }
+
+    free(id_nearest_neighbors);
+    free(square_distances_to_neighbors);
+
+    return (dot(inputPoint - nextPoint, nextNormal));
+}
+__device__ float SignedDist(CudaVec3 inputPoint, PointCloudData pcd){
+
+    //return MLS(inputPoint, pcd);
+    return HPSSDist(inputPoint, pcd);
+}
+
+
 __device__ cIntersection intersect(CudaVec3 pos, CudaVec3 dir, PointCloudData pcd)
 {
     float seuilMin = 0.01;
-    float seuilMax = 10;
+    float seuilMax = 100;
 
     int maxItt = 50;
 
@@ -569,7 +636,7 @@ __device__ cIntersection intersect(CudaVec3 pos, CudaVec3 dir, PointCloudData pc
     int i = 0;
     for (int i = 0; i < maxItt; i++)
     {
-        float dist = abs(HPSSDist(pos, pcd));
+        float dist = abs(SignedDist(pos, pcd));
 
         if (dist > seuilMax)
         {
@@ -594,9 +661,9 @@ __device__ CudaVec3 normale(CudaVec3 pos, PointCloudData pcd)
     CudaVec3 eps3 = CudaVec3(0., 0., 0.01);
 
     CudaVec3 res = CudaVec3(
-        HPSSDist(pos + eps1, pcd) - HPSSDist(pos - eps1, pcd),
-        HPSSDist(pos + eps2, pcd) - HPSSDist(pos - eps2, pcd),
-        HPSSDist(pos + eps3, pcd) - HPSSDist(pos - eps3, pcd));
+        SignedDist(pos + eps1, pcd) - SignedDist(pos - eps1, pcd),
+        SignedDist(pos + eps2, pcd) - SignedDist(pos - eps2, pcd),
+        SignedDist(pos + eps3, pcd) - SignedDist(pos - eps3, pcd));
 
     res.normalize();
 
@@ -824,15 +891,19 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     
 
     int nbsteps = 10;   
-    int blockPerSteps = nbBlock/nbsteps;
+    int blockPerSteps = std::ceil(nbBlock/nbsteps);
+
+    int computedNbStep = nbBlock / blockPerSteps ;
+    std::cout<<"computedNbStep : "<<computedNbStep<<std::endl;
+
     dim3 numBlocks(blockPerSteps, 1);
 
     int nextInd = 0;
-    int i = 0;
+    float i = 0;
     while(nextInd < nbBlock * (nbth * nbth)){
         cuda_ray_trace<<<numBlocks, threadsPerBlock>>>(nextInd, cudaPos, cudaDirTab, cudaImage, h * w, pcd);
         cudaDeviceSynchronize();
-        i += 100/nbsteps;
+        i += 100.0/computedNbStep;
         std::cout<<i<<"%"<<std::endl;
         nextInd += blockPerSteps * (nbth * nbth);
     }
