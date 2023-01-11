@@ -234,6 +234,7 @@ QWidget *MainWindow::createMaterialComponent()
     editMaterial->addWidget(this->interfaceQT->editSpeExp, 3, 4, 1, 3);
 
     this->interfaceQT->editMat = new QComboBox();
+    this->interfaceQT->editMat->addItem(matToString(MaterialType::Custom));
     this->interfaceQT->editMat->addItem(matToString(MaterialType::Gold));
     this->interfaceQT->editMat->addItem(matToString(MaterialType::Silver));
     this->interfaceQT->editMat->addItem(matToString(MaterialType::Bronze));
@@ -413,43 +414,56 @@ void MainWindow::initSignals()
 
     connect(this->interfaceQT->editMat, SIGNAL(currentIndexChanged(int)), this, SLOT(handleEditMat()));
 }
+void MainWindow::updateViewer()
+{
+    this->viewer->update();
+}
 
 /* TRANSFORM COMPONENT */
 void MainWindow::handleEditPosX(const QString &text)
 {
     this->interfaceQT->updateEditPosX(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditPosY(const QString &text)
 {
     this->interfaceQT->updateEditPosY(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditPosZ(const QString &text)
 {
     this->interfaceQT->updateEditPosZ(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditRotX(const QString &text)
 {
     this->interfaceQT->updateEditRotX(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditRotY(const QString &text)
 {
     this->interfaceQT->updateEditRotY(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditRotZ(const QString &text)
 {
     this->interfaceQT->updateEditRotZ(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditSclX(const QString &text)
 {
     this->interfaceQT->updateEditSclX(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditSclY(const QString &text)
 {
     this->interfaceQT->updateEditSclY(text);
+    this->updateViewer();
 }
 void MainWindow::handleEditSclZ(const QString &text)
 {
     this->interfaceQT->updateEditSclZ(text);
+    this->updateViewer();
 }
 
 /* MATERIAL COMPONENT */

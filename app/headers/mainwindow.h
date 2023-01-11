@@ -54,6 +54,7 @@ private:
     void marchingCloud();
     void initInterfaceQT();
     void initSignals();
+    void updateViewer();
 
     /* ACTIONS & MENU */
     QShortcut *shortcut;

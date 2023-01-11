@@ -12,10 +12,11 @@
 #include <vec.h>
 
 /* SRC */
-#include <scene.h>
-#include <tools.h>
 #include <vec3.h>
+#include <pointCloud.h>
+#include <scene.h>
 #include <interfaceQT.h>
+#include <tools.h>
 
 class Viewer : public QGLViewer
 {

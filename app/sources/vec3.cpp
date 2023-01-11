@@ -13,18 +13,12 @@ Vec3::Vec3(float x, float y, float z)
     mVals[2] = z;
 }
 
-float Vec3::getX()
-{
-    return mVals[0];
-}
-float Vec3::getY()
-{
-    return mVals[1];
-}
-float Vec3::getZ()
-{
-    return mVals[2];
-}
+float Vec3::getX() { return mVals[0]; }
+float Vec3::getY() { return mVals[1]; }
+float Vec3::getZ() { return mVals[2]; }
+void Vec3::setX(float const &v) { this->mVals[0] = v; }
+void Vec3::setY(float const &v) { this->mVals[1] = v; }
+void Vec3::setZ(float const &v) { this->mVals[2] = v; }
 
 float Vec3::squareLength() const
 {

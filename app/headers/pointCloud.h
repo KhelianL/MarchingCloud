@@ -49,10 +49,15 @@ public:
     void setMaterial(const Material &m);
     void setIsSelected(const bool &b);
 
-    // Transform
+    // Transform PointCloud
     void move(const Vec3 &v);
     void rotate(const float &d, const Vec3 &v);
     void scale(const Vec3 &v);
+
+    // Transform Relative
+    void relativeMoveX(const float &v);
+    void relativeMoveY(const float &v);
+    void relativeMoveZ(const float &v);
 
     // Generate
     void loadPointCloud(const std::string &filename);

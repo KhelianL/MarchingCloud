@@ -25,17 +25,17 @@ void InterfaceQT::enableEdit(const bool &b)
 }
 void InterfaceQT::updateViewerTarget(PointCloud &p)
 {
+    this->targetP = &p;
+
     Vec3 &vecPosition = p.getRelativePosition();
+    Vec3 &vecRotation = p.getRelativeRotation();
+    Vec3 &vecScale = p.getRelativeScale();
     this->editPosX->setText(QString::number(vecPosition.getX()));
     this->editPosY->setText(QString::number(vecPosition.getY()));
     this->editPosZ->setText(QString::number(vecPosition.getZ()));
-
-    Vec3 &vecRotation = p.getRelativeRotation();
     this->editRotX->setText(QString::number(vecRotation.getX()));
     this->editRotY->setText(QString::number(vecRotation.getY()));
     this->editRotZ->setText(QString::number(vecRotation.getZ()));
-
-    Vec3 &vecScale = p.getRelativeScale();
     this->editSclX->setText(QString::number(vecScale.getX()));
     this->editSclY->setText(QString::number(vecScale.getY()));
     this->editSclZ->setText(QString::number(vecScale.getZ()));
@@ -44,7 +44,6 @@ void InterfaceQT::updateViewerTarget(PointCloud &p)
     Vec3 &vecAmbiant = m.getAmbiant();
     Vec3 &vecDiffuse = m.getDiffuse();
     Vec3 &vecSpecular = m.getSpecular();
-
     this->editAmbR->setText(QString::number(vecAmbiant.getX()));
     this->editAmbG->setText(QString::number(vecAmbiant.getY()));
     this->editAmbB->setText(QString::number(vecAmbiant.getZ()));
@@ -55,6 +54,17 @@ void InterfaceQT::updateViewerTarget(PointCloud &p)
     this->editSpeG->setText(QString::number(vecSpecular.getY()));
     this->editSpeB->setText(QString::number(vecSpecular.getZ()));
     this->editSpeExp->setText(QString::number(m.getSpecExp()));
+
+    QString value = matToString(m.getType());
+    int index = this->editMat->findData(value);
+    if (index != -1)
+    {
+        this->editMat->setCurrentIndex(index);
+    }
+    else
+    {
+        this->editMat->setCurrentIndex(0);
+    }
 }
 void InterfaceQT::resetViewerTarget()
 {
@@ -83,13 +93,10 @@ void InterfaceQT::resetViewerTarget()
 /*#########################################*/
 /*                 Signals                #*/
 /*#########################################*/
-
-void InterfaceQT::updateEditPosX(const QString &text)
-{
-    // this->targetP.move(Vec3(text.toDouble(), 0.0f, 0.0f));
-}
-void InterfaceQT::updateEditPosY(const QString &text) { qDebug() << "Modification : updateEditPosY"; }
-void InterfaceQT::updateEditPosZ(const QString &text) { qDebug() << "Modification : updateEditPosZ"; }
+// TODO : call "updateGL()"" sur le viewer ??
+void InterfaceQT::updateEditPosX(const QString &text) { this->targetP->relativeMoveX(text.toDouble()); }
+void InterfaceQT::updateEditPosY(const QString &text) { this->targetP->relativeMoveY(text.toDouble()); }
+void InterfaceQT::updateEditPosZ(const QString &text) { this->targetP->relativeMoveZ(text.toDouble()); }
 void InterfaceQT::updateEditRotX(const QString &text) { qDebug() << "Modification : updateEditRotX"; }
 void InterfaceQT::updateEditRotY(const QString &text) { qDebug() << "Modification : updateEditRotY"; }
 void InterfaceQT::updateEditRotZ(const QString &text) { qDebug() << "Modification : updateEditRotZ"; }

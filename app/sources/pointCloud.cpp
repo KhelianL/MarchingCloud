@@ -12,18 +12,17 @@ Vec3 &PointCloud::getRelativeScale() { return this->relativeScale; }
 void PointCloud::setMaterial(const Material &m) { this->material = m; }
 void PointCloud::setIsSelected(const bool &b) { this->isSelected = b; }
 
-// Transform
+// Transform PointCloud
 void PointCloud::move(const Vec3 &v)
 {
     if (this->isSet)
     {
-        this->relativePosition += v;
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
         {
-            this->positions[i] += this->relativePosition;
+            this->positions[i] += v;
         }
-        this->minAABB += this->relativePosition;
-        this->maxAABB += this->relativePosition;
+        this->minAABB += v;
+        this->maxAABB += v;
     }
 }
 void PointCloud::rotate(const float &d, const Vec3 &v)
@@ -75,6 +74,26 @@ void PointCloud::scale(const Vec3 &v)
         }
         this->computeAABB();
     }
+}
+
+// Transform Relative for PointCloud
+void PointCloud::relativeMoveX(const float &v)
+{
+    float posX = this->relativePosition.getX();
+    this->move(Vec3((v - posX), 0.0f, 0.0f));
+    this->relativePosition.setX(v);
+}
+void PointCloud::relativeMoveY(const float &v)
+{
+    float posY = this->relativePosition.getY();
+    this->move(Vec3(0.0f, (v - posY), 0.0f));
+    this->relativePosition.setY(v);
+}
+void PointCloud::relativeMoveZ(const float &v)
+{
+    float posZ = this->relativePosition.getZ();
+    this->move(Vec3(0.0f, 0.0f, (v - posZ)));
+    this->relativePosition.setZ(v);
 }
 
 // Generation

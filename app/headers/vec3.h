@@ -17,6 +17,9 @@ public:
     float getX();
     float getY();
     float getZ();
+    void setX(float const &v);
+    void setY(float const &v);
+    void setZ(float const &v);
 
     float squareLength() const;
     float length() const;
