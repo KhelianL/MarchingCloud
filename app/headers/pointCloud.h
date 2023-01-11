@@ -3,6 +3,7 @@
 
 /* QT */
 #include <QString>
+#include <QMatrix4x4>
 
 /* C++ */
 #include <vector>
@@ -29,6 +30,8 @@ private:
     Vec3 relativeRotation = Vec3(0.0f, 0.0f, 0.0f);
     Vec3 relativeScale = Vec3(1.0f, 1.0f, 1.0f);
 
+    QMatrix4x4 modelMatrix;
+
     Vec3 minAABB;
     Vec3 maxAABB;
 
@@ -44,6 +47,7 @@ public:
     Vec3 &getRelativePosition();
     Vec3 &getRelativeRotation();
     Vec3 &getRelativeScale();
+    QMatrix4x4 &getModelMatrix();
 
     // Setters
     void setMaterial(const Material &m);
@@ -58,6 +62,9 @@ public:
     void relativeMoveX(const float &v);
     void relativeMoveY(const float &v);
     void relativeMoveZ(const float &v);
+    void relativeRotateX(const float &v);
+    void relativeRotateY(const float &v);
+    void relativeRotateZ(const float &v);
     void relativeScaleX(const float &v);
     void relativeScaleY(const float &v);
     void relativeScaleZ(const float &v);
@@ -76,6 +83,8 @@ public:
     void computeAABB();
     Vec3 &getMinAABB();
     Vec3 &getMaxAABB();
+
+    void updateMatrix();
 
     // Draw OpenGL
     void draw();

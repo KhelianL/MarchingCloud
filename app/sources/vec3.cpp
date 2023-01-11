@@ -90,6 +90,21 @@ void Vec3::operator/=(float s)
     mVals[2] /= s;
 }
 
+Vec3 Vec3::multMat4(const float matrix[16], const Vec3 &vec)
+{
+    float x = vec.mVals[0] * matrix[0] + vec.mVals[1] * matrix[4] + vec.mVals[2] * matrix[8] + matrix[12];
+    float y = vec.mVals[0] * matrix[1] + vec.mVals[1] * matrix[5] + vec.mVals[2] * matrix[9] + matrix[13];
+    float z = vec.mVals[0] * matrix[2] + vec.mVals[1] * matrix[6] + vec.mVals[2] * matrix[10] + matrix[14];
+    return Vec3(x, y, z);
+}
+Vec3 Vec3::multMat4N(const float matrix[16], const Vec3 &vec)
+{
+    float x = vec.mVals[0] * matrix[0] + vec.mVals[1] * matrix[4] + vec.mVals[2] * matrix[8];
+    float y = vec.mVals[0] * matrix[1] + vec.mVals[1] * matrix[5] + vec.mVals[2] * matrix[9];
+    float z = vec.mVals[0] * matrix[2] + vec.mVals[1] * matrix[6] + vec.mVals[2] * matrix[10];
+    return Vec3(x, y, z);
+}
+
 Vec3 operator+(Vec3 const &a, Vec3 const &b)
 {
     return Vec3(a[0] + b[0], a[1] + b[1], a[2] + b[2]);

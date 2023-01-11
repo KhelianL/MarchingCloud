@@ -7,120 +7,65 @@ Material &PointCloud::getMaterial() { return this->material; }
 Vec3 &PointCloud::getRelativePosition() { return this->relativePosition; }
 Vec3 &PointCloud::getRelativeRotation() { return this->relativeRotation; }
 Vec3 &PointCloud::getRelativeScale() { return this->relativeScale; }
-
+QMatrix4x4 &PointCloud::getModelMatrix() { return this->modelMatrix; }
 // Setters
 void PointCloud::setMaterial(const Material &m) { this->material = m; }
 void PointCloud::setIsSelected(const bool &b) { this->isSelected = b; }
 
-// Transform PointCloud
-void PointCloud::move(const Vec3 &v)
-{
-    if (this->isSet)
-    {
-        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
-        {
-            this->positions[i] += v;
-        }
-        this->minAABB += v;
-        this->maxAABB += v;
-    }
-}
-void PointCloud::rotate(const float &d, const Vec3 &v)
-{
-    if (this->isSet)
-    {
-        // Création de la matrice de rotation
-        float c = cos(d);
-        float s = sin(d);
-        float x = v[0];
-        float y = v[1];
-        float z = v[2];
-        float x2 = x * x;
-        float y2 = y * y;
-        float z2 = z * z;
-
-        float rotationMatrix[3][3] = {
-            {c + x2 * (1 - c), x * y * (1 - c) - z * s, x * z * (1 - c) + y * s},
-            {y * x * (1 - c) + z * s, c + y2 * (1 - c), y * z * (1 - c) - x * s},
-            {z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z2 * (1 - c)}};
-
-        // Appliquer la rotation à chaque vecteur de positions
-        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
-        {
-            Vec3 rotatedVector;
-            for (int j = 0; j < 3; j++)
-            {
-                rotatedVector[j] = 0;
-                for (int k = 0; k < 3; k++)
-                {
-                    rotatedVector[j] += rotationMatrix[j][k] * this->positions[i][k];
-                }
-            }
-            this->positions[i] = rotatedVector;
-        }
-        this->computeAABB();
-    }
-}
-void PointCloud::scale(const Vec3 &v)
-{
-    if (this->isSet)
-    {
-        for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                this->positions[i][j] = this->positions[i][j] * v[j];
-            }
-        }
-        this->computeAABB();
-    }
-}
-
 // Transform Relative for PointCloud
 void PointCloud::relativeMoveX(const float &v)
 {
-
-    float posX = this->relativePosition.getX();
-    this->move(Vec3((v - posX), 0.0f, 0.0f));
     this->relativePosition.setX(v);
+    this->updateMatrix();
+    this->computeAABB();
 }
 void PointCloud::relativeMoveY(const float &v)
 {
-
-    float posY = this->relativePosition.getY();
-    this->move(Vec3(0.0f, (v - posY), 0.0f));
     this->relativePosition.setY(v);
+    this->updateMatrix();
+    this->computeAABB();
 }
 void PointCloud::relativeMoveZ(const float &v)
 {
-
-    float posZ = this->relativePosition.getZ();
-    this->move(Vec3(0.0f, 0.0f, (v - posZ)));
     this->relativePosition.setZ(v);
+    this->updateMatrix();
+    this->computeAABB();
+}
+void PointCloud::relativeRotateX(const float &v)
+{
+    this->relativeRotation.setX(v);
+    this->updateMatrix();
+    this->computeAABB();
+}
+void PointCloud::relativeRotateY(const float &v)
+{
+    this->relativeRotation.setY(v);
+    this->updateMatrix();
+    this->computeAABB();
+}
+void PointCloud::relativeRotateZ(const float &v)
+{
+    this->relativeRotation.setZ(v);
+    this->updateMatrix();
+    this->computeAABB();
 }
 void PointCloud::relativeScaleX(const float &v)
 {
-    /*
-    float sclX = this->relativeScale.getX();
-    this->scale(Vec3((v * sclX), 1.0f, 1.0f));
     this->relativeScale.setX(v);
-    */
+    this->updateMatrix();
+    this->computeAABB();
 }
 void PointCloud::relativeScaleY(const float &v)
 {
-    /*
-    float sclY = this->relativeScale.getY();
-    this->scale(Vec3(1.0F, (v - sclY), 1.0f));
     this->relativeScale.setY(v);
-    */
+    this->updateMatrix();
+    this->computeAABB();
 }
 void PointCloud::relativeScaleZ(const float &v)
 {
-    /*
-    float sclZ = this->relativeScale.getZ();
-    this->scale(Vec3(1.0f, 1.0f, (v - sclZ)));
     this->relativeScale.setZ(v);
-    */
+    this->updateMatrix();
+    this->computeAABB();
 }
 
 // Generation
@@ -163,6 +108,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     }
     else
     {
+        this->updateMatrix();
         this->computeAABB();
         this->setMaterial(Material(MaterialType::Custom));
         this->isSet = true;
@@ -190,6 +136,7 @@ void PointCloud::generatePlane(const int &resolution)
         }
     }
 
+    this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
 }
@@ -215,6 +162,7 @@ void PointCloud::generateSphere(const int &resolution)
         this->normals.push_back(Vec3(this->positions[i][0], this->positions[i][1], this->positions[i][2]));
     }
 
+    this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
 }
@@ -242,6 +190,7 @@ void PointCloud::generateCube(const int &resolution)
         }
     }
 
+    this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
 }
@@ -279,6 +228,7 @@ void PointCloud::generateTorus(const int &resolution)
         }
     }
 
+    this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
 }
@@ -333,12 +283,13 @@ void PointCloud::computeAABB()
 
     for (int i = 0, maxSize = this->positions.size(); i < maxSize; i++)
     {
-        minX = std::min(minX, this->positions[i].getX());
-        minY = std::min(minY, this->positions[i].getY());
-        minZ = std::min(minZ, this->positions[i].getZ());
-        maxX = std::max(maxX, this->positions[i].getX());
-        maxY = std::max(maxY, this->positions[i].getY());
-        maxZ = std::max(maxZ, this->positions[i].getZ());
+        Vec3 tmpVec = Vec3::multMat4(this->modelMatrix.data(), this->positions[i]);
+        minX = std::min(minX, tmpVec.getX());
+        minY = std::min(minY, tmpVec.getY());
+        minZ = std::min(minZ, tmpVec.getZ());
+        maxX = std::max(maxX, tmpVec.getX());
+        maxY = std::max(maxY, tmpVec.getY());
+        maxZ = std::max(maxZ, tmpVec.getZ());
     }
 
     this->minAABB = Vec3(minX, minY, minZ);
@@ -353,11 +304,30 @@ Vec3 &PointCloud::getMaxAABB()
     return this->maxAABB;
 }
 
+void PointCloud::updateMatrix()
+{
+    // Initialise la matrice de transformation
+    this->modelMatrix.setToIdentity();
+
+    // Applique une translation
+    this->modelMatrix.translate(relativePosition[0], relativePosition[1], relativePosition[2]);
+
+    // Applique une rotation
+    this->modelMatrix.rotate(relativeRotation[0], 1.0, 0.0, 0.0);
+    this->modelMatrix.rotate(relativeRotation[1], 0.0, 1.0, 0.0);
+    this->modelMatrix.rotate(relativeRotation[2], 0.0, 0.0, 1.0);
+
+    // Applique une échelle
+    this->modelMatrix.scale(relativeScale[0], relativeScale[1], relativeScale[2]);
+}
+
 // Draw
 void PointCloud::draw()
 {
     if (this->isSet)
     {
+        glMultMatrixf(this->modelMatrix.data());
+
         // DrawPoints
         glBegin(GL_POINTS);
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
@@ -374,7 +344,7 @@ void PointCloud::draw()
             }
         }
         glEnd();
-        
+
         // DrawNormals
         glBegin(GL_LINES);
         for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
@@ -384,5 +354,7 @@ void PointCloud::draw()
             glColor3f(1.0, 0.0, 0.0);
         }
         glEnd();
+
+        glFlush();
     }
 }

@@ -145,11 +145,11 @@ extern "C" struct CudaMaterial
     float refractionIndex = 1.0;
 
     CudaMaterial(Material &m) : AMBIANT_COLOR(CudaVec3(m.getAmbiant())),
-                                      DIFFUSE_COLOR(CudaVec3(m.getDiffuse())),
-                                      SPECULAR_COLOR(CudaVec3(m.getSpecular())),
-                                      SPECULAR_EXPONENT(m.getSpecExp()),
-                                      transparency(m.getTransparency()),
-                                      refractionIndex(m.getRefractionIndex())
+                                DIFFUSE_COLOR(CudaVec3(m.getDiffuse())),
+                                SPECULAR_COLOR(CudaVec3(m.getSpecular())),
+                                SPECULAR_EXPONENT(m.getSpecExp()),
+                                transparency(m.getTransparency()),
+                                refractionIndex(m.getRefractionIndex())
     {
     }
 };
@@ -185,8 +185,16 @@ void linkToCuda(std::vector<PointCloud> scenePointCloud, int width, int height, 
 
     for (int i = 0, sizeMax = scenePointCloud.size(); i < sizeMax; i++)
     {
+        QMatrix4x4 mat = scenePointCloud[i].getModelMatrix();
         std::vector<Vec3> p = scenePointCloud[i].getPositions();
         std::vector<Vec3> n = scenePointCloud[i].getNormals();
+
+        for (int j = 0, sizeMax = scenePointCloud[i].getPositions().size(); j < sizeMax; j++)
+        {
+            p[j] = Vec3::multMat4(mat.data(), p[j]);
+            n[j] = Vec3::multMat4N(mat.data(), n[j]);
+            n[j].normalize();
+        }
 
         concat_positions.insert(concat_positions.end(), p.begin(), p.end());
         concat_normals.insert(concat_normals.end(), n.begin(), n.end());

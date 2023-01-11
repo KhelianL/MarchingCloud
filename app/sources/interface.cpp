@@ -105,9 +105,9 @@ void InterfaceQT::resetViewerTarget()
 void InterfaceQT::updateEditPosX(const QString &text) { this->targetP->relativeMoveX(text.toDouble()); }
 void InterfaceQT::updateEditPosY(const QString &text) { this->targetP->relativeMoveY(text.toDouble()); }
 void InterfaceQT::updateEditPosZ(const QString &text) { this->targetP->relativeMoveZ(text.toDouble()); }
-void InterfaceQT::updateEditRotX(const QString &text) {} // TODO
-void InterfaceQT::updateEditRotY(const QString &text) {} // TODO
-void InterfaceQT::updateEditRotZ(const QString &text) {} // TODO
+void InterfaceQT::updateEditRotX(const QString &text) { this->targetP->relativeRotateX(text.toDouble()); }
+void InterfaceQT::updateEditRotY(const QString &text) { this->targetP->relativeRotateY(text.toDouble()); }
+void InterfaceQT::updateEditRotZ(const QString &text) { this->targetP->relativeRotateZ(text.toDouble()); }
 void InterfaceQT::updateEditSclX(const QString &text) { this->targetP->relativeScaleX(text.toDouble()); }
 void InterfaceQT::updateEditSclY(const QString &text) { this->targetP->relativeScaleY(text.toDouble()); }
 void InterfaceQT::updateEditSclZ(const QString &text) { this->targetP->relativeScaleZ(text.toDouble()); }

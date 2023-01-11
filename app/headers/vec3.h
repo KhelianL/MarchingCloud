@@ -43,6 +43,9 @@ public:
     friend Vec3 operator*(Vec3 const &a, Vec3 const &b);
     friend Vec3 operator/(Vec3 const &a, float b);
 
+    static Vec3 multMat4(const float matrix[16], const Vec3 &vec);
+    static Vec3 multMat4N(const float matrix[16], const Vec3 &vec);
+
     friend std::istream &operator>>(std::istream &in, Vec3 &v);
     friend std::ostream &operator<<(std::ostream &out, const Vec3 &v);
 };
