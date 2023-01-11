@@ -401,16 +401,16 @@ void MainWindow::initSignals()
     connect(this->interfaceQT->editSclZ, SIGNAL(textEdited(QString)), this, SLOT(handleEditSclZ(QString)));
 
     /* MATERIAL COMPONENT */
-    connect(this->interfaceQT->editAmbR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbR()));
-    connect(this->interfaceQT->editAmbG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbG()));
-    connect(this->interfaceQT->editAmbB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditAmbB()));
-    connect(this->interfaceQT->editDifR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifR()));
-    connect(this->interfaceQT->editDifG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifG()));
-    connect(this->interfaceQT->editDifB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditDifB()));
-    connect(this->interfaceQT->editSpeR, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeR()));
-    connect(this->interfaceQT->editSpeG, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeG()));
-    connect(this->interfaceQT->editSpeB, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeB()));
-    connect(this->interfaceQT->editSpeExp, SIGNAL(editingFinished()), this, SLOT(handleEditingEditSpeExp()));
+    connect(this->interfaceQT->editAmbR, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbR(QString)));
+    connect(this->interfaceQT->editAmbG, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbG(QString)));
+    connect(this->interfaceQT->editAmbB, SIGNAL(textEdited(QString)), this, SLOT(handleEditAmbB(QString)));
+    connect(this->interfaceQT->editDifR, SIGNAL(textEdited(QString)), this, SLOT(handleEditDifR(QString)));
+    connect(this->interfaceQT->editDifG, SIGNAL(textEdited(QString)), this, SLOT(handleEditDifG(QString)));
+    connect(this->interfaceQT->editDifB, SIGNAL(textEdited(QString)), this, SLOT(handleEditDifB(QString)));
+    connect(this->interfaceQT->editSpeR, SIGNAL(textEdited(QString)), this, SLOT(handleEditSpeR(QString)));
+    connect(this->interfaceQT->editSpeG, SIGNAL(textEdited(QString)), this, SLOT(handleEditSpeG(QString)));
+    connect(this->interfaceQT->editSpeB, SIGNAL(textEdited(QString)), this, SLOT(handleEditSpeB(QString)));
+    connect(this->interfaceQT->editSpeExp, SIGNAL(textEdited(QString)), this, SLOT(handleEditSpeExp(QString)));
 
     connect(this->interfaceQT->editMat, SIGNAL(currentIndexChanged(int)), this, SLOT(handleEditMat()));
 }
@@ -467,45 +467,45 @@ void MainWindow::handleEditSclZ(const QString &text)
 }
 
 /* MATERIAL COMPONENT */
-void MainWindow::handleEditingEditAmbR()
+void MainWindow::handleEditAmbR(const QString &text)
 {
-    this->interfaceQT->updateEditAmbR();
+    this->interfaceQT->updateEditAmbR(text);
 }
-void MainWindow::handleEditingEditAmbG()
+void MainWindow::handleEditAmbG(const QString &text)
 {
-    this->interfaceQT->updateEditAmbG();
+    this->interfaceQT->updateEditAmbG(text);
 }
-void MainWindow::handleEditingEditAmbB()
+void MainWindow::handleEditAmbB(const QString &text)
 {
-    this->interfaceQT->updateEditAmbB();
+    this->interfaceQT->updateEditAmbB(text);
 }
-void MainWindow::handleEditingEditDifR()
+void MainWindow::handleEditDifR(const QString &text)
 {
-    this->interfaceQT->updateEditDifR();
+    this->interfaceQT->updateEditDifR(text);
 }
-void MainWindow::handleEditingEditDifG()
+void MainWindow::handleEditDifG(const QString &text)
 {
-    this->interfaceQT->updateEditDifG();
+    this->interfaceQT->updateEditDifG(text);
 }
-void MainWindow::handleEditingEditDifB()
+void MainWindow::handleEditDifB(const QString &text)
 {
-    this->interfaceQT->updateEditDifB();
+    this->interfaceQT->updateEditDifB(text);
 }
-void MainWindow::handleEditingEditSpeR()
+void MainWindow::handleEditSpeR(const QString &text)
 {
-    this->interfaceQT->updateEditSpeR();
+    this->interfaceQT->updateEditSpeR(text);
 }
-void MainWindow::handleEditingEditSpeG()
+void MainWindow::handleEditSpeG(const QString &text)
 {
-    this->interfaceQT->updateEditSpeG();
+    this->interfaceQT->updateEditSpeG(text);
 }
-void MainWindow::handleEditingEditSpeB()
+void MainWindow::handleEditSpeB(const QString &text)
 {
-    this->interfaceQT->updateEditSpeB();
+    this->interfaceQT->updateEditSpeB(text);
 }
-void MainWindow::handleEditingEditSpeExp()
+void MainWindow::handleEditSpeExp(const QString &text)
 {
-    this->interfaceQT->updateEditSpeExp();
+    this->interfaceQT->updateEditSpeExp(text);
 }
 
 /* QComboBox */
@@ -528,7 +528,15 @@ void MainWindow::showCustomMenu()
     menu.exec(QCursor::pos());
     this->statusBar()->showMessage(tr("Invoked <SHORTCUT CTRL+A>"));
 }
-
+void MainWindow::delTarget()
+{
+    this->statusBar()->showMessage(tr("Invoked <DEL TARGET>"));
+    if (this->interfaceQT->targetP != nullptr)
+    {
+        this->viewer->getScene()->removePointCloudAtIndex(this->interfaceQT->indexP);
+        this->updateViewer();
+    }
+}
 void MainWindow::newScene()
 {
     this->statusBar()->showMessage(tr("Invoked <NEW SCENE>"));
@@ -615,6 +623,12 @@ void MainWindow::createActions()
     shortcut = new QShortcut(QKeySequence::SelectAll, this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(showCustomMenu()));
 
+    /* Ctrl + a pour menu contextuel */
+    delTargetAct = new QAction(tr("&Delete object"), this);
+    delTargetAct->setShortcuts(QKeySequence::Delete);
+    delTargetAct->setStatusTip(tr("Delete the target from the scene"));
+    this->connect(delTargetAct, &QAction::triggered, this, &MainWindow::delTarget);
+
     /* File Scene Options */
     newSceneAct = new QAction(tr("&New Scene"), this);
     newSceneAct->setShortcuts(QKeySequence::New);
@@ -689,6 +703,8 @@ void MainWindow::createMenus()
     pointCloudMenu->addAction(genCubeAct);
     pointCloudMenu->addAction(genSphereAct);
     pointCloudMenu->addAction(genTorusAct);
+    pointCloudMenu->addSeparator();
+    pointCloudMenu->addAction(delTargetAct);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAct);

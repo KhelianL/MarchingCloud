@@ -12,7 +12,7 @@ void Viewer::init()
 	setMouseTracking(true);
 	setAxisIsDrawn();
 	glDisable(GL_LIGHTING);
-	glPointSize(1.0);
+	glPointSize(2.0);
 }
 
 Viewer::~Viewer()
@@ -75,16 +75,20 @@ void Viewer::rayCastClick(const QPoint &point)
 	}
 	if (indexPointCloud >= 0)
 	{
-		this->interfaceQt->enableEdit(true);
-
 		PointCloud &p = this->scene->getPointCloudAtIndex(indexPointCloud);
+		this->interfaceQt->targetP = &p;
+		this->interfaceQt->indexP = indexPointCloud;
+
 		p.setIsSelected(true);
-		this->interfaceQt->updateViewerTarget(p);
+		this->interfaceQt->updateViewerTarget();
+		this->interfaceQt->enableEdit(true);
 	}
 	else
 	{
-		this->interfaceQt->enableEdit(false);
+		this->interfaceQt->targetP = nullptr;
+		this->interfaceQt->indexP = 0;
 		this->interfaceQt->resetViewerTarget();
+		this->interfaceQt->enableEdit(false);
 	}
 }
 

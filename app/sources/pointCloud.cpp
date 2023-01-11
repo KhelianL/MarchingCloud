@@ -79,21 +79,48 @@ void PointCloud::scale(const Vec3 &v)
 // Transform Relative for PointCloud
 void PointCloud::relativeMoveX(const float &v)
 {
+
     float posX = this->relativePosition.getX();
     this->move(Vec3((v - posX), 0.0f, 0.0f));
     this->relativePosition.setX(v);
 }
 void PointCloud::relativeMoveY(const float &v)
 {
+
     float posY = this->relativePosition.getY();
     this->move(Vec3(0.0f, (v - posY), 0.0f));
     this->relativePosition.setY(v);
 }
 void PointCloud::relativeMoveZ(const float &v)
 {
+
     float posZ = this->relativePosition.getZ();
     this->move(Vec3(0.0f, 0.0f, (v - posZ)));
     this->relativePosition.setZ(v);
+}
+void PointCloud::relativeScaleX(const float &v)
+{
+    /*
+    float sclX = this->relativeScale.getX();
+    this->scale(Vec3((v * sclX), 1.0f, 1.0f));
+    this->relativeScale.setX(v);
+    */
+}
+void PointCloud::relativeScaleY(const float &v)
+{
+    /*
+    float sclY = this->relativeScale.getY();
+    this->scale(Vec3(1.0F, (v - sclY), 1.0f));
+    this->relativeScale.setY(v);
+    */
+}
+void PointCloud::relativeScaleZ(const float &v)
+{
+    /*
+    float sclZ = this->relativeScale.getZ();
+    this->scale(Vec3(1.0f, 1.0f, (v - sclZ)));
+    this->relativeScale.setZ(v);
+    */
 }
 
 // Generation

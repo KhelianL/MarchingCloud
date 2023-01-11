@@ -23,13 +23,11 @@ void InterfaceQT::enableEdit(const bool &b)
     this->editMat->setEnabled(b);
     this->editSpeExp->setEnabled(b);
 }
-void InterfaceQT::updateViewerTarget(PointCloud &p)
+void InterfaceQT::updateViewerTarget()
 {
-    this->targetP = &p;
-
-    Vec3 &vecPosition = p.getRelativePosition();
-    Vec3 &vecRotation = p.getRelativeRotation();
-    Vec3 &vecScale = p.getRelativeScale();
+    Vec3 &vecPosition = this->targetP->getRelativePosition();
+    Vec3 &vecRotation = this->targetP->getRelativeRotation();
+    Vec3 &vecScale = this->targetP->getRelativeScale();
     this->editPosX->setText(QString::number(vecPosition.getX()));
     this->editPosY->setText(QString::number(vecPosition.getY()));
     this->editPosZ->setText(QString::number(vecPosition.getZ()));
@@ -40,7 +38,7 @@ void InterfaceQT::updateViewerTarget(PointCloud &p)
     this->editSclY->setText(QString::number(vecScale.getY()));
     this->editSclZ->setText(QString::number(vecScale.getZ()));
 
-    Material &m = p.getMaterial();
+    Material &m = this->targetP->getMaterial();
     Vec3 &vecAmbiant = m.getAmbiant();
     Vec3 &vecDiffuse = m.getDiffuse();
     Vec3 &vecSpecular = m.getSpecular();
@@ -89,35 +87,76 @@ void InterfaceQT::resetViewerTarget()
     this->editSpeExp->setText("");
 }
 
-#include <QDebug>
 /*#########################################*/
 /*                 Signals                #*/
 /*#########################################*/
-// TODO : call "updateGL()"" sur le viewer ??
+
 void InterfaceQT::updateEditPosX(const QString &text) { this->targetP->relativeMoveX(text.toDouble()); }
 void InterfaceQT::updateEditPosY(const QString &text) { this->targetP->relativeMoveY(text.toDouble()); }
 void InterfaceQT::updateEditPosZ(const QString &text) { this->targetP->relativeMoveZ(text.toDouble()); }
-void InterfaceQT::updateEditRotX(const QString &text) { qDebug() << "Modification : updateEditRotX"; }
-void InterfaceQT::updateEditRotY(const QString &text) { qDebug() << "Modification : updateEditRotY"; }
-void InterfaceQT::updateEditRotZ(const QString &text) { qDebug() << "Modification : updateEditRotZ"; }
-void InterfaceQT::updateEditSclX(const QString &text) { qDebug() << "Modification : updateEditSclX"; }
-void InterfaceQT::updateEditSclY(const QString &text) { qDebug() << "Modification : updateEditSclY"; }
-void InterfaceQT::updateEditSclZ(const QString &text) { qDebug() << "Modification : updateEditSclZ"; }
+void InterfaceQT::updateEditRotX(const QString &text) {} // TODO
+void InterfaceQT::updateEditRotY(const QString &text) {} // TODO
+void InterfaceQT::updateEditRotZ(const QString &text) {} // TODO
+void InterfaceQT::updateEditSclX(const QString &text) { this->targetP->relativeScaleX(text.toDouble()); }
+void InterfaceQT::updateEditSclY(const QString &text) { this->targetP->relativeScaleY(text.toDouble()); }
+void InterfaceQT::updateEditSclZ(const QString &text) { this->targetP->relativeScaleZ(text.toDouble()); }
 
-// TODO : NE PAS OUBLIER DE METTRE EDITMAT A CUSTOM SI CHANGEMENT!
-void InterfaceQT::updateEditAmbR() { qDebug() << "Modification : updateEditAmbR"; }
-void InterfaceQT::updateEditAmbG() { qDebug() << "Modification : updateEditAmbG"; }
-void InterfaceQT::updateEditAmbB() { qDebug() << "Modification : updateEditAmbB"; }
-void InterfaceQT::updateEditDifR() { qDebug() << "Modification : updateEditDifR"; }
-void InterfaceQT::updateEditDifG() { qDebug() << "Modification : updateEditDifG"; }
-void InterfaceQT::updateEditDifB() { qDebug() << "Modification : updateEditDifB"; }
-void InterfaceQT::updateEditSpeR() { qDebug() << "Modification : updateEditSpeR"; }
-void InterfaceQT::updateEditSpeG() { qDebug() << "Modification : updateEditSpeG"; }
-void InterfaceQT::updateEditSpeB() { qDebug() << "Modification : updateEditSpeB"; }
-void InterfaceQT::updateEditSpeExp() { qDebug() << "Modification : updateEditSpeExp"; }
+void InterfaceQT::updateEditAmbR(const QString &text)
+{
+    this->targetP->getMaterial().setAmbiantR(this->editAmbR->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditAmbG(const QString &text)
+{
+    this->targetP->getMaterial().setAmbiantG(this->editAmbG->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditAmbB(const QString &text)
+{
+    this->targetP->getMaterial().setAmbiantB(this->editAmbB->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditDifR(const QString &text)
+{
+    this->targetP->getMaterial().setDiffuseR(this->editDifR->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditDifG(const QString &text)
+{
+    this->targetP->getMaterial().setDiffuseG(this->editDifG->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditDifB(const QString &text)
+{
+    this->targetP->getMaterial().setDiffuseB(this->editDifB->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditSpeR(const QString &text)
+{
+    this->targetP->getMaterial().setSpecularR(this->editSpeR->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditSpeG(const QString &text)
+{
+    this->targetP->getMaterial().setSpecularG(this->editSpeG->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditSpeB(const QString &text)
+{
+    this->targetP->getMaterial().setSpecularB(this->editSpeB->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
+void InterfaceQT::updateEditSpeExp(const QString &text)
+{
+    this->targetP->getMaterial().setSpecExp(this->editSpeExp->text().toDouble());
+    this->editMat->setCurrentIndex(0);
+}
 
+// TODO
 void InterfaceQT::updateEditMat(const QString &selected)
 {
-    qDebug() << selected;
-    // TODO : SWITCH CASE SUR SELECTED ET UPDATE LES MATERIAL.
+    this->targetP->getMaterial().setAmbiant({1.0, 2.0, 3.0});
+    this->editAmbR->setText("1.0");
+    this->editAmbG->setText("2.0");
+    this->editAmbB->setText("3.0");
 }

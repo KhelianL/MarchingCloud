@@ -161,6 +161,17 @@ void Material::setAmbiant(const Vec3 &ambiant) { this->ambiant = ambiant; }
 void Material::setDiffuse(const Vec3 &diffuse) { this->diffuse = diffuse; }
 void Material::setSpecular(const Vec3 &specular) { this->specular = specular; }
 void Material::setSpecExp(const int &spec_exp) { this->spec_exp = spec_exp; }
+
+void Material::setAmbiantR(const float &v) { this->ambiant.setX(v); }
+void Material::setAmbiantG(const float &v) { this->ambiant.setY(v); }
+void Material::setAmbiantB(const float &v) { this->ambiant.setZ(v); }
+void Material::setDiffuseR(const float &v) { this->diffuse.setX(v); }
+void Material::setDiffuseG(const float &v) { this->diffuse.setY(v); }
+void Material::setDiffuseB(const float &v) { this->diffuse.setZ(v); }
+void Material::setSpecularR(const float &v) { this->specular.setX(v); }
+void Material::setSpecularG(const float &v) { this->specular.setY(v); }
+void Material::setSpecularB(const float &v) { this->specular.setZ(v); }
+
 void Material::setTransparency(const float &transparency) { this->transparency = transparency; }
 void Material::setRefractionIndex(const float &refractionIndex) { this->refractionIndex = refractionIndex; }
 
@@ -218,4 +229,8 @@ QString matToString(const MaterialType &type)
     }
 
     return res;
+}
+MaterialType stringToMat(const QString &type)
+{
+
 }

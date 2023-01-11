@@ -27,6 +27,9 @@ enum class MaterialType
     Donut,
     Fire
 };
+// make struct 
+// std::map<std::string, struct> m = {.... TOUT LE BORDEL ....}
+
 QString matToString(const MaterialType &type);
 
 class Material
@@ -57,5 +60,15 @@ public:
     void setSpecExp(const int &spec_exp);
     void setTransparency(const float &transparency);
     void setRefractionIndex(const float &refractionIndex);
+
+    void setAmbiantR(const float &v);
+    void setAmbiantG(const float &v);
+    void setAmbiantB(const float &v);
+    void setDiffuseR(const float &v);
+    void setDiffuseG(const float &v);
+    void setDiffuseB(const float &v);
+    void setSpecularR(const float &v);
+    void setSpecularG(const float &v);
+    void setSpecularB(const float &v);
 };
 #endif

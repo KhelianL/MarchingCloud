@@ -68,3 +68,7 @@ PointCloud &Scene::getPointCloudAtIndex(const int &index)
 {
     return this->listPointCloud[index];
 }
+void Scene::removePointCloudAtIndex(const int &index)
+{
+    this->listPointCloud.erase(this->listPointCloud.begin() + index);
+}

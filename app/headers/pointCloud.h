@@ -58,6 +58,9 @@ public:
     void relativeMoveX(const float &v);
     void relativeMoveY(const float &v);
     void relativeMoveZ(const float &v);
+    void relativeScaleX(const float &v);
+    void relativeScaleY(const float &v);
+    void relativeScaleZ(const float &v);
 
     // Generate
     void loadPointCloud(const std::string &filename);

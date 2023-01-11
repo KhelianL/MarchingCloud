@@ -26,9 +26,10 @@ struct InterfaceQT
     QProgressBar *progressBar;
 
     PointCloud *targetP;
+    int indexP;
 
     void enableEdit(const bool &b);
-    void updateViewerTarget(PointCloud &p);
+    void updateViewerTarget();
     void resetViewerTarget();
 
     /* SIGNALS */
@@ -42,16 +43,16 @@ struct InterfaceQT
     void updateEditSclY(const QString &text);
     void updateEditSclZ(const QString &text);
 
-    void updateEditAmbR();
-    void updateEditAmbG();
-    void updateEditAmbB();
-    void updateEditDifR();
-    void updateEditDifG();
-    void updateEditDifB();
-    void updateEditSpeR();
-    void updateEditSpeG();
-    void updateEditSpeB();
-    void updateEditSpeExp();
+    void updateEditAmbR(const QString &text);
+    void updateEditAmbG(const QString &text);
+    void updateEditAmbB(const QString &text);
+    void updateEditDifR(const QString &text);
+    void updateEditDifG(const QString &text);
+    void updateEditDifB(const QString &text);
+    void updateEditSpeR(const QString &text);
+    void updateEditSpeG(const QString &text);
+    void updateEditSpeB(const QString &text);
+    void updateEditSpeExp(const QString &text);
 
     void updateEditMat(const QString &selected);
 };

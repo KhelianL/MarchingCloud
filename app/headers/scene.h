@@ -21,6 +21,7 @@ public:
 
     std::vector<PointCloud> &getListPointCloud();
     PointCloud &getPointCloudAtIndex(const int &index);
+    void removePointCloudAtIndex(const int &index);
 
     void generateImport(const std::string &filename, const float &decimate);
     void generatePrimitive(const PopupType &type, const int &resolution);

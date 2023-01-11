@@ -62,6 +62,7 @@ private:
     QMenu *editMenu;
     QMenu *pointCloudMenu;
     QMenu *helpMenu;
+    QAction *delTargetAct;
     QAction *newSceneAct;
     QAction *openSceneAct;
     QAction *saveSceneAct;
@@ -86,19 +87,20 @@ private slots:
     void handleEditSclX(const QString &text);
     void handleEditSclY(const QString &text);
     void handleEditSclZ(const QString &text);
-    void handleEditingEditAmbR();
-    void handleEditingEditAmbG();
-    void handleEditingEditAmbB();
-    void handleEditingEditDifR();
-    void handleEditingEditDifG();
-    void handleEditingEditDifB();
-    void handleEditingEditSpeR();
-    void handleEditingEditSpeG();
-    void handleEditingEditSpeB();
-    void handleEditingEditSpeExp();
+    void handleEditAmbR(const QString &text);
+    void handleEditAmbG(const QString &text);
+    void handleEditAmbB(const QString &text);
+    void handleEditDifR(const QString &text);
+    void handleEditDifG(const QString &text);
+    void handleEditDifB(const QString &text);
+    void handleEditSpeR(const QString &text);
+    void handleEditSpeG(const QString &text);
+    void handleEditSpeB(const QString &text);
+    void handleEditSpeExp(const QString &text);
     void handleEditMat();
 
     /* ACTIONS & MENU */
+    void delTarget();
     void showCustomMenu();
     void newScene();
     void openScene();
