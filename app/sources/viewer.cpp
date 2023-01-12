@@ -214,8 +214,8 @@ void Viewer::sceneWriteJSON(const std::string &filename)
 		// Type and Resolution
 		PointCloudType &typePointCloud = pointCloud.getPointCloudType();
 		int &resolution = pointCloud.getResolution();
-		fileContent += "\t\t\"type_pointcloud\":\"" + getPointCloudTypeToString(typePointCloud) + "\",\n";
-		fileContent += "\t\t\"param_resolution\":" + myToStringFloat(resolution) + ",\n";
+		fileContent += "\t\t\t\"type_pointcloud\":\"" + getPointCloudTypeToString(typePointCloud) + "\",\n";
+		fileContent += "\t\t\t\"param_resolution\":" + myToStringFloat(resolution) + ",\n";
 
 		// If IMPORT : save each positions/normals
 		if (typePointCloud == PointCloudType::IMPORT)
