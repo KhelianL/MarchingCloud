@@ -1,7 +1,5 @@
 #include <interface.h>
 
-#include <QDebug>
-
 void InterfaceQT::enableEdit(const bool &b)
 {
     this->editPosX->setEnabled(b);

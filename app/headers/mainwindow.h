@@ -57,7 +57,6 @@ private:
     /* ACTIONS & MENU */
     QShortcut *shortcut;
     QMenu *fileMenu;
-    QMenu *editMenu;
     QMenu *displayMenu;
     QMenu *pointCloudMenu;
     QMenu *helpMenu;
@@ -66,8 +65,6 @@ private:
     QAction *openSceneAct;
     QAction *saveSceneAct;
     QAction *exitAct;
-    QAction *undoAct;
-    QAction *redoAct;
     QAction *drawAxisAct;
     QAction *drawGridAct;
     QAction *drawFPSAct;
@@ -107,8 +104,6 @@ private slots:
     void newScene();
     void openScene();
     void saveScene();
-    void undo();
-    void redo();
     void drawAxis();
     void drawGrid();
     void drawFPS();

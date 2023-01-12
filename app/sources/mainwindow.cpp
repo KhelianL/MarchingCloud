@@ -4,8 +4,6 @@
 /*           Construct/Destruct           #*/
 /*#########################################*/
 
-#include <iostream>
-
 MainWindow::MainWindow()
 {
     // Configuration de la barre d'état et ajout de la barre de progression
@@ -535,20 +533,12 @@ void MainWindow::newScene()
 void MainWindow::openScene()
 {
     this->statusBar()->showMessage(tr("Invoked <OPEN SCENE>"));
+    this->viewer->sceneReaderJSON("test.json");
 }
 void MainWindow::saveScene()
 {
     this->statusBar()->showMessage(tr("Invoked <SAVE SCENE>"));
     this->viewer->sceneParserJSON("test.json");
-}
-
-void MainWindow::undo()
-{
-    this->statusBar()->showMessage(tr("Invoked <UNDO>"));
-}
-void MainWindow::redo()
-{
-    this->statusBar()->showMessage(tr("Invoked <REDO>"));
 }
 
 void MainWindow::drawAxis()
@@ -657,16 +647,6 @@ void MainWindow::createActions()
     exitAct->setStatusTip(tr("Exit the application"));
     this->connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
-    /* Edition */
-    undoAct = new QAction(tr("&Undo"), this);
-    undoAct->setShortcuts(QKeySequence::Undo);
-    undoAct->setStatusTip(tr("Undo the last operation"));
-    this->connect(undoAct, &QAction::triggered, this, &MainWindow::undo);
-    redoAct = new QAction(tr("&Redo"), this);
-    redoAct->setShortcuts(QKeySequence::Redo);
-    redoAct->setStatusTip(tr("Redo the last operation"));
-    this->connect(redoAct, &QAction::triggered, this, &MainWindow::redo);
-
     /* Display */
     drawAxisAct = new QAction(tr("&Display Axis"), this);
     drawAxisAct->setStatusTip(tr("World axis is drawn by the viewer"));
@@ -709,10 +689,6 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveSceneAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
-
-    editMenu = menuBar()->addMenu(tr("&Edit"));
-    editMenu->addAction(undoAct);
-    editMenu->addAction(redoAct);
 
     displayMenu = menuBar()->addMenu(tr("&Display"));
     displayMenu->addAction(drawAxisAct);

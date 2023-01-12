@@ -314,10 +314,24 @@ void Viewer::sceneParserJSON(const std::string &filename)
 
 	std::ofstream jsonFile(filename);
 	jsonFile << fileContent;
+	jsonFile.close();
 }
 
 #include <iostream>
-void Viewer::sceneUploadJSON(const std::string &filename)
+void Viewer::sceneReaderJSON(const std::string &filename)
 {
 	std::cout << "PASSED" << std::endl;
+
+	std::ifstream jsonFile(filename);
+	std::string jsonContent((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
+	std::istringstream jsonStream(jsonContent);
+
+	std::string line;
+	std::string key, value;
+	while (std::getline(jsonStream, line))
+	{
+		std::cout << line << std::endl;
+	}
+
+	jsonFile.close();
 }
