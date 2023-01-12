@@ -24,7 +24,7 @@ Viewer::~Viewer()
 
 void Viewer::draw()
 {
-	this->scene->draw();
+	this->scene->draw(this->drawNormals);
 }
 
 float Viewer::isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection)
@@ -179,13 +179,14 @@ QString Viewer::helpString() const
 	return text;
 }
 
+void Viewer::toggleDrawNormals() { this->drawNormals = !this->drawNormals; }
+
 std::string myToStringFloat(float a)
 {
 	std::stringstream ss;
 	ss << a;
 	return ss.str();
 }
-
 void Viewer::sceneWriteJSON(const std::string &filename)
 {
 	std::string fileContent = ""; // std::string for popback "," if needed.

@@ -31,6 +31,8 @@ private:
     Scene *scene;
     InterfaceQT *const interfaceQt;
 
+    bool drawNormals = false;
+
 protected:
     virtual void init();
     virtual void keyPressEvent(QKeyEvent *event);
@@ -52,6 +54,8 @@ public:
     void sceneWriteJSON(const std::string &filename);
     void sceneReadJSON(const std::string &filename);
     void sceneNew();
+
+    void toggleDrawNormals();
 };
 
 std::string myToStringFloat(float a);

@@ -1,16 +1,10 @@
 #include <scene.h>
 
-Scene::Scene()
-{
-    this->init();
-}
-void Scene::init() {}
-
-void Scene::draw()
+void Scene::draw(bool drawNormals)
 {
     int size = this->listPointCloud.size();
     for (int i = 0; i < size; i++)
-        this->listPointCloud[i].draw();
+        this->listPointCloud[i].draw(drawNormals);
 }
 
 void Scene::generateImport(const std::string &filename, const float &keepingPart)
@@ -22,7 +16,6 @@ void Scene::generateImport(const std::string &filename, const float &keepingPart
 
     this->listPointCloud.push_back(res);
 }
-
 void Scene::generatePrimitive(const PointCloudType &type, const int &resolution)
 {
     if (resolution > 0)

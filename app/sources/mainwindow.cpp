@@ -568,6 +568,11 @@ void MainWindow::drawFPS()
     this->statusBar()->showMessage(tr("Invoked <DRAW FPS>"));
     this->viewer->setFPSIsDisplayed(!this->viewer->FPSIsDisplayed());
 }
+void MainWindow::drawNormals()
+{
+    this->statusBar()->showMessage(tr("Invoked <DRAW NORMALS>"));
+    this->viewer->toggleDrawNormals();
+}
 
 void MainWindow::importPointCloud()
 {
@@ -670,6 +675,9 @@ void MainWindow::createActions()
     drawFPSAct = new QAction(tr("&Display FPS"), this);
     drawFPSAct->setStatusTip(tr("Current frame rate is drawn by the viewer."));
     this->connect(drawFPSAct, &QAction::triggered, this, &MainWindow::drawFPS);
+    drawNormalsAct = new QAction(tr("&Display Normals"), this);
+    drawNormalsAct->setStatusTip(tr("Normals of points clouds are drawn by the viewer."));
+    this->connect(drawNormalsAct, &QAction::triggered, this, &MainWindow::drawNormals);
 
     /* PointCloud */
     importPointCloudAct = new QAction(tr("&Import PointCloud"), this);
@@ -707,7 +715,8 @@ void MainWindow::createMenus()
     displayMenu->addAction(drawAxisAct);
     displayMenu->addAction(drawGridAct);
     displayMenu->addAction(drawFPSAct);
-
+    displayMenu->addAction(drawNormalsAct);
+    
     pointCloudMenu = menuBar()->addMenu(tr("&PointCloud"));
     pointCloudMenu->addAction(importPointCloudAct);
     pointCloudMenu->addSeparator();

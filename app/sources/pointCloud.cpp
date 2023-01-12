@@ -359,7 +359,7 @@ void PointCloud::updateMatrix()
 }
 
 // Draw
-void PointCloud::draw()
+void PointCloud::draw(bool drawNormals)
 {
     if (this->isSet)
     {
@@ -382,9 +382,7 @@ void PointCloud::draw()
         }
         glEnd();
 
-        // DrawNormals
-        /*
-        if (this->isSelected)
+        if (drawNormals)
         {
             glBegin(GL_LINES);
             for (unsigned int i = 0, sizeV = this->positions.size(); i < sizeV; i++)
@@ -395,7 +393,6 @@ void PointCloud::draw()
             }
             glEnd();
         }
-        */
 
         glFlush();
         glMultMatrixf(this->modelMatrix.inverted().data());

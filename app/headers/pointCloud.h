@@ -116,7 +116,7 @@ public:
     void updateMatrix();
 
     // Draw OpenGL
-    void draw();
+    void draw(bool drawNormals);
 };
 
 #endif

@@ -16,10 +16,7 @@ private:
     std::vector<PointCloud> listPointCloud;
 
 public:
-    Scene();
-
-    void draw();
-    void init();
+    void draw(bool drawNormals);
 
     std::vector<PointCloud> &getListPointCloud();
     PointCloud &getPointCloudAtIndex(const int &index);

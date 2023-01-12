@@ -68,6 +68,7 @@ private:
     QAction *drawAxisAct;
     QAction *drawGridAct;
     QAction *drawFPSAct;
+    QAction *drawNormalsAct;
     QAction *importPointCloudAct;
     QAction *genPlaneAct;
     QAction *genCubeAct;
@@ -107,6 +108,7 @@ private slots:
     void drawAxis();
     void drawGrid();
     void drawFPS();
+    void drawNormals();
     void importPointCloud();
     void createPlane();
     void createCube();
