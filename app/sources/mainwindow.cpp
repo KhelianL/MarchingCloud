@@ -549,6 +549,22 @@ void MainWindow::redo()
     this->statusBar()->showMessage(tr("Invoked <REDO>"));
 }
 
+void MainWindow::drawAxis()
+{
+    this->statusBar()->showMessage(tr("Invoked <DRAW AXIS>"));
+    this->viewer->setAxisIsDrawn(!this->viewer->axisIsDrawn());
+}
+void MainWindow::drawGrid()
+{
+    this->statusBar()->showMessage(tr("Invoked <DRAW GRID>"));
+    this->viewer->setGridIsDrawn(!this->viewer->gridIsDrawn());
+}
+void MainWindow::drawFPS()
+{
+    this->statusBar()->showMessage(tr("Invoked <DRAW FPS>"));
+    this->viewer->setFPSIsDisplayed(!this->viewer->FPSIsDisplayed());
+}
+
 void MainWindow::importPointCloud()
 {
     this->statusBar()->showMessage(tr("Invoked <IMPORT POINT CLOUD>"));
@@ -649,12 +665,22 @@ void MainWindow::createActions()
     redoAct->setStatusTip(tr("Redo the last operation"));
     this->connect(redoAct, &QAction::triggered, this, &MainWindow::redo);
 
+    /* Display */
+    drawAxisAct = new QAction(tr("&Display Axis"), this);
+    drawAxisAct->setStatusTip(tr("World axis is drawn by the viewer"));
+    this->connect(drawAxisAct, &QAction::triggered, this, &MainWindow::drawAxis);
+    drawGridAct = new QAction(tr("&Display Grid"), this);
+    drawGridAct->setStatusTip(tr("Grid is drawn by the viewer."));
+    this->connect(drawGridAct, &QAction::triggered, this, &MainWindow::drawGrid);
+    drawFPSAct = new QAction(tr("&Display FPS"), this);
+    drawFPSAct->setStatusTip(tr("Current frame rate is drawn by the viewer."));
+    this->connect(drawFPSAct, &QAction::triggered, this, &MainWindow::drawFPS);
+
     /* PointCloud */
     importPointCloudAct = new QAction(tr("&Import PointCloud"), this);
     importPointCloudAct->setShortcuts(QKeySequence::DeleteEndOfLine);
     importPointCloudAct->setStatusTip(tr("Import a point cloud from disk"));
     this->connect(importPointCloudAct, &QAction::triggered, this, &MainWindow::importPointCloud);
-    // ---
     genPlaneAct = new QAction(tr("&Create Plane"), this);
     genPlaneAct->setStatusTip(tr("Create a plane"));
     this->connect(genPlaneAct, &QAction::triggered, this, &MainWindow::createPlane);
@@ -685,6 +711,11 @@ void MainWindow::createMenus()
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(undoAct);
     editMenu->addAction(redoAct);
+
+    displayMenu = menuBar()->addMenu(tr("&Display"));
+    displayMenu->addAction(drawAxisAct);
+    displayMenu->addAction(drawGridAct);
+    displayMenu->addAction(drawFPSAct);
 
     pointCloudMenu = menuBar()->addMenu(tr("&PointCloud"));
     pointCloudMenu->addAction(importPointCloudAct);

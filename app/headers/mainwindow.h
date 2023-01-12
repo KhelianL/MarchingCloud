@@ -60,6 +60,7 @@ private:
     QShortcut *shortcut;
     QMenu *fileMenu;
     QMenu *editMenu;
+    QMenu *displayMenu;
     QMenu *pointCloudMenu;
     QMenu *helpMenu;
     QAction *delTargetAct;
@@ -69,6 +70,9 @@ private:
     QAction *exitAct;
     QAction *undoAct;
     QAction *redoAct;
+    QAction *drawAxisAct;
+    QAction *drawGridAct;
+    QAction *drawFPSAct;
     QAction *importPointCloudAct;
     QAction *genPlaneAct;
     QAction *genCubeAct;
@@ -107,6 +111,9 @@ private slots:
     void saveScene();
     void undo();
     void redo();
+    void drawAxis();
+    void drawGrid();
+    void drawFPS();
     void importPointCloud();
     void createPlane();
     void createCube();
