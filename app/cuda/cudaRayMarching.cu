@@ -502,9 +502,67 @@ __device__ int findNearest(KdTreeNode *tree, CudaVec3 point)
 
     return bestNode;
 }
-__device__ float HPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
+
+__device__ float SPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
 {
     int kerneltype = 1;
+    float h = 100;
+    unsigned int nbIterations = 4;
+    const unsigned int knn = 10;
+
+    int *id_nearest_neighbors = (int *)malloc(knn * sizeof(int));
+    float *square_distances_to_neighbors = (float *)malloc(knn * sizeof(float));
+
+    CudaVec3 precPoint = inputPoint;
+    CudaVec3 nextPoint;
+    CudaVec3 nextNormal;
+
+    for (int itt = 0; itt < nbIterations; itt++)
+    {
+        computeKnn(id_nearest_neighbors, (float *)square_distances_to_neighbors, pcd.kdTree, knn, precPoint[0], precPoint[1], precPoint[2]);
+
+        nextPoint = CudaVec3();
+        nextNormal = CudaVec3();
+
+        float totWeight = 0.0;
+
+        for (int i = 0; i < knn; i++)
+        {
+            float weight = 0.0;
+            float r = sqrt(square_distances_to_neighbors[i]) / h;
+            switch (kerneltype)
+            {
+            case 0: // gaussien
+                weight = exp((-(r * r)) / (h * h));
+                break;
+            case 1:
+                weight = 0;
+                weight = pow(1-r, 6) * pow(1 + (3+1)*r, 6);
+                break;
+            case 2:
+                weight = 0;
+                break;
+            }
+            totWeight += weight;
+            nextPoint += weight * pcd.positions[id_nearest_neighbors[i]];
+        }
+        nextPoint = nextPoint / totWeight;
+        precPoint = nextPoint;
+    }
+
+    free(id_nearest_neighbors);
+    free(square_distances_to_neighbors);
+
+    nextNormal = nextPoint - inputPoint;
+
+    return (dot(inputPoint - nextPoint, nextNormal));
+}
+
+
+
+__device__ float HPSSDist(CudaVec3 inputPoint, PointCloudData pcd)
+{
+    int kerneltype = 0;
     float h = 100;
     unsigned int nbIterations = 4;
     const unsigned int knn = 10;
@@ -619,6 +677,7 @@ __device__ float MLS(CudaVec3 inputPoint, PointCloudData pcd)
 }
 __device__ float SignedDist(CudaVec3 inputPoint, PointCloudData pcd){
 
+    //return SPSSDist(inputPoint, pcd);
     //return MLS(inputPoint, pcd);
     return HPSSDist(inputPoint, pcd);
 }
@@ -890,7 +949,7 @@ extern "C" void cuda_ray_trace_from_camera(int w, int h, float ModelViewMatrix[1
     // cudaMemcpy((void *)image.data(), (void *)cudaImage, image.size() * sizeof(float), cudaMemcpyDeviceToHost);
     
 
-    int nbsteps = 10;   
+    int nbsteps = 1;   
     int blockPerSteps = std::ceil(nbBlock/nbsteps);
 
     int computedNbStep = nbBlock / blockPerSteps ;

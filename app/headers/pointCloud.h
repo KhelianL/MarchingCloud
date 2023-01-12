@@ -76,6 +76,9 @@ public:
     PointCloudType &getPointCloudType();
     int &getResolution();
 
+    //centerNormalise
+    void centerNormalize();
+
     // Setters
     void setMaterial(const Material &m);
     void setIsSelected(const bool &b);

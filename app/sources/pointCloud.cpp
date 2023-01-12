@@ -94,6 +94,32 @@ void PointCloud::relativeScaleZ(const float &v)
     this->computeAABB();
 }
 
+void PointCloud::centerNormalize(){
+    Vec3 center(0, 0, 0);
+    for (auto &pos : positions) {
+        center += pos;
+    }
+    center /= positions.size();
+
+    for (auto &pos : positions) {
+        pos -= center;
+    }
+
+    float maxLength = 0;
+    for (auto &pos : positions) {
+        maxLength = std::max(maxLength, pos.length());
+    }
+
+    for (auto &pos : positions) {
+        pos /= maxLength;
+    }
+
+    for (auto &normal : normals) {
+        normal.normalize();
+    }
+
+}
+
 // Generation
 void PointCloud::loadPointCloud(const std::string &filename)
 {
@@ -134,6 +160,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     }
     else
     {
+        this->centerNormalize();
         this->updateMatrix();
         this->computeAABB();
         this->setMaterial(Material(MaterialType::CUSTOM));
