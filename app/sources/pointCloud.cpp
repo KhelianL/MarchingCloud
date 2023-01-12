@@ -1,6 +1,21 @@
 #include <pointCloud.h>
 
 std::string getPointCloudTypeToString(const PointCloudType &type) { return PointCloudTable[static_cast<uint32_t>(type)]; }
+PointCloudType getStringToPointCloudType(std::string s)
+{
+    bool find = false;
+    int idx;
+    for (int i = 0, maxSize = sizeof(PointCloudTable) / sizeof(PointCloudTable[0]); i < maxSize && !find; i++)
+    {
+        std::string stringAtIndex(PointCloudTable[i]);
+        if (s == stringAtIndex)
+        {
+            find = true;
+            idx = i;
+        }
+    }
+    return static_cast<PointCloudType>(idx);
+}
 
 // Getters
 std::vector<Vec3> &PointCloud::getPositions() { return this->positions; }
@@ -16,6 +31,12 @@ int &PointCloud::getResolution() { return this->resolution; }
 // Setters
 void PointCloud::setMaterial(const Material &m) { this->material = m; }
 void PointCloud::setIsSelected(const bool &b) { this->isSelected = b; }
+void PointCloud::setRelativePosition(const Vec3 &v) { this->relativePosition = v; }
+void PointCloud::setRelativeRotation(const Vec3 &v) { this->relativeRotation = v; }
+void PointCloud::setRelativeScale(const Vec3 &v) { this->relativeScale = v; }
+void PointCloud::setResolution(const int &i) { this->resolution = i; }
+void PointCloud::setType(const PointCloudType &type) { this->type = type; }
+void PointCloud::setIsSet(const bool &b) { this->isSet = b; }
 
 // Transform Relative for PointCloud
 void PointCloud::relativeMoveX(const float &v)
@@ -115,7 +136,7 @@ void PointCloud::loadPointCloud(const std::string &filename)
     {
         this->updateMatrix();
         this->computeAABB();
-        this->setMaterial(Material(MaterialType::Custom));
+        this->setMaterial(Material(MaterialType::CUSTOM));
         this->isSet = true;
         this->type = PointCloudType::IMPORT;
         this->resolution = -1;

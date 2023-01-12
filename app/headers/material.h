@@ -7,44 +7,45 @@
 /* SRC */
 #include <vec3.h>
 
-enum class MaterialType : uint32_t
+enum class MaterialType
 {
-    Custom,
-    Gold,
-    Silver,
-    Bronze,
-    Copper,
-    Wood,
-    RedPlastic,
-    GreenPlastic,
-    BluePlastic,
-    Ruby,
-    Crystal,
-    Water,
-    Glass,
-    WitchHair,
-    Donut,
-    Fire
+    CUSTOM,
+    GOLD,
+    SILVER,
+    BRONZE,
+    COPPER,
+    WOOD,
+    REDPLASTIC,
+    GREENPLASTIC,
+    BLUEPLASTIC,
+    RUBY,
+    CRYSTAL,
+    WATER,
+    GLASS,
+    WITCHHAIR,
+    DONUT,
+    FIRE
 };
 constexpr static const char *MaterialTable[] = {
-    "Custom",
-    "Gold",
-    "Silver",
-    "Bronze",
-    "Copper",
-    "Wood",
-    "RedPlastic",
-    "GreenPlastic",
-    "BluePlastic",
-    "Ruby",
-    "Crystal",
-    "Water",
-    "Glass",
-    "WitchHair",
-    "Donut",
-    "Fire"};
+    "CUSTOM",
+    "GOLD",
+    "SILVER",
+    "BRONZE",
+    "COPPER",
+    "WOOD",
+    "REDPLASTIC",
+    "GREENPLASTIC",
+    "BLUEPLASTIC",
+    "RUBY",
+    "CRYSTAL",
+    "WATER",
+    "GLASS",
+    "WITCHHAIR",
+    "DONUT",
+    "FIRE"};
 
-QString getMaterialTypeToString(const MaterialType &type);
+std::string getMaterialTypeToString(const MaterialType &type);
+MaterialType getStringToMaterialType(std::string s);
 
 class Material
 {

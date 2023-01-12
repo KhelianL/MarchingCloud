@@ -4,16 +4,7 @@ Scene::Scene()
 {
     this->init();
 }
-void Scene::init()
-{
-    /*
-    PointCloud dino3;
-    dino3.loadPointCloud("dataPointsets/dino_subsampled_extreme.pn");
-    dino3.move({2.0, 0.0, 0.0});
-    dino3.setMaterial(Material(MaterialType::Gold));
-    this->listPointCloud.push_back(dino3);
-    */
-}
+void Scene::init() {}
 
 void Scene::draw()
 {
@@ -32,29 +23,29 @@ void Scene::generateImport(const std::string &filename, const float &keepingPart
     this->listPointCloud.push_back(res);
 }
 
-void Scene::generatePrimitive(const PopupType &type, const int &resolution)
+void Scene::generatePrimitive(const PointCloudType &type, const int &resolution)
 {
     if (resolution > 0)
     {
         PointCloud res;
         switch (type)
         {
-        case PopupType::PLANE:
+        case PointCloudType::PLANE:
             res.generatePlane(resolution);
             break;
-        case PopupType::CUBE:
+        case PointCloudType::CUBE:
             res.generateCube(resolution);
             break;
-        case PopupType::SPHERE:
+        case PointCloudType::SPHERE:
             res.generateSphere(resolution);
             break;
-        case PopupType::TORUS:
+        case PointCloudType::TORUS:
             res.generateTorus(resolution);
             break;
         default:
             break;
         }
-        res.setMaterial(Material(MaterialType::Custom));
+        res.setMaterial(Material(MaterialType::CUSTOM));
         this->listPointCloud.push_back(res);
     }
 }
@@ -71,4 +62,8 @@ PointCloud &Scene::getPointCloudAtIndex(const int &index)
 void Scene::removePointCloudAtIndex(const int &index)
 {
     this->listPointCloud.erase(this->listPointCloud.begin() + index);
+}
+void Scene::addPointCloud(const PointCloud &p)
+{
+    this->listPointCloud.push_back(p);
 }

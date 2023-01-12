@@ -15,7 +15,7 @@ Material::Material(const MaterialType &type)
     this->type = type;
     switch (type)
     {
-    case MaterialType::Gold:
+    case MaterialType::GOLD:
         this->ambiant = Vec3(0.24725, 0.1995, 0.0745);
         this->diffuse = Vec3(0.75164, 0.60648, 0.22648);
         this->specular = Vec3(0.628281, 0.555802, 0.366065);
@@ -23,7 +23,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Silver:
+    case MaterialType::SILVER:
         this->ambiant = Vec3(0.19225, 0.19225, 0.19225);
         this->diffuse = Vec3(0.50754, 0.50754, 0.50754);
         this->specular = Vec3(0.508273, 0.508273, 0.508273);
@@ -31,7 +31,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Bronze:
+    case MaterialType::BRONZE:
         this->ambiant = Vec3(0.2125, 0.1275, 0.054);
         this->diffuse = Vec3(0.714, 0.4284, 0.18144);
         this->specular = Vec3(0.393548, 0.271906, 0.166721);
@@ -39,7 +39,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Copper:
+    case MaterialType::COPPER:
         this->ambiant = Vec3(0.19125, 0.0735, 0.0225);
         this->diffuse = Vec3(0.7038, 0.27048, 0.0828);
         this->specular = Vec3(0.256777, 0.137622, 0.086014);
@@ -47,7 +47,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Wood:
+    case MaterialType::WOOD:
         this->ambiant = Vec3(0.3, 0.1, 0.1);
         this->diffuse = Vec3(0.6, 0.3, 0.3);
         this->specular = Vec3(0.1, 0.1, 0.1);
@@ -55,7 +55,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::RedPlastic:
+    case MaterialType::REDPLASTIC:
         this->ambiant = Vec3(0.3, 0.0, 0.0);
         this->diffuse = Vec3(0.6, 0.0, 0.0);
         this->specular = Vec3(0.8, 0.8, 0.8);
@@ -63,7 +63,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::GreenPlastic:
+    case MaterialType::GREENPLASTIC:
         this->ambiant = Vec3(0.0, 0.3, 0.0);
         this->diffuse = Vec3(0.0, 0.6, 0.0);
         this->specular = Vec3(0.8, 0.8, 0.8);
@@ -71,7 +71,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::BluePlastic:
+    case MaterialType::BLUEPLASTIC:
         this->ambiant = Vec3(0.0, 0.0, 0.3);
         this->diffuse = Vec3(0.0, 0.0, 0.6);
         this->specular = Vec3(0.8, 0.8, 0.8);
@@ -79,7 +79,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Ruby:
+    case MaterialType::RUBY:
         this->ambiant = Vec3(0.1745, 0.01175, 0.01175);
         this->diffuse = Vec3(0.61424, 0.04136, 0.04136);
         this->specular = Vec3(0.727811, 0.626959, 0.626959);
@@ -87,7 +87,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Crystal:
+    case MaterialType::CRYSTAL:
         this->ambiant = Vec3(0.1, 0.1, 0.1);
         this->diffuse = Vec3(0.4, 0.4, 0.4);
         this->specular = Vec3(0.9, 0.9, 0.9);
@@ -95,7 +95,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
         break;
-    case MaterialType::Water:
+    case MaterialType::WATER:
         this->ambiant = Vec3(0.0, 0.0, 0.2);
         this->diffuse = Vec3(0.0, 0.0, 0.6);
         this->specular = Vec3(0.9, 0.9, 0.9);
@@ -103,7 +103,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.9;
         this->refractionIndex = 1.33;
         break;
-    case MaterialType::Glass:
+    case MaterialType::GLASS:
         this->ambiant = Vec3(0.0, 0.0, 0.0);
         this->diffuse = Vec3(0.5, 0.5, 0.5);
         this->specular = Vec3(0.9, 0.9, 0.9);
@@ -111,7 +111,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.9;
         this->refractionIndex = 1.5;
         break;
-    case MaterialType::WitchHair:
+    case MaterialType::WITCHHAIR:
         this->ambiant = Vec3(0.2, 0.2, 0.2);
         this->diffuse = Vec3(0.9, 0.9, 0.8);
         this->specular = Vec3(0.9, 0.9, 0.9);
@@ -119,7 +119,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Donut:
+    case MaterialType::DONUT:
         this->ambiant = Vec3(0.8, 0.5, 0.2);
         this->diffuse = Vec3(0.9, 0.7, 0.3);
         this->specular = Vec3(0.1, 0.1, 0.1);
@@ -127,7 +127,7 @@ Material::Material(const MaterialType &type)
         this->transparency = 0.0;
         this->refractionIndex = 0.0;
         break;
-    case MaterialType::Fire:
+    case MaterialType::FIRE:
         this->ambiant = Vec3(0.5, 0.3, 0.1);
         this->diffuse = Vec3(1.0, 0.1, 0.05);
         this->specular = Vec3(0.9, 0.9, 0.9);
@@ -136,7 +136,7 @@ Material::Material(const MaterialType &type)
         this->refractionIndex = 0.0;
         break;
     default:
-        this->type = MaterialType::Custom;
+        this->type = MaterialType::CUSTOM;
         this->ambiant = Vec3();
         this->diffuse = Vec3(0.5, 0.5, 0.5);
         this->specular = Vec3(0.5, 0.5, 0.5);
@@ -173,4 +173,21 @@ void Material::setSpecularB(const float &v) { this->specular.setZ(v); }
 void Material::setTransparency(const float &transparency) { this->transparency = transparency; }
 void Material::setRefractionIndex(const float &refractionIndex) { this->refractionIndex = refractionIndex; }
 
-QString getMaterialTypeToString(const MaterialType &type) { return QString(MaterialTable[static_cast<uint32_t>(type)]); }
+std::string getMaterialTypeToString(const MaterialType &type) { return MaterialTable[static_cast<uint32_t>(type)]; }
+
+#include <iostream>
+MaterialType getStringToMaterialType(std::string s)
+{
+    bool find = false;
+    int idx;
+    for (int i = 0, maxSize = sizeof(MaterialTable) / sizeof(MaterialTable[0]); i < maxSize && !find; i++)
+    {
+        std::string stringAtIndex(MaterialTable[i]);
+        if (s == stringAtIndex)
+        {
+            find = true;
+            idx = i;
+        }
+    }
+    return static_cast<MaterialType>(idx);
+}

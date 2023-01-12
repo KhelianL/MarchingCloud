@@ -36,6 +36,7 @@ constexpr static const char *PointCloudTable[] = {
     "TORUS"};
 
 std::string getPointCloudTypeToString(const PointCloudType &type);
+PointCloudType getStringToPointCloudType(std::string s);
 
 class PointCloud
 {
@@ -78,6 +79,12 @@ public:
     // Setters
     void setMaterial(const Material &m);
     void setIsSelected(const bool &b);
+    void setRelativePosition(const Vec3 &v);
+    void setRelativeRotation(const Vec3 &v);
+    void setRelativeScale(const Vec3 &v);
+    void setResolution(const int &i);
+    void setType(const PointCloudType &type);
+    void setIsSet(const bool &b);
 
     // Transform Relative
     void relativeMoveX(const float &v);

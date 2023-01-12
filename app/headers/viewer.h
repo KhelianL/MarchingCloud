@@ -49,8 +49,8 @@ public:
     void rayCastClick(const QPoint &point);
     float isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection);
 
-    void sceneParserJSON(const std::string &filename);
-    void sceneReaderJSON(const std::string &filename);
+    void sceneWriteJSON(const std::string &filename);
+    void sceneReadJSON(const std::string &filename);
 };
 
 std::string myToStringFloat(float a);

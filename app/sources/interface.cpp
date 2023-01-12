@@ -53,7 +53,7 @@ void InterfaceQT::updateViewerTarget()
     this->editSpeB->setText(QString::number(vecSpecular.getZ()));
     this->editSpeExp->setText(QString::number(m.getSpecExp()));
 
-    QString value = getMaterialTypeToString(m.getType());
+    QString value = QString::fromStdString(getMaterialTypeToString(m.getType()));
     int index = -1;
     bool find = false;
     for (int i = 0, maxSize = this->editMat->count(); i < maxSize && !find; ++i)

@@ -186,7 +186,7 @@ std::string myToStringFloat(float a)
 	return ss.str();
 }
 
-void Viewer::sceneParserJSON(const std::string &filename)
+void Viewer::sceneWriteJSON(const std::string &filename)
 {
 	std::string fileContent = ""; // std::string for popback "," if needed.
 	fileContent += "{\n";
@@ -262,7 +262,7 @@ void Viewer::sceneParserJSON(const std::string &filename)
 		Material &mat = pointCloud.getMaterial();
 		MaterialType &typeMaterial = mat.getType();
 
-		if (typeMaterial == MaterialType::Custom)
+		if (typeMaterial == MaterialType::CUSTOM)
 		{
 			const Vec3 &matAmb = mat.getAmbiant();
 			const Vec3 &matDif = mat.getDiffuse();
@@ -270,7 +270,7 @@ void Viewer::sceneParserJSON(const std::string &filename)
 			const int &matSpecExp = mat.getSpecExp();
 			const float &matTransparency = mat.getTransparency();
 			const float &matRefractionIndex = mat.getRefractionIndex();
-			fileContent += "\t\t\t\"type_material\":\"" + getMaterialTypeToString(typeMaterial).toStdString() + "\",\n";
+			fileContent += "\t\t\t\"type_material\":\"" + getMaterialTypeToString(typeMaterial) + "\",\n";
 			fileContent += "\t\t\t\"material\":{\n";
 			fileContent += "\t\t\t\t\"ambient\":[" + myToStringFloat(matAmb[0]) + "," + myToStringFloat(matAmb[1]) + "," + myToStringFloat(matAmb[2]) + "],\n";
 			fileContent += "\t\t\t\t\"diffuse\":[" + myToStringFloat(matDif[0]) + "," + myToStringFloat(matDif[1]) + "," + myToStringFloat(matDif[2]) + "],\n";
@@ -282,7 +282,7 @@ void Viewer::sceneParserJSON(const std::string &filename)
 		}
 		else
 		{
-			fileContent += "\t\t\t\"typeMaterial\":\"" + getMaterialTypeToString(typeMaterial).toStdString() + "\"\n";
+			fileContent += "\t\t\t\"type_material\":\"" + getMaterialTypeToString(typeMaterial) + "\"\n";
 		}
 
 		/** END POINTCLOUD **/
@@ -304,11 +304,96 @@ void Viewer::sceneParserJSON(const std::string &filename)
 	jsonFile.close();
 }
 
-void Viewer::sceneReaderJSON(const std::string &filename)
+void Viewer::sceneReadJSON(const std::string &filename)
 {
-	std::string str = "{'RSJ': 'string data', 'keyName': [2,3,5,7]}";
-	RSJresource my_json(str);
-	std::cout << my_json["keyName"][2].as<int>() << std::endl;					 // prints 5
-	std::cout << my_json["RSJ"].as<std::string>("default string") << std::endl;	 // prints "string data"
-	std::cout << my_json["JSON"].as<std::string>("default string") << std::endl; // prints "default string"
+	// Init JSON
+	std::ifstream jsonFile(filename);
+	std::stringstream buffer;
+	buffer << jsonFile.rdbuf();
+	std::string jsonString = buffer.str();
+
+	// Parser
+	RSJresource json(jsonString);
+
+	/** DATA CAMERA **/
+	this->camera()->setPosition({json["data_camera"]["position"][0].as<double>(), json["data_camera"]["position"][1].as<double>(), json["data_camera"]["position"][2].as<double>()});
+	this->camera()->setOrientation({json["data_camera"]["orientation"][0].as<double>(), json["data_camera"]["orientation"][1].as<double>(), json["data_camera"]["orientation"][2].as<double>(), json["data_camera"]["orientation"][3].as<double>()});
+
+	/** DATA SCENE **/
+	delete this->scene;
+	this->scene = new Scene();
+
+	for (int i = 0, maxSize = json["data_scene"].size(); i < maxSize; i++)
+	{
+		PointCloud res;
+		Material m;
+
+		// Generate mesh
+		if (getStringToPointCloudType(json["data_scene"][i]["type_pointcloud"].as<std::string>("default")) == PointCloudType::IMPORT)
+		{
+			// Positions
+			for (int j = 0, maxSizeJ = json["data_scene"][i]["positions"].size(); j < maxSizeJ; j++)
+			{
+				res.getPositions().push_back({json["data_scene"][i]["positions"][j][0].as<double>(), json["data_scene"][i]["positions"][j][1].as<double>(), json["data_scene"][i]["positions"][j][2].as<double>()});
+			}
+			// Normals
+			for (int j = 0, maxSizeJ = json["data_scene"][i]["normals"].size(); j < maxSizeJ; j++)
+			{
+				res.getNormals().push_back({json["data_scene"][i]["normals"][j][0].as<double>(), json["data_scene"][i]["normals"][j][1].as<double>(), json["data_scene"][i]["normals"][j][2].as<double>()});
+			}
+
+			res.setResolution(-1);
+			res.setType(PointCloudType::IMPORT);
+			res.setIsSet(true);
+		}
+		else
+		{
+			if (json["data_scene"][i]["param_resolution"].as<double>() > 0)
+			{
+				switch (getStringToPointCloudType(json["data_scene"][i]["type_pointcloud"].as<std::string>("default")))
+				{
+				case PointCloudType::PLANE:
+					res.generatePlane(json["data_scene"][i]["param_resolution"].as<double>());
+					break;
+				case PointCloudType::CUBE:
+					res.generateCube(json["data_scene"][i]["param_resolution"].as<double>());
+					break;
+				case PointCloudType::SPHERE:
+					res.generateSphere(json["data_scene"][i]["param_resolution"].as<double>());
+					break;
+				case PointCloudType::TORUS:
+					res.generateTorus(json["data_scene"][i]["param_resolution"].as<double>());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		// Set relative transform
+		res.setRelativePosition({json["data_scene"][i]["relative_position"][0].as<double>(), json["data_scene"][i]["relative_position"][1].as<double>(), json["data_scene"][i]["relative_position"][2].as<double>()});
+		res.setRelativeRotation({json["data_scene"][i]["relative_rotation"][0].as<double>(), json["data_scene"][i]["relative_rotation"][1].as<double>(), json["data_scene"][i]["relative_rotation"][2].as<double>()});
+		res.setRelativeScale({json["data_scene"][i]["relative_scale"][0].as<double>(), json["data_scene"][i]["relative_scale"][1].as<double>(), json["data_scene"][i]["relative_scale"][2].as<double>()});
+
+		// Material
+		if (getStringToMaterialType(json["data_scene"][i]["type_material"].as<std::string>("default")) != MaterialType::CUSTOM)
+		{
+			m = Material(getStringToMaterialType(json["data_scene"][i]["type_material"].as<std::string>("default")));
+		}
+		else
+		{
+			m.setAmbiant({json["data_scene"][i]["material"]["ambient"][0].as<double>(), json["data_scene"][i]["material"]["ambient"][1].as<double>(), json["data_scene"][i]["material"]["ambient"][2].as<double>()});
+			m.setDiffuse({json["data_scene"][i]["material"]["diffuse"][0].as<double>(), json["data_scene"][i]["material"]["diffuse"][1].as<double>(), json["data_scene"][i]["material"]["diffuse"][2].as<double>()});
+			m.setSpecular({json["data_scene"][i]["material"]["specular"][0].as<double>(), json["data_scene"][i]["material"]["specular"][1].as<double>(), json["data_scene"][i]["material"]["specular"][2].as<double>()});
+			m.setSpecExp(json["data_scene"][i]["material"]["specular_exponent"].as<double>());
+			m.setTransparency(json["data_scene"][i]["material"]["transparency"].as<double>());
+			m.setRefractionIndex(json["data_scene"][i]["material"]["refraction_index"].as<double>());
+		}
+
+		res.setMaterial(m);
+		res.updateMatrix();
+		res.computeAABB();
+
+		this->scene->addPointCloud(res);
+	}
 }

@@ -1,6 +1,6 @@
 #include <popupWindow.h>
 
-PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(parent)
+PopupWindow::PopupWindow(const PointCloudType &type, QWidget *parent) : QDialog(parent)
 {
     // Type
     this->t = type;
@@ -15,7 +15,7 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
     QRegExpValidator *vInt = new QRegExpValidator(rvi, this);
 
     // Création des champs de saisie selon le type
-    if (type == PopupType::IMPORT)
+    if (type == PointCloudType::IMPORT)
     {
         // Param = decimation
         layout->addWidget(new QLabel("Entrez une valeur de décimation [0.0 ; 1.0] :", this));
@@ -24,7 +24,7 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
         m_lineEdit->setValidator(vPercent);
         layout->addWidget(m_lineEdit);
     }
-    else // PopupType::PLANE + PopupType::CUBE + PopupType::SHPERE + PopupType::TORUS
+    else // PointCloudType::PLANE + PointCloudType::CUBE + PointCloudType::SHPERE + PointCloudType::TORUS
     {
         // Param = resolution
         layout->addWidget(new QLabel("Entrez une valeur de résolution :", this));
@@ -45,7 +45,7 @@ PopupWindow::PopupWindow(const PopupType &type, QWidget *parent) : QDialog(paren
 void PopupWindow::handleButtonClick()
 {
     double v = this->m_lineEdit->text().toDouble();
-    this->value = (this->t == PopupType::IMPORT ? (v > 1.0 ? 1.0 : v) : v);
+    this->value = (this->t == PointCloudType::IMPORT ? (v > 1.0 ? 1.0 : v) : v);
     this->accept();
 }
 

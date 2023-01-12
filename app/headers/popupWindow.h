@@ -10,28 +10,22 @@
 #include <QMessageBox>
 #include <QDoubleValidator>
 
-enum class PopupType
-{
-    IMPORT,
-    PLANE,
-    CUBE,
-    SPHERE,
-    TORUS
-};
+/* SRC */
+#include <pointCloud.h>
 
 class PopupWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    PopupWindow(const PopupType &type, QWidget *parent = nullptr);
+    PopupWindow(const PointCloudType &type, QWidget *parent = nullptr);
     double getValue();
 
 private slots:
     void handleButtonClick();
 
 private:
-    PopupType t;
+    PointCloudType t;
 
     QLineEdit *m_lineEdit;
     QPushButton *m_button;
