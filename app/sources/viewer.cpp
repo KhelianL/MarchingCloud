@@ -303,7 +303,6 @@ void Viewer::sceneWriteJSON(const std::string &filename)
 	jsonFile << fileContent;
 	jsonFile.close();
 }
-
 void Viewer::sceneReadJSON(const std::string &filename)
 {
 	// Init JSON
@@ -320,8 +319,7 @@ void Viewer::sceneReadJSON(const std::string &filename)
 	this->camera()->setOrientation({json["data_camera"]["orientation"][0].as<double>(), json["data_camera"]["orientation"][1].as<double>(), json["data_camera"]["orientation"][2].as<double>(), json["data_camera"]["orientation"][3].as<double>()});
 
 	/** DATA SCENE **/
-	delete this->scene;
-	this->scene = new Scene();
+	this->sceneNew();
 
 	for (int i = 0, maxSize = json["data_scene"].size(); i < maxSize; i++)
 	{
@@ -388,6 +386,7 @@ void Viewer::sceneReadJSON(const std::string &filename)
 			m.setSpecExp(json["data_scene"][i]["material"]["specular_exponent"].as<double>());
 			m.setTransparency(json["data_scene"][i]["material"]["transparency"].as<double>());
 			m.setRefractionIndex(json["data_scene"][i]["material"]["refraction_index"].as<double>());
+			m.setType(MaterialType::CUSTOM);
 		}
 
 		res.setMaterial(m);
@@ -396,4 +395,9 @@ void Viewer::sceneReadJSON(const std::string &filename)
 
 		this->scene->addPointCloud(res);
 	}
+}
+void Viewer::sceneNew()
+{
+	delete this->scene;
+	this->scene = new Scene();
 }

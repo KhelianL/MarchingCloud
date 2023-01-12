@@ -51,6 +51,7 @@ public:
 
     void sceneWriteJSON(const std::string &filename);
     void sceneReadJSON(const std::string &filename);
+    void sceneNew();
 };
 
 std::string myToStringFloat(float a);

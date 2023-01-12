@@ -1,5 +1,5 @@
-#ifndef POPUP_WINDOW_H
-#define POPUP_WINDOW_H
+#ifndef POPUP_CREATE_H
+#define POPUP_CREATE_H
 
 /* QT */
 #include <QDialog>
@@ -13,12 +13,12 @@
 /* SRC */
 #include <pointCloud.h>
 
-class PopupWindow : public QDialog
+class PopupCreate : public QDialog
 {
     Q_OBJECT
 
 public:
-    PopupWindow(const PointCloudType &type, QWidget *parent = nullptr);
+    PopupCreate(const PointCloudType &type, QWidget *parent = nullptr);
     double getValue();
 
 private slots:

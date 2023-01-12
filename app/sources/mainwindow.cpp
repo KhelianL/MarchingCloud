@@ -529,12 +529,14 @@ void MainWindow::delTarget()
 void MainWindow::newScene()
 {
     this->statusBar()->showMessage(tr("Invoked <NEW SCENE>"));
+    this->viewer->sceneNew();
     this->updateViewer();
 }
 void MainWindow::openScene()
 {
     this->statusBar()->showMessage(tr("Invoked <OPEN SCENE>"));
-    this->viewer->sceneReadJSON("test.json");
+    QString fileName = QFileDialog::getOpenFileName();
+    this->viewer->sceneReadJSON(fileName.toStdString());
     this->updateViewer();
 }
 void MainWindow::saveScene()
@@ -565,7 +567,7 @@ void MainWindow::importPointCloud()
     this->statusBar()->showMessage(tr("Invoked <IMPORT POINT CLOUD>"));
     QString fileName = QFileDialog::getOpenFileName();
 
-    PopupWindow popup(PointCloudType::IMPORT);
+    PopupCreate popup(PointCloudType::IMPORT);
     popup.exec();
 
     this->viewer->getScene()->generateImport(fileName.toStdString(), (double)popup.getValue());
@@ -575,7 +577,7 @@ void MainWindow::createPlane()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE PLANE>"));
 
-    PopupWindow popup(PointCloudType::PLANE);
+    PopupCreate popup(PointCloudType::PLANE);
     popup.exec();
 
     this->viewer->getScene()->generatePrimitive(PointCloudType::PLANE, (int)popup.getValue());
@@ -584,7 +586,7 @@ void MainWindow::createCube()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE CUBE>"));
 
-    PopupWindow popup(PointCloudType::CUBE);
+    PopupCreate popup(PointCloudType::CUBE);
     popup.exec();
 
     this->viewer->getScene()->generatePrimitive(PointCloudType::CUBE, (int)popup.getValue());
@@ -593,7 +595,7 @@ void MainWindow::createSphere()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE SPHERE>"));
 
-    PopupWindow popup(PointCloudType::SPHERE);
+    PopupCreate popup(PointCloudType::SPHERE);
     popup.exec();
 
     this->viewer->getScene()->generatePrimitive(PointCloudType::SPHERE, (int)popup.getValue());
@@ -602,7 +604,7 @@ void MainWindow::createTorus()
 {
     this->statusBar()->showMessage(tr("Invoked <CREATE TORUS>"));
 
-    PopupWindow popup(PointCloudType::TORUS);
+    PopupCreate popup(PointCloudType::TORUS);
     popup.exec();
 
     this->viewer->getScene()->generatePrimitive(PointCloudType::TORUS, (int)popup.getValue());

@@ -75,6 +75,7 @@ public:
     void setSpecExp(const int &spec_exp);
     void setTransparency(const float &transparency);
     void setRefractionIndex(const float &refractionIndex);
+    void setType(const MaterialType &type);
 
     void setAmbiantR(const float &v);
     void setAmbiantG(const float &v);

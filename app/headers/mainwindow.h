@@ -28,7 +28,7 @@
 
 /* SRC */
 #include <viewer.h>
-#include <popupWindow.h>
+#include <popupCreate.h>
 #include <interface.h>
 
 class MainWindow : public QMainWindow

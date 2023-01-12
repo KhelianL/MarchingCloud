@@ -172,10 +172,9 @@ void Material::setSpecularG(const float &v) { this->specular.setY(v); }
 void Material::setSpecularB(const float &v) { this->specular.setZ(v); }
 void Material::setTransparency(const float &transparency) { this->transparency = transparency; }
 void Material::setRefractionIndex(const float &refractionIndex) { this->refractionIndex = refractionIndex; }
+void Material::setType(const MaterialType &type) { this->type = type; }
 
 std::string getMaterialTypeToString(const MaterialType &type) { return MaterialTable[static_cast<uint32_t>(type)]; }
-
-#include <iostream>
 MaterialType getStringToMaterialType(std::string s)
 {
     bool find = false;

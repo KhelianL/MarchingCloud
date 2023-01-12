@@ -1,6 +1,6 @@
-#include <popupWindow.h>
+#include <popupCreate.h>
 
-PopupWindow::PopupWindow(const PointCloudType &type, QWidget *parent) : QDialog(parent)
+PopupCreate::PopupCreate(const PointCloudType &type, QWidget *parent) : QDialog(parent)
 {
     // Type
     this->t = type;
@@ -39,17 +39,17 @@ PopupWindow::PopupWindow(const PointCloudType &type, QWidget *parent) : QDialog(
     layout->addWidget(m_button);
 
     // Connecte le signal "clicked" du bouton d'envoi au slot handleButtonClick()
-    connect(m_button, &QPushButton::clicked, this, &PopupWindow::handleButtonClick);
+    connect(m_button, &QPushButton::clicked, this, &PopupCreate::handleButtonClick);
 }
 
-void PopupWindow::handleButtonClick()
+void PopupCreate::handleButtonClick()
 {
     double v = this->m_lineEdit->text().toDouble();
     this->value = (this->t == PointCloudType::IMPORT ? (v > 1.0 ? 1.0 : v) : v);
     this->accept();
 }
 
-double PopupWindow::getValue()
+double PopupCreate::getValue()
 {
     return this->value;
 }
