@@ -66,13 +66,15 @@ void InterfaceQT::updateViewerTarget()
     }
     if (find)
     {
-        // DO NOT UPDATE SIGNAL
+        this->editMat->blockSignals(true);
         this->editMat->setCurrentIndex(index);
+        this->editMat->blockSignals(false);
     }
     else
     {
-        // DO NOT UPDATE SIGNAL
+        this->editMat->blockSignals(true);
         this->editMat->setCurrentIndex(0);
+        this->editMat->blockSignals(false);
     }
 }
 void InterfaceQT::resetViewerTarget()
