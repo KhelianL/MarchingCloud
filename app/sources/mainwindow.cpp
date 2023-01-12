@@ -535,14 +535,15 @@ void MainWindow::newScene()
 void MainWindow::openScene()
 {
     this->statusBar()->showMessage(tr("Invoked <OPEN SCENE>"));
-    QString fileName = QFileDialog::getOpenFileName();
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Enregistrer sous"), QString(), tr("Fichiers JSON (*.json);;Tous les fichiers (*)"));
     this->viewer->sceneReadJSON(fileName.toStdString());
     this->updateViewer();
 }
 void MainWindow::saveScene()
 {
     this->statusBar()->showMessage(tr("Invoked <SAVE SCENE>"));
-    this->viewer->sceneWriteJSON("test.json");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), QString(), tr("Fichiers JSON (*.json);;Tous les fichiers (*)"));
+    this->viewer->sceneWriteJSON(fileName.toStdString() + ".json");
     this->updateViewer();
 }
 
