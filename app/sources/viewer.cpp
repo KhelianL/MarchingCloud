@@ -9,6 +9,7 @@ Viewer::Viewer(InterfaceQT *const i, QWidget *parent) : interfaceQt(i), QGLViewe
 
 void Viewer::init()
 {
+	setShortcut(STEREO, 0);
 	restoreStateFromFile();
 	setMouseTracking(true);
 	setAxisIsDrawn();
@@ -162,33 +163,19 @@ Scene *Viewer::getScene()
 
 QString Viewer::helpString() const
 {
-	QString text("<h2>S i m p l e V i e w e r</h2>");
-	text += "Use the mouse to move the camera around the object. ";
-	text += "You can respectively revolve around, zoom and translate with the "
-			"three mouse buttons. ";
-	text += "Left and middle buttons pressed together rotate around the camera "
-			"view direction axis<br><br>";
-	text += "Pressing <b>Alt</b> and one of the function keys "
-			"(<b>F1</b>..<b>F12</b>) defines a camera keyFrame. ";
-	text += "Simply press the function key again to restore it. Several "
-			"keyFrames define a ";
-	text += "camera path. Paths are saved when you quit the application and "
-			"restored at next start.<br><br>";
-	text +=
-		"Press <b>F</b> to display the frame rate, <b>A</b> for the world axis, ";
-	text += "<b>Alt+Return</b> for full screen mode and <b>Control+S</b> to save "
-			"a snapshot. ";
-	text += "See the <b>Keyboard</b> tab in this window for a complete shortcut "
-			"list.<br><br>";
-	text += "Double clicks automates single click actions: A left button double "
-			"click aligns the closer axis with the camera (if close enough). ";
-	text += "A middle button double click fits the zoom of the camera and the "
-			"right button re-centers the scene.<br><br>";
-	text += "A left button double click while holding right button pressed "
-			"defines the camera <i>Revolve Around Point</i>. ";
-	text += "See the <b>Mouse</b> tab and the documentation web pages for "
-			"details.<br><br>";
-	text += "Press <b>Escape</b> to exit the viewer.";
+	QString text("<h2>M a r c h i n g C l o u d</h2>");
+	text += "<b>Mouse left-click</b> to rotate the camera.<br>";
+	text += "<b>Mouse right-click</b> to move the camera.<br>";
+	text += "<b>Mouse scroll</b> to move forward or backward.<br><br>";
+	text += "<b>File menu</b> contains functions to save or load the scene.<br>";
+	text += "<b>Display menu</b> contains functions to display informations (axis, grid, FPS).<br>";
+	text += "<b>PointCloud menu</b> contains functions to create points clouds.<br><br>";
+	text += "<b>Ctrl + A</b> opens a shortcut for points clouds creation.<br><br>";
+	text += "A point cloud can be <b>selected by clicking on it</b> and then modified with the different components on the right (Transform, Material). ";
+	text += "A point cloud can also be <b>destroyed with the shortcut Del</b> if selected.<br><br>";
+	text += "Once the scene setup with points clouds, you can edit the <b>Render component</b> and press the <b>MarchingCloud</b> button to generate a render. ";
+	text += "The render will be save as render.ppm at the root of the project.<br><br>";
+	text += "Press <b>Escape</b> or <b>Ctrl + Q</b> to exit the application.";
 	return text;
 }
 
@@ -317,21 +304,11 @@ void Viewer::sceneParserJSON(const std::string &filename)
 	jsonFile.close();
 }
 
-#include <iostream>
 void Viewer::sceneReaderJSON(const std::string &filename)
 {
-	std::cout << "PASSED" << std::endl;
-
-	std::ifstream jsonFile(filename);
-	std::string jsonContent((std::istreambuf_iterator<char>(jsonFile)), std::istreambuf_iterator<char>());
-	std::istringstream jsonStream(jsonContent);
-
-	std::string line;
-	std::string key, value;
-	while (std::getline(jsonStream, line))
-	{
-		std::cout << line << std::endl;
-	}
-
-	jsonFile.close();
+	std::string str = "{'RSJ': 'string data', 'keyName': [2,3,5,7]}";
+	RSJresource my_json(str);
+	std::cout << my_json["keyName"][2].as<int>() << std::endl;					 // prints 5
+	std::cout << my_json["RSJ"].as<std::string>("default string") << std::endl;	 // prints "string data"
+	std::cout << my_json["JSON"].as<std::string>("default string") << std::endl; // prints "default string"
 }

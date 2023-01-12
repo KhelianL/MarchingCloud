@@ -15,6 +15,9 @@
 #include <vec.h>
 #include <quaternion.h>
 
+/* RSJP */
+#include <RSJparser.hpp>
+
 /* SRC */
 #include <vec3.h>
 #include <pointCloud.h>

@@ -362,6 +362,7 @@ void PointCloud::draw()
         glEnd();
 
         // DrawNormals
+        /*
         if (this->isSelected)
         {
             glBegin(GL_LINES);
@@ -373,6 +374,7 @@ void PointCloud::draw()
             }
             glEnd();
         }
+        */
 
         glFlush();
         glMultMatrixf(this->modelMatrix.inverted().data());

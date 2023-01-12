@@ -19,10 +19,10 @@ RCC_DIR = ./app/build/.rcc
 UI_DIR = ./app/build/.ui
 
 #####################################################################
-#                   CUDA compiler configuration                     #
+#                    CUDA compiler configuration                    #
 #####################################################################
 
-INCLUDEPATH += $$CUDA_DIR/include
+INCLUDEPATH *= $$CUDA_DIR/include
 QMAKE_LIBDIR += $$CUDA_DIR/lib/
 CUDA_LIBS = -lcuda -lcudart
 CUDA_INC = $$join(INCLUDEPATH,'" -I"','-I"','"')
@@ -38,10 +38,16 @@ cuda.dependency_type = TYPE_C
 QMAKE_EXTRA_COMPILERS += cuda
 
 #####################################################################
-#                   QGLViewer compiler configuration                #
+#                  QGLViewer compiler configuration                 #
 #####################################################################
 
 LIBS *= -lGLU
 LIBS *= -L./lib/libQGLViewer-2.8.0/QGLViewer/ -lQGLViewer-qt5
 INCLUDEPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
 DEPENDPATH *= ./lib/libQGLViewer-2.8.0/QGLViewer
+
+#####################################################################
+#                             RSJParser                             #
+#####################################################################
+
+INCLUDEPATH *= ./lib/RSJP
