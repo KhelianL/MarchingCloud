@@ -535,15 +535,21 @@ void MainWindow::newScene()
 void MainWindow::openScene()
 {
     this->statusBar()->showMessage(tr("Invoked <OPEN SCENE>"));
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Enregistrer sous"), QString(), tr("Fichiers JSON (*.json);;Tous les fichiers (*)"));
-    this->viewer->sceneReadJSON(fileName.toStdString());
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), QString(), tr("JSON Files (*.json);;All Files (*)"));
+    if (!fileName.isEmpty())
+    {
+        this->viewer->sceneReadJSON(fileName.toStdString());
+    }
     this->updateViewer();
 }
 void MainWindow::saveScene()
 {
     this->statusBar()->showMessage(tr("Invoked <SAVE SCENE>"));
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Enregistrer sous"), QString(), tr("Fichiers JSON (*.json);;Tous les fichiers (*)"));
-    this->viewer->sceneWriteJSON(fileName.toStdString() + ".json");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save as"), QString(), tr("JSON Files (*.json);;All Files (*)"));
+    if (!fileName.isEmpty())
+    {
+        this->viewer->sceneWriteJSON(fileName.toStdString() + ".json");
+    }
     this->updateViewer();
 }
 
@@ -566,12 +572,13 @@ void MainWindow::drawFPS()
 void MainWindow::importPointCloud()
 {
     this->statusBar()->showMessage(tr("Invoked <IMPORT POINT CLOUD>"));
-    QString fileName = QFileDialog::getOpenFileName();
-
-    PopupCreate popup(PointCloudType::IMPORT);
-    popup.exec();
-
-    this->viewer->getScene()->generateImport(fileName.toStdString(), (double)popup.getValue());
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open"), QString(), tr("PN Files (*.pn);;All Files (*)"));
+    if (!fileName.isEmpty())
+    {
+        PopupCreate popup(PointCloudType::IMPORT);
+        popup.exec();
+        this->viewer->getScene()->generateImport(fileName.toStdString(), (double)popup.getValue());
+    }
 }
 
 void MainWindow::createPlane()

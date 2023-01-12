@@ -66,10 +66,12 @@ void InterfaceQT::updateViewerTarget()
     }
     if (find)
     {
+        // DO NOT UPDATE SIGNAL
         this->editMat->setCurrentIndex(index);
     }
     else
     {
+        // DO NOT UPDATE SIGNAL
         this->editMat->setCurrentIndex(0);
     }
 }
