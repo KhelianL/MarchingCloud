@@ -1,5 +1,7 @@
 #include <pointCloud.h>
 
+std::string getPointCloudTypeToString(const PointCloudType &type) { return PointCloudTable[static_cast<uint32_t>(type)]; }
+
 // Getters
 std::vector<Vec3> &PointCloud::getPositions() { return this->positions; }
 std::vector<Vec3> &PointCloud::getNormals() { return this->normals; }
@@ -8,6 +10,9 @@ Vec3 &PointCloud::getRelativePosition() { return this->relativePosition; }
 Vec3 &PointCloud::getRelativeRotation() { return this->relativeRotation; }
 Vec3 &PointCloud::getRelativeScale() { return this->relativeScale; }
 QMatrix4x4 &PointCloud::getModelMatrix() { return this->modelMatrix; }
+PointCloudType &PointCloud::getPointCloudType() { return this->type; }
+int &PointCloud::getResolution() { return this->resolution; }
+
 // Setters
 void PointCloud::setMaterial(const Material &m) { this->material = m; }
 void PointCloud::setIsSelected(const bool &b) { this->isSelected = b; }
@@ -112,6 +117,8 @@ void PointCloud::loadPointCloud(const std::string &filename)
         this->computeAABB();
         this->setMaterial(Material(MaterialType::Custom));
         this->isSet = true;
+        this->type = PointCloudType::IMPORT;
+        this->resolution = -1;
     }
 }
 void PointCloud::generatePlane(const int &resolution)
@@ -139,6 +146,8 @@ void PointCloud::generatePlane(const int &resolution)
     this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
+    this->type = PointCloudType::PLANE;
+    this->resolution = resolution;
 }
 void PointCloud::generateSphere(const int &resolution)
 {
@@ -165,6 +174,8 @@ void PointCloud::generateSphere(const int &resolution)
     this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
+    this->type = PointCloudType::SPHERE;
+    this->resolution = resolution;
 }
 void PointCloud::generateCube(const int &resolution)
 {
@@ -193,6 +204,8 @@ void PointCloud::generateCube(const int &resolution)
     this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
+    this->type = PointCloudType::CUBE;
+    this->resolution = resolution;
 }
 void PointCloud::generateTorus(const int &resolution)
 {
@@ -231,6 +244,8 @@ void PointCloud::generateTorus(const int &resolution)
     this->updateMatrix();
     this->computeAABB();
     this->isSet = true;
+    this->type = PointCloudType::TORUS;
+    this->resolution = resolution;
 }
 
 // Decimate
@@ -304,6 +319,7 @@ Vec3 &PointCloud::getMaxAABB()
     return this->maxAABB;
 }
 
+// Update
 void PointCloud::updateMatrix()
 {
     // Initialise la matrice de transformation

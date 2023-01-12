@@ -9,6 +9,7 @@
 #include <vector>
 #include <random> // mt19937
 #include <ctime>  // time(nullptr)
+#include <string>
 
 /* GLUT */
 #include <GL/glut.h>
@@ -19,25 +20,48 @@
 
 #define M_PI 3.14159265358979323846
 
+enum class PointCloudType
+{
+    IMPORT,
+    PLANE,
+    SPHERE,
+    CUBE,
+    TORUS
+};
+constexpr static const char *PointCloudTable[] = {
+    "IMPORT",
+    "PLANE",
+    "SPHERE",
+    "CUBE",
+    "TORUS"};
+
+std::string getPointCloudTypeToString(const PointCloudType &type);
+
 class PointCloud
 {
 private:
+    // Define PointCloud
     std::vector<Vec3> positions;
     std::vector<Vec3> normals;
     Material material;
 
+    // Transformations
+    QMatrix4x4 modelMatrix;
     Vec3 relativePosition = Vec3(0.0f, 0.0f, 0.0f);
     Vec3 relativeRotation = Vec3(0.0f, 0.0f, 0.0f);
     Vec3 relativeScale = Vec3(1.0f, 1.0f, 1.0f);
 
-    QMatrix4x4 modelMatrix;
-
+    // RayCast AABB
     Vec3 minAABB;
     Vec3 maxAABB;
-
     bool isSelected = false;
 
+    // Assume that PointCloud is correctly init
     bool isSet = false;
+
+    // PointCloud data save
+    PointCloudType type;
+    int resolution;
 
 public:
     // Getters
@@ -48,15 +72,12 @@ public:
     Vec3 &getRelativeRotation();
     Vec3 &getRelativeScale();
     QMatrix4x4 &getModelMatrix();
+    PointCloudType &getPointCloudType();
+    int &getResolution();
 
     // Setters
     void setMaterial(const Material &m);
     void setIsSelected(const bool &b);
-
-    // Transform PointCloud
-    void move(const Vec3 &v);
-    void rotate(const float &d, const Vec3 &v);
-    void scale(const Vec3 &v);
 
     // Transform Relative
     void relativeMoveX(const float &v);
@@ -84,6 +105,7 @@ public:
     Vec3 &getMinAABB();
     Vec3 &getMaxAABB();
 
+    // Update
     void updateMatrix();
 
     // Draw OpenGL

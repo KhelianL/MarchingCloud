@@ -3,6 +3,8 @@
 
 /* C LIBS */
 #include <vector>
+#include <fstream>
+#include <string>
 
 /* SRC CUDA */
 #include <pointCloud.h>
@@ -25,6 +27,8 @@ public:
 
     void generateImport(const std::string &filename, const float &decimate);
     void generatePrimitive(const PopupType &type, const int &resolution);
+
+    void sceneParserJSON(const std::string &filename);
 };
 
 #endif

@@ -538,6 +538,7 @@ void MainWindow::openScene()
 void MainWindow::saveScene()
 {
     this->statusBar()->showMessage(tr("Invoked <SAVE SCENE>"));
+    this->viewer->getScene()->sceneParserJSON("test.json");
 }
 
 void MainWindow::undo()
