@@ -25,7 +25,7 @@
 class Viewer : public QGLViewer
 {
 private:
-    Scene *const scene;
+    Scene *scene;
     InterfaceQT *const interfaceQt;
 
 protected:
@@ -36,7 +36,7 @@ protected:
     virtual QString helpString() const;
 
 public:
-    Viewer(Scene *const s, InterfaceQT *const i, QWidget *parent);
+    Viewer(InterfaceQT *const i, QWidget *parent);
     ~Viewer();
 
     Scene *getScene();
@@ -47,6 +47,7 @@ public:
     float isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection);
 
     void sceneParserJSON(const std::string &filename);
+    void sceneUploadJSON(const std::string &filename);
 };
 
 std::string myToStringFloat(float a);

@@ -72,8 +72,3 @@ void Scene::removePointCloudAtIndex(const int &index)
 {
     this->listPointCloud.erase(this->listPointCloud.begin() + index);
 }
-
-// TODO : add .json at the end?
-// TODO : choose filename
-// TODO : AJOUTER LE DISPLAY NORMAL EN OPTION ET PAS EN CAST SELECTED
-// TODO : Override shortcut S (sterovision)

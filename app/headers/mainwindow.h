@@ -27,7 +27,6 @@
 #include <QRegExpValidator>
 
 /* SRC */
-#include <scene.h>
 #include <viewer.h>
 #include <popupWindow.h>
 #include <interface.h>
@@ -38,9 +37,8 @@ class MainWindow : public QMainWindow
 
 private:
     /* CORE */
-    Scene *const scene = new Scene();
     Viewer *viewer;
-    InterfaceQT *interfaceQT;
+    InterfaceQT *interfaceQT = new InterfaceQT();
 
     /* INTERFACE CREATION */
     QWidget *createTransformComponent();

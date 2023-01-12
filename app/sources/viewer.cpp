@@ -1,7 +1,8 @@
 #include <viewer.h>
 
-Viewer::Viewer(Scene *const s, InterfaceQT *const i, QWidget *parent) : scene(s), interfaceQt(i), QGLViewer(parent)
+Viewer::Viewer(InterfaceQT *const i, QWidget *parent) : interfaceQt(i), QGLViewer(parent)
 {
+	this->scene = new Scene();
 	this->interfaceQt->enableEdit(false);
 	this->init();
 }
@@ -18,7 +19,6 @@ void Viewer::init()
 Viewer::~Viewer()
 {
 	delete this->scene;
-	delete this->interfaceQt;
 }
 
 void Viewer::draw()
@@ -314,4 +314,10 @@ void Viewer::sceneParserJSON(const std::string &filename)
 
 	std::ofstream jsonFile(filename);
 	jsonFile << fileContent;
+}
+
+#include <iostream>
+void Viewer::sceneUploadJSON(const std::string &filename)
+{
+	std::cout << "PASSED" << std::endl;
 }

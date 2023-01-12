@@ -4,6 +4,8 @@
 /*           Construct/Destruct           #*/
 /*#########################################*/
 
+#include <iostream>
+
 MainWindow::MainWindow()
 {
     // Configuration de la barre d'état et ajout de la barre de progression
@@ -33,7 +35,7 @@ MainWindow::MainWindow()
     this->initInterfaceQT();
 
     // Left/Right side
-    this->viewer = new Viewer(this->scene, this->interfaceQT, splitter);
+    this->viewer = new Viewer(this->interfaceQT, splitter);
     splitter->addWidget(rightSide);
 
     this->setCentralWidget(splitter);
@@ -45,7 +47,6 @@ MainWindow::MainWindow()
 }
 MainWindow::~MainWindow()
 {
-    delete this->scene;
     delete this->interfaceQT->editPosX;
     delete this->interfaceQT->editPosY;
     delete this->interfaceQT->editPosZ;
@@ -574,7 +575,7 @@ void MainWindow::importPointCloud()
     PopupWindow popup(PopupType::IMPORT);
     popup.exec();
 
-    this->scene->generateImport(fileName.toStdString(), (double)popup.getValue());
+    this->viewer->getScene()->generateImport(fileName.toStdString(), (double)popup.getValue());
 }
 
 void MainWindow::createPlane()
@@ -584,7 +585,7 @@ void MainWindow::createPlane()
     PopupWindow popup(PopupType::PLANE);
     popup.exec();
 
-    scene->generatePrimitive(PopupType::PLANE, (int)popup.getValue());
+    this->viewer->getScene()->generatePrimitive(PopupType::PLANE, (int)popup.getValue());
 }
 void MainWindow::createCube()
 {
@@ -593,7 +594,7 @@ void MainWindow::createCube()
     PopupWindow popup(PopupType::CUBE);
     popup.exec();
 
-    scene->generatePrimitive(PopupType::CUBE, (int)popup.getValue());
+    this->viewer->getScene()->generatePrimitive(PopupType::CUBE, (int)popup.getValue());
 }
 void MainWindow::createSphere()
 {
@@ -602,7 +603,7 @@ void MainWindow::createSphere()
     PopupWindow popup(PopupType::SPHERE);
     popup.exec();
 
-    scene->generatePrimitive(PopupType::SPHERE, (int)popup.getValue());
+    this->viewer->getScene()->generatePrimitive(PopupType::SPHERE, (int)popup.getValue());
 }
 void MainWindow::createTorus()
 {
@@ -611,7 +612,7 @@ void MainWindow::createTorus()
     PopupWindow popup(PopupType::TORUS);
     popup.exec();
 
-    scene->generatePrimitive(PopupType::TORUS, (int)popup.getValue());
+    this->viewer->getScene()->generatePrimitive(PopupType::TORUS, (int)popup.getValue());
 }
 
 void MainWindow::about()
