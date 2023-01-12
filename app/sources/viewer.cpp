@@ -304,6 +304,15 @@ void Viewer::sceneWriteJSON(const std::string &filename)
 	jsonFile << fileContent;
 	jsonFile.close();
 }
+
+double strToDouble(std::string s){
+	double f = 0.0;    
+	std::stringstream ss;    
+	ss << s;
+	ss >> f;
+	return f;
+}
+
 void Viewer::sceneReadJSON(const std::string &filename)
 {
 	// Init JSON
@@ -314,10 +323,11 @@ void Viewer::sceneReadJSON(const std::string &filename)
 
 	// Parser
 	RSJresource json(jsonString);
+	
 
 	/** DATA CAMERA **/
-	this->camera()->setPosition({json["data_camera"]["position"][0].as<double>(), json["data_camera"]["position"][1].as<double>(), json["data_camera"]["position"][2].as<double>()});
-	this->camera()->setOrientation({json["data_camera"]["orientation"][0].as<double>(), json["data_camera"]["orientation"][1].as<double>(), json["data_camera"]["orientation"][2].as<double>(), json["data_camera"]["orientation"][3].as<double>()});
+	this->camera()->setPosition({strToDouble(json["data_camera"]["position"][0].as<std::string>()), strToDouble(json["data_camera"]["position"][1].as<std::string>()), strToDouble(json["data_camera"]["position"][2].as<std::string>())});
+	this->camera()->setOrientation({strToDouble(json["data_camera"]["orientation"][0].as<std::string>()), strToDouble(json["data_camera"]["orientation"][1].as<std::string>()), strToDouble(json["data_camera"]["orientation"][2].as<std::string>()), strToDouble(json["data_camera"]["orientation"][3].as<std::string>())});
 
 	/** DATA SCENE **/
 	this->sceneNew();
@@ -333,12 +343,12 @@ void Viewer::sceneReadJSON(const std::string &filename)
 			// Positions
 			for (int j = 0, maxSizeJ = json["data_scene"][i]["positions"].size(); j < maxSizeJ; j++)
 			{
-				res.getPositions().push_back({json["data_scene"][i]["positions"][j][0].as<double>(), json["data_scene"][i]["positions"][j][1].as<double>(), json["data_scene"][i]["positions"][j][2].as<double>()});
+				res.getPositions().push_back({strToDouble(json["data_scene"][i]["positions"][j][0].as<std::string>()), strToDouble(json["data_scene"][i]["positions"][j][1].as<std::string>()), strToDouble(json["data_scene"][i]["positions"][j][2].as<std::string>())});
 			}
 			// Normals
 			for (int j = 0, maxSizeJ = json["data_scene"][i]["normals"].size(); j < maxSizeJ; j++)
 			{
-				res.getNormals().push_back({json["data_scene"][i]["normals"][j][0].as<double>(), json["data_scene"][i]["normals"][j][1].as<double>(), json["data_scene"][i]["normals"][j][2].as<double>()});
+				res.getNormals().push_back({strToDouble(json["data_scene"][i]["normals"][j][0].as<std::string>()), strToDouble(json["data_scene"][i]["normals"][j][1].as<std::string>()), strToDouble(json["data_scene"][i]["normals"][j][2].as<std::string>())});
 			}
 
 			res.setResolution(-1);
@@ -347,21 +357,21 @@ void Viewer::sceneReadJSON(const std::string &filename)
 		}
 		else
 		{
-			if (json["data_scene"][i]["param_resolution"].as<double>() > 0)
+			if (strToDouble(json["data_scene"][i]["param_resolution"].as<std::string>()) > 0)
 			{
 				switch (getStringToPointCloudType(json["data_scene"][i]["type_pointcloud"].as<std::string>("default")))
 				{
 				case PointCloudType::PLANE:
-					res.generatePlane(json["data_scene"][i]["param_resolution"].as<double>());
+					res.generatePlane(strToDouble(json["data_scene"][i]["param_resolution"].as<std::string>()));
 					break;
 				case PointCloudType::CUBE:
-					res.generateCube(json["data_scene"][i]["param_resolution"].as<double>());
+					res.generateCube(strToDouble(json["data_scene"][i]["param_resolution"].as<std::string>()));
 					break;
 				case PointCloudType::SPHERE:
-					res.generateSphere(json["data_scene"][i]["param_resolution"].as<double>());
+					res.generateSphere(strToDouble(json["data_scene"][i]["param_resolution"].as<std::string>()));
 					break;
 				case PointCloudType::TORUS:
-					res.generateTorus(json["data_scene"][i]["param_resolution"].as<double>());
+					res.generateTorus(strToDouble(json["data_scene"][i]["param_resolution"].as<std::string>()));
 					break;
 				default:
 					break;
@@ -370,9 +380,9 @@ void Viewer::sceneReadJSON(const std::string &filename)
 		}
 
 		// Set relative transform
-		res.setRelativePosition({json["data_scene"][i]["relative_position"][0].as<double>(), json["data_scene"][i]["relative_position"][1].as<double>(), json["data_scene"][i]["relative_position"][2].as<double>()});
-		res.setRelativeRotation({json["data_scene"][i]["relative_rotation"][0].as<double>(), json["data_scene"][i]["relative_rotation"][1].as<double>(), json["data_scene"][i]["relative_rotation"][2].as<double>()});
-		res.setRelativeScale({json["data_scene"][i]["relative_scale"][0].as<double>(), json["data_scene"][i]["relative_scale"][1].as<double>(), json["data_scene"][i]["relative_scale"][2].as<double>()});
+		res.setRelativePosition({strToDouble(json["data_scene"][i]["relative_position"][0].as<std::string>()), strToDouble(json["data_scene"][i]["relative_position"][1].as<std::string>()), strToDouble(json["data_scene"][i]["relative_position"][2].as<std::string>())});
+		res.setRelativeRotation({strToDouble(json["data_scene"][i]["relative_rotation"][0].as<std::string>()), strToDouble(json["data_scene"][i]["relative_rotation"][1].as<std::string>()), strToDouble(json["data_scene"][i]["relative_rotation"][2].as<std::string>())});
+		res.setRelativeScale({strToDouble(json["data_scene"][i]["relative_scale"][0].as<std::string>()), strToDouble(json["data_scene"][i]["relative_scale"][1].as<std::string>()), strToDouble(json["data_scene"][i]["relative_scale"][2].as<std::string>())});
 
 		// Material
 		if (getStringToMaterialType(json["data_scene"][i]["type_material"].as<std::string>("default")) != MaterialType::CUSTOM)
@@ -381,12 +391,12 @@ void Viewer::sceneReadJSON(const std::string &filename)
 		}
 		else
 		{
-			m.setAmbiant({json["data_scene"][i]["material"]["ambient"][0].as<double>(), json["data_scene"][i]["material"]["ambient"][1].as<double>(), json["data_scene"][i]["material"]["ambient"][2].as<double>()});
-			m.setDiffuse({json["data_scene"][i]["material"]["diffuse"][0].as<double>(), json["data_scene"][i]["material"]["diffuse"][1].as<double>(), json["data_scene"][i]["material"]["diffuse"][2].as<double>()});
-			m.setSpecular({json["data_scene"][i]["material"]["specular"][0].as<double>(), json["data_scene"][i]["material"]["specular"][1].as<double>(), json["data_scene"][i]["material"]["specular"][2].as<double>()});
-			m.setSpecExp(json["data_scene"][i]["material"]["specular_exponent"].as<double>());
-			m.setTransparency(json["data_scene"][i]["material"]["transparency"].as<double>());
-			m.setRefractionIndex(json["data_scene"][i]["material"]["refraction_index"].as<double>());
+			m.setAmbiant({strToDouble(json["data_scene"][i]["material"]["ambient"][0].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["ambient"][1].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["ambient"][2].as<std::string>())});
+			m.setDiffuse({strToDouble(json["data_scene"][i]["material"]["diffuse"][0].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["diffuse"][1].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["diffuse"][2].as<std::string>())});
+			m.setSpecular({strToDouble(json["data_scene"][i]["material"]["specular"][0].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["specular"][1].as<std::string>()), strToDouble(json["data_scene"][i]["material"]["specular"][2].as<std::string>())});
+			m.setSpecExp(strToDouble(json["data_scene"][i]["material"]["specular_exponent"].as<std::string>()));
+			m.setTransparency(strToDouble(json["data_scene"][i]["material"]["transparency"].as<std::string>()));
+			m.setRefractionIndex(strToDouble(json["data_scene"][i]["material"]["refraction_index"].as<std::string>()));
 			m.setType(MaterialType::CUSTOM);
 		}
 
