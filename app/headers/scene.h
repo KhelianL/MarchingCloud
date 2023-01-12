@@ -1,12 +1,12 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-/* C LIBS */
+/* C++ */
 #include <vector>
 #include <fstream>
 #include <string>
 
-/* SRC CUDA */
+/* SRC */
 #include <pointCloud.h>
 #include <popupWindow.h>
 
@@ -27,8 +27,6 @@ public:
 
     void generateImport(const std::string &filename, const float &decimate);
     void generatePrimitive(const PopupType &type, const int &resolution);
-
-    void sceneParserJSON(const std::string &filename);
 };
 
 #endif

@@ -1,6 +1,9 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
+/* C++ */
+#include <sstream>
+
 /* QT */
 #include <QString>
 #include <QKeyEvent>
@@ -10,6 +13,7 @@
 /* libQGLViewer */
 #include <qglviewer.h>
 #include <vec.h>
+#include <quaternion.h>
 
 /* SRC */
 #include <vec3.h>
@@ -41,6 +45,10 @@ public:
 
     void rayCastClick(const QPoint &point);
     float isAABBHit(const Vec3 &MinAABB, const Vec3 &MaxAABB, const qglviewer::Vec &rayOrigin, const qglviewer::Vec &rayDirection);
+
+    void sceneParserJSON(const std::string &filename);
 };
+
+std::string myToStringFloat(float a);
 
 #endif
